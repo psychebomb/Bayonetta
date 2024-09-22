@@ -8,13 +8,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
     public class ABK : BaseMeleeAttack
     {
-        public enum SpeedState
-        {
-            starting,
-            middle,
-            slower,
-        }
-
         protected float fallOffTime = 0.35f;
         protected float initialSpeedCoefficient = 0f;
         protected float midSpeedCoefficient = 8f;
@@ -37,6 +30,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             bonusForce = 0.8f * forwardDir * Uppercut.upwardForceStrength;
 
             characterDirection.forward = forwardDir;
+            characterBody.bodyFlags |= CharacterBody.BodyFlags.IgnoreFallDamage;
 
             kickSpeed = new AnimationCurve(new Keyframe[]
             {
@@ -81,6 +75,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         public override void OnExit()
         {
             PlayAnimation("Body", "AbkExit");
+            characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
             base.OnExit();
         }
     }

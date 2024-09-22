@@ -481,7 +481,7 @@ namespace BayoMod.Survivors.Bayo
                 isCombatSkill = true,
                 canceledFromSprinting = false,
                 cancelSprintingOnActivation = true,
-                forceSprintDuringState = true,
+                forceSprintDuringState = false,
             });
 
             Skills.AddSecondarySkills(bodyPrefab, secondarySkillDef1);
@@ -519,7 +519,7 @@ namespace BayoMod.Survivors.Bayo
                 isCombatSkill = false,
                 canceledFromSprinting = false,
                 cancelSprintingOnActivation = false,
-                forceSprintDuringState = false,
+                forceSprintDuringState = true,
             });
 
             Skills.AddUtilitySkills(bodyPrefab, utilitySkillDef1);
