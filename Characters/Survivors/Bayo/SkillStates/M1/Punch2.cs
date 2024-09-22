@@ -6,11 +6,22 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
     {
         public override void OnEnter()
         {
-            earlyExitPercentTime = 0.26f;
-            holdTime = 0.24f;
-            endDuration = 0.48f;
-            animStart = "P2";
-            animEnd = "P2E";
+            if (characterMotor.isGrounded)
+            {
+                animStart = "P2";
+                animEnd = "P2E";
+                earlyExitPercentTime = 0.26f;
+                endDuration = 0.48f;
+            }
+            else
+            {
+                animStart = "P2A";
+                animEnd = "P2AE";
+                earlyExitPercentTime = 0.24f;
+                endDuration = 0.44f;
+            }
+            holdTime = 0.5f - earlyExitPercentTime;
+            gunStr = "gunlh4";
             base.OnEnter();
         }
     }

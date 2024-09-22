@@ -2,7 +2,7 @@
 using BayoMod.Survivors.Bayo.SkillStates;
 using RoR2;
 using UnityEngine;
-using EntityStates.Merc;
+using EntityStates.Loader;
 using UnityEngine.UIElements;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
@@ -14,6 +14,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         protected float loopTime;
         protected bool hasLooped;
         protected float myDuration;
+        private string animName;
+        public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
         public override void OnEnter()
         {
             myDuration = 2.08f;
@@ -22,7 +24,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             attackEndPercentTime = 1f;
             earlyExitPercentTime = 0.3f;
 
-            damageCoefficient = 2f;
+            damageCoefficient = 1.5f;
             procCoefficient = 0.75f;
             damageType = DamageType.Generic;
             pushForce = 300f;
@@ -34,9 +36,23 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             fireFreq = 0.2f;
             loopTime = 1.12f;
             hasLooped = false;
+            shootRay = GetAimRay();
+            gunName = "gunrh4";
+            gunDamage = 0.5f;
+            fireTime = 0.15f;
+
+            if (characterMotor.isGrounded)
+            {
+                animName = "Flurry";
+            }
+            else
+            {
+                animName = "FlurryA";
+                characterMotor.airControl = characterMotor.airControl;
+            }
 
             characterDirection.forward = GetAimRay().direction;
-            PlayCrossfade("Body", "Flurry", "Slash.playbackRate", loopTime, 0.05f);
+            PlayCrossfade("Body", animName, "Slash.playbackRate", loopTime, 0.05f);
 
             if (characterMotor && characterDirection)
             {
@@ -70,10 +86,26 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
 
             characterDirection.forward = GetAimRay().direction;
+            shootRay = GetAimRay();
 
-            if (characterMotor && characterDirection)
+            if (characterMotor.isGrounded)
             {
-                characterMotor.velocity = characterMotor.velocity * 0f;
+                if (isAuthority && characterMotor)
+                {
+                    inputBank.moveVector = Vector3.zero;
+                    characterMotor.moveDirection = Vector3.zero;
+                }
+                if (characterMotor && characterDirection)
+                {
+                    characterMotor.velocity = characterMotor.velocity * 0f;
+                }
+            }
+            else
+            {
+                base.characterMotor.rootMotion = Vector3.zero;
+                characterMotor.moveDirection = inputBank.moveVector;
+                characterDirection.moveVector = characterMotor.moveDirection;
+                characterMotor.velocity.y = Mathf.Lerp(0f, -20f, fixedAge / duration);
             }
 
             fireAge += Time.fixedDeltaTime;
@@ -83,7 +115,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 if (!hasLooped)
                 {
                     hasLooped = true;
-                    PlayCrossfade("Body", "Flurry", "Slash.playbackRate", loopTime, 0.05f);
+                    PlayCrossfade("Body", animName, "Slash.playbackRate", loopTime, 0.05f);
                 }   
             }
 

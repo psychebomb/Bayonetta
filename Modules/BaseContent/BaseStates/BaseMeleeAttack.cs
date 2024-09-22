@@ -1,5 +1,7 @@
 ﻿using BayoMod.Survivors.Bayo.SkillStates;
 using EntityStates;
+using EntityStates.Commando.CommandoWeapon;
+using EntityStates.Toolbot;
 using RoR2;
 using RoR2.Audio;
 using RoR2.Skills;
@@ -52,6 +54,17 @@ namespace BayoMod.Modules.BaseStates
         private HitStopCachedState hitStopCachedState;
         protected Vector3 storedVelocity;
         protected bool exitToStance;
+
+        protected Ray shootRay;
+        protected string gunName;
+        private float recoilAmplitude = FirePistol2.recoilAmplitude;
+        protected float gunDamage;
+        protected float gunForce = BaseNailgunState.force;
+        private GameObject tracerEffectPrefab = FirePistol2.tracerEffectPrefab;
+        private GameObject gunEffectPrefab = FirePistol2.tracerEffectPrefab;
+        protected float spreadBloomValue = 0f;
+        protected float fireTime = 100f;
+        protected float bulletStopWatch = 0f;
 
         public override void OnEnter()
         {
@@ -155,12 +168,6 @@ namespace BayoMod.Modules.BaseStates
 
             hitPauseTimer -= Time.fixedDeltaTime;
 
-            if (isAuthority && characterMotor)
-            {
-                inputBank.moveVector = Vector3.zero;
-                characterMotor.moveDirection = Vector3.zero;
-            }
-
             if (hitPauseTimer <= 0f && inHitPause)
             {
                 RemoveHitstop();
@@ -176,6 +183,8 @@ namespace BayoMod.Modules.BaseStates
                 if (animator) animator.SetFloat(playbackRateParam, 0f);
             }
 
+            bulletStopWatch += Time.fixedDeltaTime;
+
             bool fireStarted = stopwatch >= duration * attackStartPercentTime;
             bool fireEnded = stopwatch >= duration * attackEndPercentTime;
 
@@ -187,6 +196,12 @@ namespace BayoMod.Modules.BaseStates
                     EnterAttack();
                 }
                 FireAttack();
+            }
+
+            if(bulletStopWatch >= fireTime)
+            {
+                bulletStopWatch -= fireTime;
+                FireBullet();
             }
 
             if (stopwatch >= duration && isAuthority)
@@ -208,41 +223,36 @@ namespace BayoMod.Modules.BaseStates
         {
             return InterruptPriority.Skill;
         }
-        /*
+ 
         private void FireBullet()
         {
             Ray aimRay = shootRay;
-            string muzzleName;
-            if ((bool)effectPrefab)
-            {
-                EffectManager.SimpleMuzzleFlash(effectPrefab, FindModelChild(gunName), gunName, transmit: false);
-            }
-            AddRecoil(-0.8f * recoilAmplitude, -1f * recoilAmplitude, -0.1f * recoilAmplitude, 0.15f * recoilAmplitude);
+            EffectManager.SimpleMuzzleFlash(EntityStates.Commando.CommandoWeapon.FirePistol2.muzzleEffectPrefab, gameObject, gunName, false);
+            AddRecoil(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
             if (base.isAuthority)
             {
                 BulletAttack bulletAttack = new BulletAttack();
-                bulletAttack.owner = FindModelChild(gunName);
-                bulletAttack.weapon = FindModelChild(gunName);
+                bulletAttack.owner = gameObject;
+                bulletAttack.weapon = gameObject;
                 bulletAttack.origin = aimRay.origin;
                 bulletAttack.aimVector = aimRay.direction;
-                bulletAttack.minSpread = minSpread;
-                bulletAttack.maxSpread = maxSpread;
-                bulletAttack.bulletCount = 1u;
-                bulletAttack.damage = bulletDamage * damageStat;
-                bulletAttack.force = force;
+                bulletAttack.minSpread = 0f;
+                bulletAttack.maxSpread = 0f;
+                bulletAttack.bulletCount = 1;
+                bulletAttack.damage = gunDamage * damageStat;
+                bulletAttack.force = gunForce;
                 bulletAttack.tracerEffectPrefab = tracerEffectPrefab;
-                bulletAttack.muzzleName = muzzleName;
-                bulletAttack.hitEffectPrefab = hitEffectPrefab;
+                bulletAttack.muzzleName = gunName;
+                bulletAttack.hitEffectPrefab = gunEffectPrefab;
                 bulletAttack.isCrit = Util.CheckRoll(critStat, base.characterBody.master);
-                bulletAttack.radius = bulletRadius;
+                bulletAttack.radius = 0.75f;
                 bulletAttack.smartCollision = true;
                 bulletAttack.damageType = DamageType.Generic;
                 bulletAttack.Fire();
             }
             base.characterBody.AddSpreadBloom(spreadBloomValue);
-            Util.PlaySound(fireBarrageSoundString, base.gameObject);
+            Util.PlaySound(FirePistol2.firePistolSoundString, base.gameObject);
         }
-        */
 
         public override void OnSerialize(NetworkWriter writer)
         {

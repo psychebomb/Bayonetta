@@ -15,13 +15,25 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
         private RootMotionAccumulator rootMotionAccumulator;
 
+        private string animName;
+
 
         public override void OnEnter()
         {
             base.OnEnter();
+            if (characterMotor.isGrounded)
+            {
+                animName = "FlurryStart";
+            }
+            else
+            {
+                animName = "FlurryAStart";
+                characterMotor.airControl = characterMotor.airControl;
+            }
             rootMotionAccumulator = GetModelRootMotionAccumulator();
-            PlayAnimation("Body", "FlurryStart", "Slash.playbackRate", duration);
+            PlayAnimation("Body", animName, "Slash.playbackRate", duration);
             characterDirection.forward = GetAimRay().direction;
+            characterMotor.velocity.y = 0f;
         }
         protected bool CanDodge()
         {
@@ -43,14 +55,31 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 return;
             }
 
-            if (rootMotionAccumulator)
+            characterMotor.velocity.y = 0f;
+
+            if (characterMotor.isGrounded)
             {
-                Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
-                if (vector != Vector3.zero && base.isAuthority && base.characterMotor)
+                if (isAuthority && characterMotor)
                 {
-                    base.characterMotor.rootMotion += vector;
+                    inputBank.moveVector = Vector3.zero;
+                    characterMotor.moveDirection = Vector3.zero;
+                }
+
+                if (rootMotionAccumulator)
+                {
+                    Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
+                    if (vector != Vector3.zero && base.isAuthority && base.characterMotor)
+                    {
+                        base.characterMotor.rootMotion += vector;
+                    }
                 }
             }
+            else
+            {
+                characterMotor.moveDirection = inputBank.moveVector;
+                characterDirection.moveVector = characterMotor.moveDirection;
+            }
+
             if (fixedAge > duration)
             {
                 outer.SetNextState(new Flurry());

@@ -3,6 +3,7 @@ using BayoMod.Survivors.Bayo.SkillStates;
 using RoR2;
 using UnityEngine;
 using EntityStates.Merc;
+using EntityStates.Loader;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 {
@@ -13,13 +14,15 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         private bool cancel;
         private bool jumped;
         private float earlyExit;
+        private string animName;
+        public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
 
         public override void OnEnter()
         {
 
             duration = 1.92f;
             attackStartPercentTime = 0.25f;
-            attackEndPercentTime = 0.625f;
+            attackEndPercentTime = 0.5f;
             earlyExit = 1.5f;
 
             damageCoefficient = 15f;
@@ -30,11 +33,21 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             hitStopDuration = 0.05f;
             attackRecoil = 1f;
             hitHopVelocity = 4f;
+            characterMotor.velocity.y = 0f;
             exitToStance = true;
+            if (characterMotor.isGrounded)
+            {
+                animName = "FlurryE";
+            }
+            else
+            {
+                animName = "FlurryAE";
+                characterMotor.airControl = characterMotor.airControl;
+            }
 
             characterDirection.forward = GetAimRay().direction;
             rootMotionAccumulator = GetModelRootMotionAccumulator();
-            PlayAnimation("Body", "FlurryE", "Slash.playbackRate", duration);
+            PlayAnimation("Body", animName, "Slash.playbackRate", duration);
 
             if (characterMotor && characterDirection)
             {
@@ -47,20 +60,22 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
         private void DetermineCancel()
         {
-            if (characterMotor)
-            {
-                if (!characterMotor.isGrounded) cancel = true;
-            }
+
             if (inputBank)
             {
-
+                if (stopwatch >= duration * attackEndPercentTime + 0.012)
+                {
+                    if (inputBank.skill2.down) cancel = true;
+                    if (inputBank.skill3.down) cancel = true;
+                    if (inputBank.skill4.down) cancel = true;
+                    if (inputBank.moveVector != Vector3.zero) cancel = true;
+                }
                 if (inputBank.jump.down)
                 {
                     cancel = true;
                     jumped = true;
                 }
-
-                if (inputBank.moveVector != Vector3.zero) cancel = true;
+                //if (stopwatch >= exitTime && inputBank.moveVector != Vector3.zero) cancel = true;
             }
         }
 
@@ -92,13 +107,29 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             characterDirection.forward = GetAimRay().direction;
 
-            if (rootMotionAccumulator)
+            if (characterMotor.isGrounded)
             {
-                Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
-                if (vector != Vector3.zero && base.isAuthority && base.characterMotor)
+                if (isAuthority && characterMotor)
                 {
-                    base.characterMotor.rootMotion += vector;
+                    inputBank.moveVector = Vector3.zero;
+                    characterMotor.moveDirection = Vector3.zero;
                 }
+
+                if (rootMotionAccumulator)
+                {
+                    Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
+                    if (vector != Vector3.zero && base.isAuthority && base.characterMotor)
+                    {
+                        base.characterMotor.rootMotion += vector;
+                    }
+                }
+            }
+            else
+            {
+                base.characterMotor.rootMotion = Vector3.zero;
+                characterMotor.moveDirection = inputBank.moveVector;
+                characterDirection.moveVector = characterMotor.moveDirection;
+                characterMotor.velocity.y = Mathf.Lerp(0f, -20f, fixedAge / duration);
             }
 
             if (characterMotor && characterDirection)
