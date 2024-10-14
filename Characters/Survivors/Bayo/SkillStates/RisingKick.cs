@@ -23,20 +23,22 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         private float rollSpeed;
         public SpeedState speedState;
         private bool hasEnded;
+        private float enderTime = 0.9f;
         public override void OnEnter()
         {
             duration = 1f;
             earlyExitPercentTime = 0.75f;
             attackStartPercentTime = 0.5f;
             attackEndPercentTime = 0.95f;
-            damageCoefficient = 3f;
+            damageCoefficient = 4f;
             procCoefficient = 1f;
             damageType = DamageType.Stun1s;
 
             hitStopDuration = 0.1f;
             attackRecoil = 1f;
             hitHopVelocity = 4f;
-            bonusForce = 0.8f * Vector3.up * Uppercut.upwardForceStrength;
+            launch = true;
+            
             
             forwardDir = Vector3.up;
             rollSpeed = 0f;
@@ -124,12 +126,40 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                     hasEnded = true;
                     PlayAnimation("Body", "BackKickExit", playbackRateParam, duration - earlyExitPercentTime);
                 }
-                if (base.inputBank.skill2.down)
+                if (base.inputBank.skill2.down && (stopwatch>= enderTime))
                 {
                     outer.SetNextState(new RisingFinisher());
                     return;
                 }
 
+            }
+        }
+        protected override void ApplyForce(HurtBox item)
+        {
+            CharacterBody body = item.healthComponent.body;
+            if (!launchList.Contains(item.healthComponent))
+            {
+                launchList.Add(item.healthComponent);
+                float num = 1f;
+                Vector3 forceVec;
+
+                if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
+                {
+                    body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
+                }
+                if (body.characterMotor)
+                {
+                    num = body.characterMotor.mass;
+                }
+                else if (item.healthComponent.GetComponent<Rigidbody>())
+                {
+                    num = base.rigidbody.mass;
+                }
+                num = num * 22f;
+                forceVec = Vector3.up * num;
+                item.healthComponent.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
+                body.characterMotor.velocity.x = 0f;
+                body.characterMotor.velocity.z = 0f;
             }
         }
         protected override void RemoveHitstop()

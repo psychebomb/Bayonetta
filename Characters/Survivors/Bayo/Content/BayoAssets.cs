@@ -3,6 +3,10 @@ using UnityEngine;
 using BayoMod.Modules;
 using System;
 using RoR2.Projectile;
+using On.EntityStates.Seeker;
+using R2API;
+using UnityEngine.AddressableAssets;
+using System.Xml.Linq;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -20,7 +24,11 @@ namespace BayoMod.Survivors.Bayo
         //projectiles
         public static GameObject bombProjectilePrefab;
 
+        public static GameObject fistProjectilePrefab;
+
         private static AssetBundle _assetBundle;
+
+        internal static GameObject trackerPrefab;
 
         public static void Init(AssetBundle assetBundle)
         {
@@ -32,7 +40,12 @@ namespace BayoMod.Survivors.Bayo
             CreateEffects();
 
             CreateProjectiles();
+
+            CreateTracker();
         }
+
+
+
 
         #region effects
         private static void CreateEffects()
@@ -70,6 +83,7 @@ namespace BayoMod.Survivors.Bayo
         private static void CreateProjectiles()
         {
             CreateBombProjectile();
+            CreateFistProjectile();
             Content.AddProjectilePrefab(bombProjectilePrefab);
         }
 
@@ -99,6 +113,60 @@ namespace BayoMod.Survivors.Bayo
             
             bombController.startSound = "";
         }
+
+        private static void CreateFistProjectile()
+        {
+            //highly recommend setting up projectiles in editor, but this is a quick and dirty way to prototype if you want
+            //fistProjectilePrefab = Asset.CloneProjectilePrefab("UnseenHandMovingProjectile", "FistProjectile");
+            fistProjectilePrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC2/Seeker/UnseenHandMovingProjectile.prefab").WaitForCompletion().InstantiateClone("WeaveProjectile", false);
+            //remove their ProjectileImpactExplosion component and start from default values
+            UnityEngine.Object.Destroy(fistProjectilePrefab.GetComponent<ProjectileSimple>());
+            UnityEngine.Object.Destroy(fistProjectilePrefab.GetComponent<RotateObject>());
+            UnityEngine.Object.Destroy(fistProjectilePrefab.GetComponent<UnseenHandHealingProjectile>());
+            ProjectileSimple fistSimple = fistProjectilePrefab.AddComponent<ProjectileSimple>();
+
+            fistSimple.lifetime = 0.5f;
+            fistSimple.desiredForwardSpeed = 1;
+            fistSimple.updateAfterFiring = true;
+            fistSimple.enableVelocityOverLifetime = true;
+            fistSimple.velocityOverLifetime = new AnimationCurve(new Keyframe[] { new Keyframe(0, 0), new Keyframe(0.075f, 60), new Keyframe(0.2f, 60), new Keyframe(0.205f, -60), new Keyframe(0.25f, -60), new Keyframe(0.255f, 0) });
+
+            ProjectileController fistController = fistProjectilePrefab.GetComponent<ProjectileController>();
+
+            ShakeEmitter shakeEmitter = fistProjectilePrefab.AddComponent<ShakeEmitter>();
+            shakeEmitter.amplitudeTimeDecay = true;
+            shakeEmitter.duration = 0.4f;
+            shakeEmitter.radius = 100f;
+            shakeEmitter.scaleShakeRadiusWithLocalScale = false;
+
+            shakeEmitter.wave = new Wave
+            {
+                amplitude = 1f,
+                frequency = 30f,
+                cycleOffset = 0f
+            };
+
+            fistController.startSound = "";
+        }
         #endregion projectiles
+
+        private static void CreateTracker()
+        {
+            trackerPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/HuntressTrackingIndicator"), "BayoTrackerPrefab", false);
+            trackerPrefab.transform.Find("Core Pip").gameObject.GetComponent<SpriteRenderer>().color = Color.magenta;
+            trackerPrefab.transform.Find("Core Pip").localScale = new Vector3(0.15f, 0.15f, 0.15f);
+
+            trackerPrefab.transform.Find("Core, Dark").gameObject.GetComponent<SpriteRenderer>().color = Color.black;
+            trackerPrefab.transform.Find("Core, Dark").localScale = new Vector3(0.1f, 0.1f, 0.1f);
+
+            foreach (SpriteRenderer i in trackerPrefab.transform.Find("Holder").gameObject.GetComponentsInChildren<SpriteRenderer>())
+            {
+                if (i)
+                {
+                    i.gameObject.transform.localScale = new Vector3(0.2f, 0.2f, 1f);
+                    i.color = Color.red;
+                }
+            }
+        }
     }
 }

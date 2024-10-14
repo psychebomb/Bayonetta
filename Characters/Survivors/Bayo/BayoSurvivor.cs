@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BayoMod.Characters.Survivors.Bayo.SkillStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.Weave;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -290,6 +291,10 @@ namespace BayoMod.Survivors.Bayo
         public override CharacterModel prefabCharacterModel { get; protected set; }
         public override GameObject displayPrefab { get; protected set; }
 
+        // bazooka skill overrides
+        internal static SkillDef tetsuSkillDef;
+        internal static SkillDef stompSkillDef;
+        internal static SkillDef weaveCancelSkillDef;
         public override void Initialize()
         {
             //uncomment if you have multiple characters
@@ -445,6 +450,7 @@ namespace BayoMod.Survivors.Bayo
                ));
 
             primarySkillDef1.mustKeyPress = true;
+            primarySkillDef1.cancelSprintingOnActivation = true;
 
             Skills.AddPrimarySkills(bodyPrefab, primarySkillDef1);
         }
@@ -456,7 +462,7 @@ namespace BayoMod.Survivors.Bayo
             //here is a basic skill def with all fields accounted for
             SkillDef secondarySkillDef1 = Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = "HenryAbk",
+                skillName = "BayoAbk",
                 skillNameToken = BAYO_PREFIX + "SECONDARY_ABK_NAME",
                 skillDescriptionToken = BAYO_PREFIX + "SECONDARY_ABK_DESCRIPTION",
                 skillIcon = assetBundle.LoadAsset<Sprite>("texUtilityIcon"),
@@ -494,7 +500,7 @@ namespace BayoMod.Survivors.Bayo
             //here's a skilldef of a typical movement skill.
             SkillDef utilitySkillDef1 = Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = "Evade",
+                skillName = "BayoEvade",
                 skillNameToken = BAYO_PREFIX + "UTILITY_DODGE_NAME",
                 skillDescriptionToken = BAYO_PREFIX + "UTILITY_DODGE_DESCRIPTION",
                 skillIcon = assetBundle.LoadAsset<Sprite>("texUtilityIcon"),
@@ -532,17 +538,17 @@ namespace BayoMod.Survivors.Bayo
             //a basic skill. some fields are omitted and will just have default values
             SkillDef specialSkillDef1 = Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = "Evade",
-                skillNameToken = BAYO_PREFIX + "UTILITY_DODGE_NAME",
-                skillDescriptionToken = BAYO_PREFIX + "UTILITY_DODGE_DESCRIPTION",
-                skillIcon = assetBundle.LoadAsset<Sprite>("texUtilityIcon"),
+                skillName = "WeaveEntry",
+                skillNameToken = BAYO_PREFIX + "SPECIAL_WEAVEIN_NAME",
+                skillDescriptionToken = BAYO_PREFIX + "SPECIAL_WEAVEIN_DESCRIPTION",
+                skillIcon = assetBundle.LoadAsset<Sprite>("texSpecialIcon"),
 
-                activationState = new EntityStates.SerializableEntityStateType(typeof(Emote1)),
-                activationStateMachineName = "Body",
-                interruptPriority = EntityStates.InterruptPriority.Pain,
+                activationState = new EntityStates.SerializableEntityStateType(typeof(WeaveEntry)),
+                activationStateMachineName = "Weapon",
+                interruptPriority = EntityStates.InterruptPriority.PrioritySkill,
 
-                baseRechargeInterval = 2f,
-                baseMaxStock = 1,
+                baseRechargeInterval = 15f,
+                baseMaxStock = 2,
 
                 rechargeStock = 1,
                 requiredStock = 1,
@@ -551,17 +557,91 @@ namespace BayoMod.Survivors.Bayo
                 resetCooldownTimerOnUse = false,
                 fullRestockOnAssign = true,
                 dontAllowPastMaxStocks = false,
-                mustKeyPress = false,
+                mustKeyPress = true,
                 beginSkillCooldownOnSkillEnd = false,
 
-                isCombatSkill = false,
+                isCombatSkill = true,
+                canceledFromSprinting = true,
+                cancelSprintingOnActivation = true,
+                forceSprintDuringState = false,
+            });
+
+            tetsuSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "BayoTetsu",
+                skillNameToken = BAYO_PREFIX + "SPECIAL_TETSU_NAME",
+                skillDescriptionToken = BAYO_PREFIX + "SPECIAL_TETSU_DESCRIPTION",
+                skillIcon = assetBundle.LoadAsset<Sprite>("texSpecialIcon"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(Tetsu)),
+                activationStateMachineName = "Body",
+                baseMaxStock = 1,
+                baseRechargeInterval = 1f,
+                beginSkillCooldownOnSkillEnd = false,
                 canceledFromSprinting = false,
-                cancelSprintingOnActivation = false,
-                forceSprintDuringState = true,
+                forceSprintDuringState = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Skill,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = true,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 1,
+                stockToConsume = 1
+            });
+
+            stompSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "BayoStomp",
+                skillNameToken = BAYO_PREFIX + "SPECIAL_STOMP_NAME",
+                skillDescriptionToken = BAYO_PREFIX + "SPECIAL_STOMP_DESCRIPTION",
+                skillIcon = assetBundle.LoadAsset<Sprite>("texSpecialIcon"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(Stomp)),
+                activationStateMachineName = "Body",
+                baseMaxStock = 1,
+                baseRechargeInterval = 1f,
+                beginSkillCooldownOnSkillEnd = false,
+                canceledFromSprinting = false,
+                forceSprintDuringState = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Skill,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = true,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 1,
+                stockToConsume = 1
+            });
+
+            weaveCancelSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "WeaveExit",
+                skillNameToken = BAYO_PREFIX + "SPECIAL_WEEAVEOUT_NAME",
+                skillDescriptionToken = BAYO_PREFIX + "SPECIAL_WEAVEOUT_DESCRIPTION",
+                skillIcon = assetBundle.LoadAsset<Sprite>("texSecondaryIcon"),
+                activationState = new EntityStates.SerializableEntityStateType(typeof(WeaveDummy)),
+                activationStateMachineName = "Body",
+                baseMaxStock = 1,
+                baseRechargeInterval = 0f,
+                beginSkillCooldownOnSkillEnd = false,
+                canceledFromSprinting = false,
+                forceSprintDuringState = false,
+                fullRestockOnAssign = true,
+                interruptPriority = EntityStates.InterruptPriority.Skill,
+                resetCooldownTimerOnUse = false,
+                isCombatSkill = true,
+                mustKeyPress = true,
+                cancelSprintingOnActivation = true,
+                rechargeStock = 1,
+                requiredStock = 1,
+                stockToConsume = 1
             });
 
             Skills.AddSpecialSkills(bodyPrefab, specialSkillDef1);
         }
+
+
         #endregion skills
         
         #region skins
@@ -642,10 +722,10 @@ namespace BayoMod.Survivors.Bayo
             //you must only do one of these. adding duplicate masters breaks the game.
 
             //if you're lazy or prototyping you can simply copy the AI of a different character to be used
-            //Modules.Prefabs.CloneDopplegangerMaster(bodyPrefab, masterName, "Merc");
+            Modules.Prefabs.CloneDopplegangerMaster(bodyPrefab, masterName, "Merc");
 
             //how to set up AI in code
-            BayoAI.Init(bodyPrefab, masterName);
+            //BayoAI.Init(bodyPrefab, masterName);
 
             //how to load a master set up in unity, can be an empty gameobject with just AISkillDriver components
             //assetBundle.LoadMaster(bodyPrefab, masterName);

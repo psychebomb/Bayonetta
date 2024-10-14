@@ -16,6 +16,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         protected float myDuration;
         private string animName;
         public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
+        protected float hopVelocity = 1f;
         public override void OnEnter()
         {
             myDuration = 2.08f;
@@ -40,6 +41,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             gunName = "gunrh4";
             gunDamage = 0.5f;
             fireTime = 0.15f;
+            launch = false;
 
             if (characterMotor.isGrounded)
             {
@@ -49,6 +51,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             {
                 animName = "FlurryA";
                 characterMotor.airControl = characterMotor.airControl;
+                launch = true;
+                juggleHop = 2.5f;
             }
 
             characterDirection.forward = GetAimRay().direction;
@@ -71,6 +75,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 attack.ResetIgnoredHealthComponents();
                 attack.Fire();
                 hasFired = false;
+                if (characterMotor && !characterMotor.isGrounded && hopVelocity > 0f)
+                {
+                    SmallHop(characterMotor, hopVelocity);
+                }
+                launchList.Clear();
             }
             base.FireAttack();
         }
@@ -105,7 +114,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 base.characterMotor.rootMotion = Vector3.zero;
                 characterMotor.moveDirection = inputBank.moveVector;
                 characterDirection.moveVector = characterMotor.moveDirection;
-                characterMotor.velocity.y = Mathf.Lerp(0f, -20f, fixedAge / duration);
             }
 
             fireAge += Time.fixedDeltaTime;

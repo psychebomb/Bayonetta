@@ -25,6 +25,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             holdTime = 0.5f - earlyExitPercentTime;
             gunStr = "gunrh4";
             base.OnEnter();
+            juggleHop = 12f;
         }
     }
 }

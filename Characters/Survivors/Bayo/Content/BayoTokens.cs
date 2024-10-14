@@ -61,8 +61,19 @@ namespace BayoMod.Survivors.Bayo
             #endregion
 
             #region Special
-            Language.Add(prefix + "SPECIAL_BOMB_NAME", "Bomb");
-            Language.Add(prefix + "SPECIAL_BOMB_DESCRIPTION", $"Throw a bomb for <style=cIsDamage>{100f * BayoStaticValues.bombDamageCoefficient}% damage</style>.");
+            Language.Add(prefix + "SPECIAL_WEAVEIN_NAME", "Wicked Weaves");
+            Language.Add(prefix + "SPECIAL_WEAVEIN_DESCRIPTION", $"juninhiyandiayo");
+            Language.Add(prefix + "SPECIAL_TETSU_NAME", "Tetsu");
+            Language.Add(prefix + "SPECIAL_TETSU_DESCRIPTION", $"juninhiyandiayooo");
+            Language.Add(prefix + "SPECIAL_WEEAVEOUT_NAME", "Cancel");
+            Language.Add(prefix + "SPECIAL_WEAVEOUT_DESCRIPTION", $"Cancel");
+            Language.Add(prefix + "SPECIAL_STOMP_NAME", "Stomp");
+            Language.Add(prefix + "SPECIAL_STOMP_DESCRIPTION", $"TEYIAHHH");
+            Language.Add(prefix + "SPECIAL_TETSUDUM_NAME", "Tetsu");
+            Language.Add(prefix + "SPECIAL_TETSUDUM_DESCRIPTION", $"juninhiyandiayo");
+            Language.Add(prefix + "SPECIAL_STOMPDUM_NAME", "Stomp");
+            Language.Add(prefix + "SPECIAL_STOMPDUM_DESCRIPTION", $"TEYIAH");
+
             #endregion
 
             #region Achievements
