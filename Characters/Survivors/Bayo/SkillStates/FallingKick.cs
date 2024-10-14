@@ -13,7 +13,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         public static float minimumDuration = GroundSlam.minimumDuration;
         public static string enterSoundString = GroundSlam.enterSoundString;
         public static float initialVerticalVelocity = GroundSlam.initialVerticalVelocity;
-        public static float verticalAcceleration = GroundSlam.verticalAcceleration *0.6f;
+        public static float verticalAcceleration = GroundSlam.verticalAcceleration *0.8f;
         private float previousAirControl;
 
 
@@ -23,14 +23,14 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         protected float fallDamage = 3f;
         protected float fireAge = 0f;
         protected float procCoefficient = 1f;
-        protected Vector3 downForce = 0.6f * Vector3.down * Uppercut.upwardForceStrength;
+        protected Vector3 downForce =  Vector3.down * Uppercut.upwardForceStrength * 0.8f;
         protected GameObject hitEffectPrefab;
         protected NetworkSoundEventIndex impactSound = NetworkSoundEventIndex.Invalid;
 
         protected string kickSoundString = GroundLight.comboAttackSoundString;
         protected string hitSoundString = "";
         protected float attackRecoil = 1f;
-        protected float hitStopDuration = 0.05f;
+        protected float hitStopDuration = 0.012f;
 
         private bool hasFired;
         private float hitPauseTimer;

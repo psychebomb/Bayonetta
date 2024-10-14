@@ -26,17 +26,18 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private float direction;
         protected string gunStr;
         public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
+        protected float hopVelocity = 2.5f;
         public override void OnEnter()
         {
             exitTime = holdTime + earlyExitPercentTime;
             duration = exitTime + endDuration;
-            damageCoefficient = 2f;
+            damageCoefficient = 1.5f;
             attackStartPercentTime = 0.125f;
             attackEndPercentTime = 0.6f;
             damageCoefficient = 3f;
             procCoefficient = 1f;
             damageType = DamageType.Generic;
-            pushForce = 300f;
+            pushForce = 100f;
             hitStopDuration = 0.012f;
             attackRecoil = 1f;
             hitHopVelocity = 4f;
@@ -44,21 +45,21 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             hasEnded = false;
             shootRay = GetAimRay();
             gunName = gunStr;
-            gunDamage = 0.6f;
+            gunDamage = 0.5f;
             fireTime = 0.166f;
+            launch = false;
 
             characterDirection.forward = GetAimRay().direction;
-            if (!base.characterMotor.isGrounded)
+            if (characterMotor && !characterMotor.isGrounded && hopVelocity > 0f)
             {
                 characterMotor.velocity.y = 0f;
                 characterMotor.airControl = characterMotor.airControl;
+                SmallHop(characterMotor, hopVelocity);
+                launch = true;
+                juggleHop = 7f;
             }
-            else
-            {
-                rootMotionAccumulator = GetModelRootMotionAccumulator();
-            }
+            rootMotionAccumulator = GetModelRootMotionAccumulator();
             PlayAnimation("Body", animStart);
-
 
             base.OnEnter();
 
@@ -144,10 +145,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             }
             else
             {
-                base.characterMotor.rootMotion = Vector3.zero;
+                rootMotionAccumulator.accumulatedRootMotion = Vector3.zero;
                 characterMotor.moveDirection = inputBank.moveVector;
                 characterDirection.moveVector = characterMotor.moveDirection;
-                characterMotor.velocity.y = Mathf.Lerp(0f, -20f, fixedAge / duration);
             }
 
             shootRay = GetAimRay();

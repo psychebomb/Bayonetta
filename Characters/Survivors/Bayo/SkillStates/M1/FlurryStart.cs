@@ -50,7 +50,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             if (CanDodge())
             {
-                outer.SetNextState(new Dodge { currentSwing = 4 });
+                outer.SetNextState(new Dodge { currentSwing = 3 });
                 inputBank.skill3.hasPressBeenClaimed = true;
                 return;
             }
@@ -76,6 +76,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
             else
             {
+                rootMotionAccumulator.accumulatedRootMotion = Vector3.zero;
                 characterMotor.moveDirection = inputBank.moveVector;
                 characterDirection.moveVector = characterMotor.moveDirection;
             }

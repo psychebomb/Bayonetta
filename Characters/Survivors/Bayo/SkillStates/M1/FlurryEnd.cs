@@ -4,6 +4,11 @@ using RoR2;
 using UnityEngine;
 using EntityStates.Merc;
 using EntityStates.Loader;
+using EntityStates;
+using RoR2.Projectile;
+using BayoMod.Survivors.Bayo;
+using static UnityEngine.ParticleSystem.PlaybackState;
+using EntityStates.ImpBossMonster;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 {
@@ -17,19 +22,25 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         private string animName;
         public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
 
+        private GameObject projectilePrefab = BayoAssets.fistProjectilePrefab;
+        private float weaveDamage = 12f;
+        private float weaveForce = 3000f;
+        private bool firedProjectile = false;
+        private float recoilAmplitude = 0.1f;
+        private float bloom = 10;
+
         public override void OnEnter()
         {
 
             duration = 1.92f;
             attackStartPercentTime = 0.25f;
             attackEndPercentTime = 0.5f;
-            earlyExit = 1.5f;
+            earlyExit = 1f;
 
-            damageCoefficient = 15f;
-            procCoefficient = 1.5f;
+            damageCoefficient = 3f;
+            procCoefficient = 1f;
             damageType = DamageType.Generic;
-            pushForce = 1500f;
-            bonusForce = 0.6f * GetAimRay().direction * Uppercut.upwardForceStrength;
+            pushForce = 0f;
             hitStopDuration = 0.05f;
             attackRecoil = 1f;
             hitHopVelocity = 4f;
@@ -55,6 +66,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
 
             base.OnEnter();
+
+            if ((bool)base.characterBody)
+            {
+                base.characterBody.SetAimTimer(2f);
+            }
 
         }
 
@@ -97,11 +113,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                     return;
                 }
             }
-            if (inputBank.skill3.justPressed)
+            if (CanDodge())
             {
                 cancel = true;
-                inputBank.skill3.PushState(false);
-                outer.SetNextStateToMain();
+                outer.SetNextState(new Dodge { currentSwing = -1 });
+                inputBank.skill3.hasPressBeenClaimed = true;
                 return;
             }
 
@@ -126,7 +142,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
             else
             {
-                base.characterMotor.rootMotion = Vector3.zero;
+                rootMotionAccumulator.accumulatedRootMotion = Vector3.zero;
                 characterMotor.moveDirection = inputBank.moveVector;
                 characterDirection.moveVector = characterMotor.moveDirection;
                 characterMotor.velocity.y = Mathf.Lerp(0f, -20f, fixedAge / duration);
@@ -135,6 +151,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             if (characterMotor && characterDirection)
             {
                 characterMotor.velocity = characterMotor.velocity * 0f;
+            }
+
+            if (stopwatch >= duration*attackStartPercentTime && !firedProjectile)
+            {
+                firedProjectile = true;
+                FireProjectile();
+                DoFireEffects();
             }
 
             if (isAuthority && (stopwatch >= earlyExit))
@@ -153,6 +176,23 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             base.FixedUpdate();
 
 
+        }
+        protected virtual void DoFireEffects()
+        {
+            Util.PlaySound(SpawnState.spawnSoundString, base.gameObject);
+            AddRecoil(-2f * recoilAmplitude, -3f * recoilAmplitude, -1f * recoilAmplitude, 1f * recoilAmplitude);
+            base.characterBody.AddSpreadBloom(bloom);
+        }
+
+        protected virtual void FireProjectile()
+        {
+            if (base.isAuthority)
+            {
+                Ray aimRay = GetAimRay();
+                Vector3 dir = aimRay.direction;
+                dir.y = 0f;
+                ProjectileManager.instance.FireProjectile(projectilePrefab, aimRay.origin, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * weaveDamage, weaveForce, Util.CheckRoll(critStat, base.characterBody.master));
+            }
         }
     }
 }

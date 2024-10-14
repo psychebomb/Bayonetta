@@ -2,6 +2,7 @@
 using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.Weave;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -51,6 +52,20 @@ namespace BayoMod.Survivors.Bayo
             Modules.Content.AddEntityState(typeof(FlurryEnd));
 
             Modules.Content.AddEntityState(typeof(ABK));
+
+            Modules.Content.AddEntityState(typeof(ABKEnd));
+
+            Modules.Content.AddEntityState(typeof(HeelSlide));
+
+            Modules.Content.AddEntityState(typeof(TetsuProto));
+
+            Modules.Content.AddEntityState(typeof(Tetsu));
+
+            Modules.Content.AddEntityState(typeof(WeaveEntry));
+
+            Modules.Content.AddEntityState(typeof(WeaveDummy));
+
+            Modules.Content.AddEntityState(typeof(Stomp));
         }
     }
 }

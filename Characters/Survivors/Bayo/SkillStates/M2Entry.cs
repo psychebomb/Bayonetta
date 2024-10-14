@@ -25,7 +25,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 }
                 else
                 {
-                    outer.SetNextState(new RisingKick());
+                    outer.SetNextState(new HeelSlide());
                 }
             }
             else

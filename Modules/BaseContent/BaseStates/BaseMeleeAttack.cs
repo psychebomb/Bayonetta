@@ -7,6 +7,8 @@ using RoR2.Audio;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using static UnityEngine.ParticleSystem.PlaybackState;
@@ -65,6 +67,10 @@ namespace BayoMod.Modules.BaseStates
         protected float spreadBloomValue = 0f;
         protected float fireTime = 100f;
         protected float bulletStopWatch = 0f;
+        protected bool launch = false;
+        protected float juggleHop = 0f;
+        protected bool hasJuggled = false;
+        protected readonly List<HealthComponent> launchList = new List<HealthComponent>();
 
         public override void OnEnter()
         {
@@ -94,6 +100,7 @@ namespace BayoMod.Modules.BaseStates
             {
                 RemoveHitstop();
             }
+            launchList.Clear();
             base.OnExit();
         }
 
@@ -146,6 +153,28 @@ namespace BayoMod.Modules.BaseStates
                 if (attack.Fire())
                 {
                     OnHitEnemyAuthority();
+                }
+                if (NetworkServer.active && launch)
+                {
+                    Transform t = FindHitBoxGroup(hitboxGroupName).transform;
+                    HitBox[] hitBoxes = FindHitBoxGroup(hitboxGroupName).hitBoxes;
+                    Vector3 position = t.position;
+                    Vector3 vector = t.lossyScale * 2.5f;
+                    Quaternion rot = t.rotation;
+                    Collider[] list;
+                    int num = HGPhysics.OverlapBox(out list, position, vector, rot, LayerIndex.entityPrecise.mask);
+
+                    TeamIndex team = GetTeam();
+                    for (int i = 0; i < num; ++i)
+                    {
+                        HurtBox item = list[i].GetComponent<HurtBox>();
+                        if (FriendlyFireManager.ShouldSplashHitProceed(item.healthComponent, team) && !item.healthComponent.body.isChampion)
+                        {
+                            ApplyForce(item);
+                        }
+                    }
+
+                    HGPhysics.ReturnResults(list);
                 }
             }
         }
@@ -223,7 +252,21 @@ namespace BayoMod.Modules.BaseStates
         {
             return InterruptPriority.Skill;
         }
- 
+
+        protected virtual void ApplyForce(HurtBox item)
+        {
+            CharacterBody body = item.healthComponent.body;
+            if (!launchList.Contains(item.healthComponent) && !body.characterMotor.isGrounded)
+            {
+                launchList.Add(item.healthComponent);
+                //Chat.AddMessage("juggled");
+                SmallHop(body.characterMotor, juggleHop);
+                body.characterMotor.velocity.x = 0f;
+                body.characterMotor.velocity.z = 0f;
+                item.healthComponent.GetComponent<SetStateOnHurt>()?.SetStun(1f);
+            }
+        }
+
         private void FireBullet()
         {
             Ray aimRay = shootRay;

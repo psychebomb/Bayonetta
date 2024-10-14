@@ -3,6 +3,7 @@ using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
+using System;
 
 
 namespace BayoMod.Survivors.Bayo.SkillStates
@@ -51,13 +52,17 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             {
                 mSpeed = 6.5f;
             }
+            else
+            {
+                mSpeed = Math.Max(mSpeed, 6.5f);
+            }
 
             RecalculateRollSpeed();
 
             if (characterMotor && characterDirection)
             {
                 Vector3 jump = forwardDirection * rollSpeed;
-                jump.y = characterMotor.velocity.y;
+                jump.y = Math.Min(Math.Max(characterMotor.velocity.y, -10f),20f);
                 characterMotor.velocity = jump;
             }
 
