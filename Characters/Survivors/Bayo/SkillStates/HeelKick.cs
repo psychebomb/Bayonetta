@@ -2,6 +2,7 @@
 using RoR2;
 using UnityEngine;
 using EntityStates.Merc;
+using UnityEngine.Assertions.Must;
 
 namespace BayoMod.Survivors.Bayo.SkillStates
 {
@@ -12,7 +13,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         private bool cancel;
         private bool jumped;
         private float earlyExit;
-        protected Vector3 upForce = 0.6f * Vector3.up * Uppercut.upwardForceStrength;
+        protected Vector3 upForce = 16f * Vector3.up;
 
         public override void OnEnter()
         {
@@ -27,11 +28,11 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             procCoefficient = 1f;
             damageType = DamageType.Stun1s;
             pushForce = 0f;
-            bonusForce = upForce;
             hitStopDuration = 0.05f;
             attackRecoil = 1f;
             hitHopVelocity = 4f;
             exitToStance = true;
+            launch = true;
 
             rootMotionAccumulator = GetModelRootMotionAccumulator();
             PlayAnimation("Body", "HeelKick", "Slash.playbackRate", duration);
@@ -52,7 +53,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             {
                 if (stopwatch >= duration * earlyExit + 0.012)
                 {
-                    if (inputBank.skill2.down) cancel = true;
+                    if (inputBank.skill1.down) cancel = true;
                     if (inputBank.skill3.down) cancel = true;
                     if (inputBank.skill4.down) cancel = true;
                     if (inputBank.moveVector != Vector3.zero) cancel = true;
@@ -116,6 +117,53 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
             base.FixedUpdate();
 
+        }
+        protected override void ApplyForce(HealthComponent item)
+        {
+            CharacterBody body = item.body;
+            if (!launchList.Contains(item))
+            {
+                launchList.Add(item);
+                float num = 1f;
+                Vector3 forceVec;
+
+                if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
+                {
+                    body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
+                }
+                if (body.characterMotor)
+                {
+                    if (base.characterBody.HasBuff(BayoBuffs.wtBuff))
+                    {
+                        num = body.characterMotor.mass;/// 2f;
+                    }
+                    else if (body.characterMotor.mass < 300)
+                    {
+                        num = body.characterMotor.mass;
+                    }
+                    else
+                    {
+                        num = 100;
+                    }
+                    body.characterMotor.velocity.x = 0f;
+                    body.characterMotor.velocity.z = 0f;
+                }
+                else if (item.GetComponent<Rigidbody>())
+                {
+                    if (base.characterBody.HasBuff(BayoBuffs.wtBuff) || body.characterMotor.mass < 300)
+                    {
+                        num = body.rigidbody.mass;
+                    }
+                    else
+                    {
+                        num = 100;
+                    }
+
+                }
+
+                forceVec = upForce * num;
+                item.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         {
             base.OnEnter();
             rootMotionAccumulator = GetModelRootMotionAccumulator();
-            PlayAnimation("Body", "FallKickStart", "Emote.playbackRate", duration);
+            PlayAnimation("Body", "FallKickStart", "Slash.playbackRate", duration);
             Util.PlaySound(enterSoundString, gameObject);
             characterMotor.Motor.ForceUnground();
             characterMotor.disableAirControlUntilCollision = false;

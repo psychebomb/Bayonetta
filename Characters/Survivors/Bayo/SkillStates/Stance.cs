@@ -97,6 +97,10 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                     }
                 }
             }
+            if (characterMotor && characterDirection)
+            {
+                characterMotor.velocity = Vector3.zero;
+            }
             if (isAuthority && stopwatch >= (cancelDuration + idleDuration))
             {
                 outer.SetNextStateToMain();

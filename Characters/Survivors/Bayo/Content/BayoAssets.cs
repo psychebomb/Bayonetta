@@ -7,6 +7,8 @@ using On.EntityStates.Seeker;
 using R2API;
 using UnityEngine.AddressableAssets;
 using System.Xml.Linq;
+using System.Security.Cryptography;
+using UnityEngine.Networking;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -26,9 +28,15 @@ namespace BayoMod.Survivors.Bayo
 
         public static GameObject fistProjectilePrefab;
 
+        public static GameObject bulletMuz;
+
         private static AssetBundle _assetBundle;
 
         internal static GameObject trackerPrefab;
+
+        internal static GameObject wardPrefab;
+
+        internal static GameObject railPrefab;
 
         public static void Init(AssetBundle assetBundle)
         {
@@ -42,6 +50,7 @@ namespace BayoMod.Survivors.Bayo
             CreateProjectiles();
 
             CreateTracker();
+
         }
 
 
@@ -54,6 +63,10 @@ namespace BayoMod.Survivors.Bayo
 
             swordSwingEffect = _assetBundle.LoadEffect("HenrySwordSwingEffect", true);
             swordHitImpactEffect = _assetBundle.LoadEffect("ImpactHenrySlash");
+            bulletMuz = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Bandit2/MuzzleflashBandit2.prefab").WaitForCompletion().InstantiateClone("BayoMuzz", false);
+            UnityEngine.Object.Destroy(bulletMuz.GetComponent<VFXAttributes>());
+            UnityEngine.Object.Destroy(bulletMuz.GetComponent<ShakeEmitter>());
+            ContentAddition.AddEffect(bulletMuz);
         }
 
         private static void CreateBombExplosionEffect()
@@ -84,7 +97,10 @@ namespace BayoMod.Survivors.Bayo
         {
             CreateBombProjectile();
             CreateFistProjectile();
+            CreateWard();
             Content.AddProjectilePrefab(bombProjectilePrefab);
+            Content.AddProjectilePrefab(fistProjectilePrefab);
+            ContentAddition.AddNetworkedObject(wardPrefab);
         }
 
         private static void CreateBombProjectile()
@@ -118,6 +134,8 @@ namespace BayoMod.Survivors.Bayo
         {
             //highly recommend setting up projectiles in editor, but this is a quick and dirty way to prototype if you want
             //fistProjectilePrefab = Asset.CloneProjectilePrefab("UnseenHandMovingProjectile", "FistProjectile");
+            //RoR2/Base/Bandit2/Bandit2SlashBlade.prefab
+            //Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Bandit2/Bandit2SlashBlade.prefab").WaitForCompletion()
             fistProjectilePrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC2/Seeker/UnseenHandMovingProjectile.prefab").WaitForCompletion().InstantiateClone("WeaveProjectile", false);
             //remove their ProjectileImpactExplosion component and start from default values
             UnityEngine.Object.Destroy(fistProjectilePrefab.GetComponent<ProjectileSimple>());
@@ -168,5 +186,63 @@ namespace BayoMod.Survivors.Bayo
                 }
             }
         }
+
+        private static void CreateWard()
+        {
+            /*
+            wardPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/EliteHaunted/AffixHauntedWard.prefab").WaitForCompletion().InstantiateClone("WtWardPrefab", false);
+            railPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/Railgunner/RailgunnerMineAltDetonated.prefab").WaitForCompletion();
+            //UnityEngine.Object.Destroy(wardPrefab.GetComponent<BuffWard>());
+
+            BuffWard buffWard = wardPrefab.GetComponent<BuffWard>();
+
+            buffWard.radius = 25f;
+            buffWard.buffDef = BayoBuffs.wtDebuff;
+            buffWard.invertTeamFilter = true;
+
+            wardPrefab.GetComponent<TeamFilter>().defaultTeam = TeamIndex.Player;
+
+            NetworkIdentity ni = wardPrefab.GetComponent<NetworkIdentity>();
+
+            //ni.localPlayerAuthority = true;
+
+            SphereCollider sc = wardPrefab.AddComponent<SphereCollider>();
+
+            sc.isTrigger = true;
+            sc.radius = 25f;
+            sc.center = Vector3.zero;
+
+
+            wardPrefab.AddComponent<SlowDownProjectiles>();
+            wardPrefab.GetComponent<SlowDownProjectiles>().teamFilter = wardPrefab.GetComponent<TeamFilter>();
+            wardPrefab.GetComponent<SlowDownProjectiles>().slowDownCoefficient = 0.1f;
+
+            //sdp.teamFilter = wardPrefab.GetComponent<TeamFilter>();
+
+            //sdp.Equals(sdp1);
+
+            //sdp.slowDownCoefficient = 0.1f;
+            */
+            wardPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/Railgunner/RailgunnerMineAltDetonated.prefab").WaitForCompletion().InstantiateClone("WtWardPrefab", false);
+
+            BuffWard buffWard = wardPrefab.GetComponent<BuffWard>();
+
+            buffWard.radius = 25f;
+            buffWard.buffDef = BayoBuffs.wtDebuff;
+            buffWard.invertTeamFilter = true;
+            buffWard.interval = 0.25f;
+
+            SphereCollider sc = wardPrefab.GetComponent<SphereCollider>();
+
+            sc.radius = 25f;
+
+            wardPrefab.GetComponent<TeamFilter>().defaultTeam = TeamIndex.Player;
+
+            wardPrefab.AddComponent<NetworkedBodyAttachment>();
+            wardPrefab.GetComponent<NetworkedBodyAttachment>().shouldParentToAttachedBody = true;
+
+            wardPrefab.GetComponent<SlowDownProjectiles>().slowDownCoefficient = 0.075f;
+        }
+
     }
 }

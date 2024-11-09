@@ -6,12 +6,13 @@ using BayoMod.Survivors.Bayo.Components;
 using BayoMod.Survivors.Bayo.SkillStates;
 using RoR2;
 using RoR2.Skills;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using BayoMod.Characters.Survivors.Bayo.SkillStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Weave;
+using UnityEngine.Networking;
+using IL.RoR2.Projectile;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -73,7 +74,7 @@ namespace BayoMod.Survivors.Bayo
                 new CustomRendererInfo
                 {
                     childName = "body3",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
@@ -94,7 +95,7 @@ namespace BayoMod.Survivors.Bayo
                 new CustomRendererInfo
                 {
                     childName = "body8",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
@@ -111,7 +112,7 @@ namespace BayoMod.Survivors.Bayo
                 new CustomRendererInfo
                 {
                     childName = "hair2",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
@@ -120,12 +121,12 @@ namespace BayoMod.Survivors.Bayo
                 new CustomRendererInfo
                 {
                     childName = "hair4",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
                     childName = "har5",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
@@ -146,27 +147,27 @@ namespace BayoMod.Survivors.Bayo
                 new CustomRendererInfo
                 {
                     childName = "eye0",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
                     childName = "eye1",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
                     childName = "eye2",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
                     childName = "chain0",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
                     childName = "chain1",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
@@ -211,7 +212,7 @@ namespace BayoMod.Survivors.Bayo
                 new CustomRendererInfo
                 {
                     childName = "gunrh4",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
@@ -232,7 +233,7 @@ namespace BayoMod.Survivors.Bayo
                 new CustomRendererInfo
                 {
                     childName = "gunlh4",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
@@ -253,7 +254,7 @@ namespace BayoMod.Survivors.Bayo
                 new CustomRendererInfo
                 {
                     childName = "gunrf4",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
                 new CustomRendererInfo
                 {
@@ -274,7 +275,7 @@ namespace BayoMod.Survivors.Bayo
                 new CustomRendererInfo
                 {
                     childName = "gunlf4",
-                    dontHotpoo = true,
+                    //dontHotpoo = true,
                 },
         };
 
@@ -290,6 +291,20 @@ namespace BayoMod.Survivors.Bayo
         public override GameObject characterModelObject { get; protected set; }
         public override CharacterModel prefabCharacterModel { get; protected set; }
         public override GameObject displayPrefab { get; protected set; }
+
+        private GameObject wtWard;
+
+        private float reducedGravity = 0.65f;
+
+        private float lessGravity = 0.8f;
+
+        private float lesserGravity = 0.97f;
+
+        //private float stopwatch = 0f;
+
+        //private bool launched = false;
+
+
 
         // bazooka skill overrides
         internal static SkillDef tetsuSkillDef;
@@ -318,8 +333,8 @@ namespace BayoMod.Survivors.Bayo
             BayoStates.Init();
             BayoTokens.Init();
 
-            BayoAssets.Init(assetBundle);
             BayoBuffs.Init(assetBundle);
+            BayoAssets.Init(assetBundle);
 
             InitializeEntityStateMachines();
             InitializeSkills();
@@ -471,8 +486,8 @@ namespace BayoMod.Survivors.Bayo
                 activationStateMachineName = "Body",
                 interruptPriority = EntityStates.InterruptPriority.PrioritySkill,
 
-                baseRechargeInterval = 4f,
-                baseMaxStock = 2,
+                baseRechargeInterval = 5f,
+                baseMaxStock = 3,
 
                 rechargeStock = 1,
                 requiredStock = 1,
@@ -509,7 +524,7 @@ namespace BayoMod.Survivors.Bayo
                 activationStateMachineName = "Body",
                 interruptPriority = EntityStates.InterruptPriority.Pain,
 
-                baseRechargeInterval = 1f,
+                baseRechargeInterval = 1.25f,
                 baseMaxStock = 1,
 
                 rechargeStock = 1,
@@ -547,7 +562,7 @@ namespace BayoMod.Survivors.Bayo
                 activationStateMachineName = "Weapon",
                 interruptPriority = EntityStates.InterruptPriority.PrioritySkill,
 
-                baseRechargeInterval = 15f,
+                baseRechargeInterval = 13.5f,
                 baseMaxStock = 2,
 
                 rechargeStock = 1,
@@ -734,6 +749,91 @@ namespace BayoMod.Survivors.Bayo
         private void AddHooks()
         {
             R2API.RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
+            On.RoR2.HealthComponent.TakeDamage += DamageHook;
+            On.RoR2.CharacterBody.OnBuffFirstStackGained += WTHookk;
+            On.RoR2.CharacterBody.OnBuffFinalStackLost += CdHook;
+            On.RoR2.CharacterMotor.FixedUpdate += WtGravityHook;
+        }
+
+        private void WtGravityHook(On.RoR2.CharacterMotor.orig_FixedUpdate orig, CharacterMotor self)
+        {
+            
+            if(self.body.HasBuff(BayoBuffs.wtDebuff) && !self.isGrounded)
+            {
+                if ((self.velocity.y <= 3f)&& (self.velocity.y >= -3f))
+                {
+                    self.velocity.y *= reducedGravity;
+                    self.velocity.y -= Time.fixedDeltaTime * Physics.gravity.y;
+                }
+                if(self.velocity.y < 0)
+                {
+                    self.velocity.y -= Time.fixedDeltaTime * Physics.gravity.y * 1.8f;
+                }
+                if ((self.velocity.x <= 7f) && (self.velocity.x >= -7f))
+                {
+                    self.velocity.x *= lessGravity;
+                }
+                if ((self.velocity.z <= -7f) && (self.velocity.z >= -7f))
+                {
+                    self.velocity.z *= lessGravity;
+                }
+
+                self.velocity.x *= lesserGravity;
+                self.velocity.z *= lesserGravity;
+
+                if (self.velocity.y < 0.2f && self.velocity.y > 0) self.velocity.y = 0.2f;
+                if (self.velocity.y > -0.2f && self.velocity.y < 0) self.velocity.y = -0.2f;
+                if (self.velocity.x < 0.2f && self.velocity.x > 0) self.velocity.x = 0.2f;
+                if (self.velocity.x > -0.2f && self.velocity.x < 0) self.velocity.x = -0.2f;
+                if (self.velocity.z < 0.2f && self.velocity.z > 0) self.velocity.z = 0.2f;
+                if (self.velocity.z > -0.2f && self.velocity.z < 0) self.velocity.z = -0.2f;
+
+            }
+            orig(self);
+        }
+
+        private void CdHook(On.RoR2.CharacterBody.orig_OnBuffFinalStackLost orig, CharacterBody self, BuffDef buffDef)
+        {
+            if (NetworkServer.active)
+            {
+                bool flagg = (buffDef == BayoBuffs.wtBuff);
+                if (flagg && wtWard)
+                {
+                    Object.Destroy(wtWard);
+                    //wtWard = null;
+                }
+                if (flagg && !self.HasBuff(BayoBuffs.wtCoolDown))
+                {
+                    for (int k = 1; k <= 12f; k++)
+                    {
+                        self.AddTimedBuff(BayoBuffs.wtCoolDown, k);
+                    }
+                }
+                flagg = buffDef == BayoBuffs.wtDebuff;
+                if(flagg && self.characterMotor)
+                {
+                    //self.characterMotor.veclocity
+                }
+            }
+
+            orig(self, buffDef);
+        }
+
+        private void WTHookk(On.RoR2.CharacterBody.orig_OnBuffFirstStackGained orig, CharacterBody self, BuffDef buffDef)
+        {
+            if (NetworkServer.active)
+            {
+                bool flagg = (buffDef == BayoBuffs.wtBuff);
+                if (flagg && !wtWard)
+                {
+                    wtWard = Object.Instantiate(BayoAssets.wardPrefab);
+                    //wtWard.GetComponent<TeamFilter>().teamIndex = self.teamComponent.teamIndex;
+                    wtWard.GetComponent<BuffWard>().Networkradius = 25f + self.radius;
+                    wtWard.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(self.gameObject);
+                }
+            }
+
+            orig(self, buffDef);
         }
 
         private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, R2API.RecalculateStatsAPI.StatHookEventArgs args)
@@ -741,8 +841,30 @@ namespace BayoMod.Survivors.Bayo
 
             if (sender.HasBuff(BayoBuffs.armorBuff))
             {
-                args.armorAdd += 300;
+                args.armorAdd += 100;
             }
+            if (sender.HasBuff(BayoBuffs.wtBuff))
+            {
+                args.armorAdd += 200;
+            }
+            if (sender.HasBuff(BayoBuffs.wtDebuff))
+            {
+                args.moveSpeedReductionMultAdd += 0.95f;
+                args.baseMoveSpeedAdd += -0.9f;
+                args.attackSpeedReductionMultAdd += 0.95f;
+            }
+        }
+
+        private void DamageHook(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        {
+            if (NetworkServer.active && self.body.HasBuff(BayoBuffs.dodgeBuff) && damageInfo.damage > 0f)
+            {
+                if (self.body.HasBuff(BayoBuffs.dodgeBuff)) self.body.RemoveBuff(BayoBuffs.dodgeBuff);
+                self.body.AddTimedBuff(BayoBuffs.evadeSuccess, 0.1f);
+                damageInfo.rejected = true;
+            }
+
+            orig(self, damageInfo);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             characterMotor.Motor.ForceUnground();
             exitToStance = false;
             shootRay = GetAimRay();
-            gunName = "gunrh4";
+            gunName = "muzrf";
             gunDamage = 1f;
             fireTime = 0.15f;
 

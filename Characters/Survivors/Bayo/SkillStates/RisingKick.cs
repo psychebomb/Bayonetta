@@ -3,6 +3,7 @@ using RoR2;
 using UnityEngine;
 using EntityStates.Merc;
 using BayoMod.Survivors.Bayo.SkillStates;
+using BayoMod.Survivors.Bayo;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -30,7 +31,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             earlyExitPercentTime = 0.75f;
             attackStartPercentTime = 0.5f;
             attackEndPercentTime = 0.95f;
-            damageCoefficient = 4f;
+            damageCoefficient = 3.95f;
             procCoefficient = 1f;
             damageType = DamageType.Stun1s;
 
@@ -51,7 +52,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 
             Vector3 b = characterMotor ? characterMotor.velocity : Vector3.zero;
             previousPosition = transform.position - b;
-            PlayAnimation("Body", "BackKickStart", playbackRateParam, attackStartPercentTime);
+            PlayAnimation("Body", "BackKickStart", "Roll.playbackRate", attackStartPercentTime);
             characterMotor.Motor.ForceUnground();
             exitToStance = false;
 
@@ -124,7 +125,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 if (!hasEnded)
                 {
                     hasEnded = true;
-                    PlayAnimation("Body", "BackKickExit", playbackRateParam, duration - earlyExitPercentTime);
                 }
                 if (base.inputBank.skill2.down && (stopwatch>= enderTime))
                 {
@@ -134,12 +134,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 
             }
         }
-        protected override void ApplyForce(HurtBox item)
+        protected override void ApplyForce(HealthComponent item)
         {
-            CharacterBody body = item.healthComponent.body;
-            if (!launchList.Contains(item.healthComponent))
+            CharacterBody body = item.body;
+            if (!launchList.Contains(item))
             {
-                launchList.Add(item.healthComponent);
+                launchList.Add(item);
                 float num = 1f;
                 Vector3 forceVec;
 
@@ -149,17 +149,36 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 }
                 if (body.characterMotor)
                 {
-                    num = body.characterMotor.mass;
+                    if (base.characterBody.HasBuff(BayoBuffs.wtBuff))
+                    {
+                        num = body.characterMotor.mass;///2f;
+                    }
+                    else if (body.characterMotor.mass < 300)
+                    {
+                        num = body.characterMotor.mass;
+                    }
+                    else
+                    {
+                        num = 100;
+                    }
+                    body.characterMotor.velocity.x = 0f;
+                    body.characterMotor.velocity.z = 0f;
                 }
-                else if (item.healthComponent.GetComponent<Rigidbody>())
+                else if (item.GetComponent<Rigidbody>())
                 {
-                    num = base.rigidbody.mass;
+                    if (base.characterBody.HasBuff(BayoBuffs.wtBuff) || body.characterMotor.mass < 300)
+                    {
+                        num = body.rigidbody.mass;
+                    }
+                    else
+                    {
+                        num = 100;
+                    }
+
                 }
-                num = num * 22f;
+                num = num * (22f / 7f * moveSpeedStat);
                 forceVec = Vector3.up * num;
-                item.healthComponent.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
-                body.characterMotor.velocity.x = 0f;
-                body.characterMotor.velocity.z = 0f;
+                item.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
             }
         }
         protected override void RemoveHitstop()
@@ -171,7 +190,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         protected override void EnterAttack()
         {
             characterMotor.Motor.ForceUnground();
-            PlayCrossfade("Body", "BackKick", playbackRateParam, earlyExitPercentTime - attackStartPercentTime, 0.05f);
             base.EnterAttack();
         }
 

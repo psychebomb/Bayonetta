@@ -1,7 +1,10 @@
-﻿using BayoMod.Survivors.Bayo.SkillStates;
+﻿using BayoMod.Survivors.Bayo;
+using BayoMod.Survivors.Bayo.SkillStates;
 using EntityStates;
 using EntityStates.Commando.CommandoWeapon;
 using EntityStates.Toolbot;
+using EntityStates.Wisp1Monster;
+using EntityStates.Drone.DroneWeapon;
 using RoR2;
 using RoR2.Audio;
 using RoR2.Skills;
@@ -10,6 +13,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 using static UnityEngine.ParticleSystem.PlaybackState;
 
@@ -42,7 +46,7 @@ namespace BayoMod.Modules.BaseStates
         protected string muzzleString = "SwingCenter";
         protected string playbackRateParam = "Slash.playbackRate";
         protected GameObject swingEffectPrefab;
-        protected GameObject hitEffectPrefab;
+        protected GameObject hitEffectPrefab = FireEmbers.hitEffectPrefab;
         protected NetworkSoundEventIndex impactSound = NetworkSoundEventIndex.Invalid;
 
         public float duration;
@@ -63,7 +67,7 @@ namespace BayoMod.Modules.BaseStates
         protected float gunDamage;
         protected float gunForce = BaseNailgunState.force;
         private GameObject tracerEffectPrefab = FirePistol2.tracerEffectPrefab;
-        private GameObject gunEffectPrefab = FirePistol2.tracerEffectPrefab;
+        private GameObject gunEffectPrefab = FireTurret.hitEffectPrefab;
         protected float spreadBloomValue = 0f;
         protected float fireTime = 100f;
         protected float bulletStopWatch = 0f;
@@ -156,25 +160,17 @@ namespace BayoMod.Modules.BaseStates
                 }
                 if (NetworkServer.active && launch)
                 {
-                    Transform t = FindHitBoxGroup(hitboxGroupName).transform;
-                    HitBox[] hitBoxes = FindHitBoxGroup(hitboxGroupName).hitBoxes;
-                    Vector3 position = t.position;
-                    Vector3 vector = t.lossyScale * 2.5f;
-                    Quaternion rot = t.rotation;
-                    Collider[] list;
-                    int num = HGPhysics.OverlapBox(out list, position, vector, rot, LayerIndex.entityPrecise.mask);
-
+                    int num = attack.ignoredHealthComponentList.Count;
                     TeamIndex team = GetTeam();
+
                     for (int i = 0; i < num; ++i)
                     {
-                        HurtBox item = list[i].GetComponent<HurtBox>();
-                        if (FriendlyFireManager.ShouldSplashHitProceed(item.healthComponent, team) && !item.healthComponent.body.isChampion)
+                        HealthComponent item = attack.ignoredHealthComponentList[i];
+                        if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || (item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body"))) && item && item.transform)
                         {
                             ApplyForce(item);
                         }
                     }
-
-                    HGPhysics.ReturnResults(list);
                 }
             }
         }
@@ -253,24 +249,28 @@ namespace BayoMod.Modules.BaseStates
             return InterruptPriority.Skill;
         }
 
-        protected virtual void ApplyForce(HurtBox item)
+        protected virtual void ApplyForce(HealthComponent item)
         {
-            CharacterBody body = item.healthComponent.body;
-            if (!launchList.Contains(item.healthComponent) && !body.characterMotor.isGrounded)
+            CharacterBody body = item.body;
+            if (!launchList.Contains(item))
             {
-                launchList.Add(item.healthComponent);
+                launchList.Add(item);
                 //Chat.AddMessage("juggled");
-                SmallHop(body.characterMotor, juggleHop);
-                body.characterMotor.velocity.x = 0f;
-                body.characterMotor.velocity.z = 0f;
-                item.healthComponent.GetComponent<SetStateOnHurt>()?.SetStun(1f);
+                if (body.characterMotor && !body.characterMotor.isGrounded)
+                {
+                    if (base.characterBody.HasBuff(BayoBuffs.wtBuff)) juggleHop /= 3f;
+                    SmallHop(body.characterMotor, juggleHop);
+                    body.characterMotor.velocity.x = 0f;
+                    body.characterMotor.velocity.z = 0f;
+                    item.GetComponent<SetStateOnHurt>()?.SetStun(1f);
+                }
             }
         }
 
         private void FireBullet()
         {
             Ray aimRay = shootRay;
-            EffectManager.SimpleMuzzleFlash(EntityStates.Commando.CommandoWeapon.FirePistol2.muzzleEffectPrefab, gameObject, gunName, false);
+            EffectManager.SimpleMuzzleFlash(FirePistol2.muzzleEffectPrefab, gameObject, gunName, false);
             AddRecoil(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
             if (base.isAuthority)
             {
@@ -287,7 +287,7 @@ namespace BayoMod.Modules.BaseStates
                 bulletAttack.tracerEffectPrefab = tracerEffectPrefab;
                 bulletAttack.muzzleName = gunName;
                 bulletAttack.hitEffectPrefab = gunEffectPrefab;
-                bulletAttack.isCrit = Util.CheckRoll(critStat, base.characterBody.master);
+                bulletAttack.isCrit = Util.CheckRoll(0.5f, base.characterBody.master);
                 bulletAttack.radius = 0.75f;
                 bulletAttack.smartCollision = true;
                 bulletAttack.damageType = DamageType.Generic;

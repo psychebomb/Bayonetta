@@ -23,9 +23,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                     outer.SetNextState(new RisingKick());
 
                 }
-                else
+                else if (direction > 0.5f)
                 {
                     outer.SetNextState(new HeelSlide());
+                }
+                else
+                {
+                    outer.SetNextState(new BreakStart());
                 }
             }
             else
@@ -35,9 +39,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                     outer.SetNextState(new FallingKickStart());
 
                 }
-                else
+                else if (direction > 0.5f)
                 {
                     outer.SetNextState(new ABK());
+                }
+                else
+                {
+                    outer.SetNextState(new SpinStart());
                 }
             }
         }

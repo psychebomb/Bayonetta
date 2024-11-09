@@ -4,6 +4,8 @@ using UnityEngine;
 using RoR2.Audio;
 using EntityStates.Loader;
 using EntityStates.Merc;
+using UnityEngine.Networking;
+using System.Collections.Generic;
 
 namespace BayoMod.Survivors.Bayo.SkillStates
 {
@@ -23,21 +25,24 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         protected float fallDamage = 3f;
         protected float fireAge = 0f;
         protected float procCoefficient = 1f;
-        protected Vector3 downForce =  Vector3.down * Uppercut.upwardForceStrength * 0.8f;
+        protected Vector3 downForce =  Vector3.down * 0.8f;
         protected GameObject hitEffectPrefab;
         protected NetworkSoundEventIndex impactSound = NetworkSoundEventIndex.Invalid;
 
         protected string kickSoundString = GroundLight.comboAttackSoundString;
         protected string hitSoundString = "";
         protected float attackRecoil = 1f;
-        protected float hitStopDuration = 0.012f;
+        protected float hitStopDuration = 0;
 
         private bool hasFired;
         private float hitPauseTimer;
         protected bool inHitPause;
         protected Animator animator;
         private HitStopCachedState hitStopCachedState;
-        protected string playbackRateParam = "Emote.playbackRate";
+        protected string playbackRateParam = "Slash.playbackRate";
+
+        private readonly List<HealthComponent> launchList = new List<HealthComponent>();
+        private bool launch = true;
         public override void OnEnter()
         {
             base.OnEnter();
@@ -62,7 +67,6 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             fallAttack = InitMeleeOverlap(fallDamage, GroundLight.comboHitEffectPrefab, GetModelTransform(), hitboxGroupName);
             fallAttack.damageType = damageType;
             fallAttack.procCoefficient = procCoefficient;
-            fallAttack.forceVector = downForce;
             fallAttack.isCrit = RollCrit();
             fallAttack.impactSound = impactSound;
         }
@@ -80,12 +84,27 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             {
                 fireAge = 0f;
                 fallAttack.ResetIgnoredHealthComponents();
+                launchList.Clear();
                 fallAttack.Fire();
                 hasFired = false;
             }
             if (isAuthority && fallAttack.Fire())
             {
                 OnHitEnemyAuthority();
+            }
+            if (NetworkServer.active && launch)
+            {
+                int num = fallAttack.ignoredHealthComponentList.Count;
+                TeamIndex team = GetTeam();
+
+                for (int i = 0; i < num; ++i)
+                {
+                    HealthComponent item = fallAttack.ignoredHealthComponentList[i];
+                    if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || (item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body"))) && item && item.transform)
+                    {
+                        ApplyForce(item);
+                    }
+                }
             }
         }
 
@@ -166,6 +185,35 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             characterMotor.airControl = previousAirControl;
             characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
             base.OnExit();
+        }
+
+        private void ApplyForce(HealthComponent item)
+        {
+            CharacterBody body = item.body;
+            if (!launchList.Contains(item))
+            {
+                launchList.Add(item);
+                float num = 1f;
+                Vector3 forceVec;
+
+                if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
+                {
+                    body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
+                }
+                if (body.characterMotor)
+                {
+                    num = body.characterMotor.mass;
+                    body.characterMotor.velocity.x = 0f;
+                    body.characterMotor.velocity.z = 0f;
+                }
+                else if (item.GetComponent<Rigidbody>())
+                {
+                    num = body.rigidbody.mass;
+                }
+                num = num * 24f;
+                forceVec = downForce * num;
+                item.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
+            }
         }
     }
 }

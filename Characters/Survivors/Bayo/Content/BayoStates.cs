@@ -66,6 +66,15 @@ namespace BayoMod.Survivors.Bayo
             Modules.Content.AddEntityState(typeof(WeaveDummy));
 
             Modules.Content.AddEntityState(typeof(Stomp));
+
+            Modules.Content.AddEntityState(typeof(SpinStart));
+
+            Modules.Content.AddEntityState(typeof(Spin));
+
+            Modules.Content.AddEntityState(typeof(BreakStart));
+
+            Modules.Content.AddEntityState(typeof(Break));
+
         }
     }
 }

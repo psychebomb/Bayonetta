@@ -12,23 +12,23 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
     {
         public override void OnEnter()
         {
-            BaseDuration = 1.68f;
-            startDuration = 0.8f;
+            baseDuration = 1.68f;
+            startDuration = 0.5f;
             BaseDelayDuration = 0.4f;
 
             base.OnEnter();
 
         }
 
-        public override void PlayEndAnim()
-        {
-        }
+        //public override void PlayEndAnim()
+        //{
+        //}
         public override void PlayAnimation(float duration)
         {
 
             if (GetModelAnimator())
             {
-                PlayAnimation("Body", "Stomp", "Roll.playbackRate", duration);
+                PlayAnimation("Body", "Stomp", "Slash.playbackRate", baseDuration);
             }
         }
 
