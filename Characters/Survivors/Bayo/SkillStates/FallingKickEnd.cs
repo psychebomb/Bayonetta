@@ -10,10 +10,10 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         {
             base.OnEnter();
             duration = 0.85f;
-            upForce = 0.2f * Vector3.up * Uppercut.upwardForceStrength;
+            upForce = 5 * Vector3.up;
             attackStartPercentTime = 0f;
             hitboxGroupName = "FallHitbox";
-            PlayAnimation("Body", "FallKickExit", "Emote.playbackRate", duration);
+            PlayAnimation("Body", "FallKickExit", "Slash.playbackRate", duration);
 
         }
     }

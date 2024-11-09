@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
 using System;
+using R2API;
 
 
 namespace BayoMod.Survivors.Bayo.SkillStates
@@ -16,7 +17,6 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         protected bool cancel;
 
         public static string dodgeSoundString = "Roll";
-        public static float dodgeFOV = global::EntityStates.Commando.DodgeState.dodgeFOV;
 
         private float rollSpeed;
         private float mSpeed;
@@ -26,6 +26,19 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         public int currentSwing = -1;
         protected float earlyExit = 0.525f;
         protected bool jumped;
+        protected float stopwatch;
+
+        protected float evadeWatch;
+        protected bool inEvade = false;
+        protected bool evadeDone = false;
+        protected bool slowed = false;
+        protected float evadeTime = 0.4f;
+        private HitStopCachedState hitStopCachedState;
+        private CameraTargetParams.CameraParamsOverrideHandle cameraParamsOverrideHandle;
+
+        private CharacterCameraParams dodgeCam;
+        public static CharacterCameraParams cameraParams;
+        protected bool rlyGoodTiming = false;
 
         public override void OnEnter()
         {
@@ -44,9 +57,6 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             Vector3 rhs = characterDirection ? characterDirection.forward : forwardDirection;
             Vector3 rhs2 = Vector3.Cross(Vector3.up, rhs);
 
-            float num = Vector3.Dot(forwardDirection, rhs);
-            float num2 = Vector3.Dot(forwardDirection, rhs2);
-
             mSpeed = moveSpeedStat;
             if (inputBank.skill1.down)
             {
@@ -62,7 +72,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             if (characterMotor && characterDirection)
             {
                 Vector3 jump = forwardDirection * rollSpeed;
-                jump.y = Math.Min(Math.Max(characterMotor.velocity.y, -10f),20f);
+                jump.y = Math.Min(Math.Max(characterMotor.velocity.y, -10f), 20f);
                 characterMotor.velocity = jump;
             }
 
@@ -74,17 +84,24 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
             if (NetworkServer.active)
             {
-                characterBody.AddTimedBuff(BayoBuffs.armorBuff, earlyExit);
-                characterBody.AddTimedBuff(RoR2Content.Buffs.HiddenInvincibility, 0.5f * earlyExit);
+                characterBody.AddTimedBuff(BayoBuffs.armorBuff, earlyExit + 0.13333333f);
+                if(characterBody.HasBuff(BayoBuffs.wtBuff)|| characterBody.HasBuff(BayoBuffs.wtCoolDown))
+                {
+                    characterBody.AddTimedBuff(RoR2Content.Buffs.HiddenInvincibility, 0.25f);
+                }
+                else
+                {
+                    characterBody.AddTimedBuff(BayoBuffs.dodgeBuff, 0.25f);
+                }
             }
         }
 
         private void RecalculateRollSpeed()
         {
-            rollSpeed = mSpeed * Mathf.Lerp(initialSpeedCoefficient, finalSpeedCoefficient, fixedAge / earlyExit);
-            if (isAuthority && fixedAge >= earlyExit)
+            rollSpeed = mSpeed * Mathf.Lerp(initialSpeedCoefficient, finalSpeedCoefficient, stopwatch / earlyExit);
+            if (isAuthority && stopwatch >= earlyExit)
             {
-                rollSpeed = mSpeed * Mathf.Lerp(finalSpeedCoefficient, 0f, fixedAge / duration);
+                rollSpeed = mSpeed * Mathf.Lerp(finalSpeedCoefficient, 0f, stopwatch / duration);
             }
         }
 
@@ -118,7 +135,34 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             jumped = false;
 
             if (characterDirection) characterDirection.forward = forwardDirection;
-            if (cameraTargetParams) cameraTargetParams.fovOverride = Mathf.Lerp(dodgeFOV, 60f, fixedAge / earlyExit);
+ 
+            if (!inEvade)
+            {
+                stopwatch += Time.fixedDeltaTime;
+                HandleBuffs();
+            }
+            else
+            {
+                evadeWatch -= Time.fixedDeltaTime;
+                if (!slowed)
+                {
+                    slowed = true;
+                    hitStopCachedState = CreateHitStopCachedState(characterMotor, animator, "Roll.playbackRate");
+                    mSpeed *= (1f / 3f);
+                    CreateCamera();
+                }
+                if (animator) animator.SetFloat("Roll.playbackRate", 0.33333f);
+
+                if (evadeWatch < 0f && !evadeDone)
+                {
+                    inEvade = false;
+                    evadeDone = true;
+                    mSpeed *= 3f;
+                    earlyExit -= 0.13333f;
+                    cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle, 0.25f);
+                    ConsumeHitStopCachedState(hitStopCachedState, characterMotor, animator);
+                }
+            }
 
             Vector3 normalized = (transform.position - previousPosition).normalized;
             if (characterMotor && characterDirection && normalized != Vector3.zero)
@@ -132,7 +176,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             }
             previousPosition = transform.position;
 
-            if (isAuthority && fixedAge >= earlyExit)
+            if (isAuthority && stopwatch >= earlyExit)
             {
                 DetermineCancel();
                 if (inputBank.skill1.down)
@@ -151,7 +195,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                     return;
                 }
             }
-            if (isAuthority && fixedAge >= duration)
+            if (isAuthority && stopwatch >= duration)
             {
                 outer.SetNextState(new Stance());
                 return;
@@ -160,9 +204,29 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         public override void OnExit()
         {
-            if (cameraTargetParams) cameraTargetParams.fovOverride = -1f;
+            if (cancel) PlayAnimation("FullBody, Override", "BufferEmpty");
+            if (evadeDone && NetworkServer.active)
+            {
+                if (rlyGoodTiming)
+                {
+                    characterBody.AddTimedBuff(BayoBuffs.wtBuff, 6f);
+                    //for (int k = 1; k <= 10f; k++)
+                    //{
+                    //    characterBody.AddTimedBuff(BayoBuffs.wtCoolDown, k + 6);
+                    //}
+                    //Chat.AddMessage("6 seconds");
+                }
+                else
+                {
+                    //for (int k = 1; k <= 12f; k++)
+                    //{
+                    //    characterBody.AddTimedBuff(BayoBuffs.wtCoolDown, k + 4);
+                    //}
+                    characterBody.AddTimedBuff(BayoBuffs.wtBuff, 4f);
+                    //Chat.AddMessage("4 seconds");
+                }
+            }
             base.OnExit();
-            if(cancel) PlayAnimation("FullBody, Override", "BufferEmpty");
 
             characterMotor.disableAirControlUntilCollision = false;
         }
@@ -181,50 +245,79 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         public override InterruptPriority GetMinimumInterruptPriority()
         {
-            if (fixedAge >= earlyExit)
+            if (stopwatch >= earlyExit)
             {
                 return InterruptPriority.Any;
             }
             return InterruptPriority.Skill;
         }
 
-                public void SetStep()
-                {
-                    switch (currentSwing + 1)
+        public void SetStep()
+        {
+            switch (currentSwing + 1)
+            {
+                case 0:
+                    outer.SetNextState(new Punch1
                     {
-                        case 0:
-                            outer.SetNextState(new Punch1
-                            {
-                                swingIndex = 0
-                            });
-                            break;
-                        case 1:
-                            outer.SetNextState(new Punch2
-                            {
-                                swingIndex = 1
-                            });
-                            break;
-                        case 2:
-                            outer.SetNextState(new Punch3
-                            {
-                                swingIndex = 2
-                            });
-                            break;
-                        case 3:
-                            outer.SetNextState(new Punch4
-                            {
-                                swingIndex = 3
-                            });
-                            break;
-                        case 4:
-                            outer.SetNextState(new FlurryStart());
-                            break;
-                        case 5:
-                            outer.SetNextState(new FlurryEnd());
-                            break;
+                        swingIndex = 0
+                    });
+                    break;
+                case 1:
+                    outer.SetNextState(new Punch2
+                    {
+                        swingIndex = 1
+                    });
+                    break;
+                case 2:
+                    outer.SetNextState(new Punch3
+                    {
+                        swingIndex = 2
+                    });
+                    break;
+                case 3:
+                    outer.SetNextState(new Punch4
+                    {
+                        swingIndex = 3
+                    });
+                    break;
+                case 4:
+                    outer.SetNextState(new FlurryStart());
+                    break;
+                case 5:
+                    outer.SetNextState(new FlurryEnd());
+                    break;
 
-                    }
-                }
+            }
+        }
+
+        private void HandleBuffs()
+        {
+            if (characterBody.HasBuff(BayoBuffs.evadeSuccess))
+            {
+                characterBody.RemoveBuff(BayoBuffs.evadeSuccess);
+                evadeWatch = evadeTime;
+                characterBody.AddTimedBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility, (earlyExit - stopwatch + evadeTime));
+                inEvade = true;
+                if (stopwatch < 0.1f) rlyGoodTiming = true;
+            }
+        }
+
+        private void CreateCamera()
+        {
+            dodgeCam = ScriptableObject.CreateInstance<CharacterCameraParams>();
+            dodgeCam.name = "dodgeCam";
+            dodgeCam.data.wallCushion = 0.1f;
+            dodgeCam.data.idealLocalCameraPos = new Vector3(0f, -1f, -5f);
+            cameraParams = dodgeCam;
+            if (base.cameraTargetParams)
+            {
+                cameraParamsOverrideHandle = base.cameraTargetParams.AddParamsOverride(new CameraTargetParams.CameraParamsOverrideRequest
+                {
+                    cameraParamsData = cameraParams.data,
+                    priority = 1f
+                }, 0.35f);
+            }
+        }
 
     }
 }

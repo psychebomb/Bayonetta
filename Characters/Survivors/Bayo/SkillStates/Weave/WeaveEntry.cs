@@ -62,19 +62,19 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
 
         private void AuthorityFixedUpdate()
         {
-            if (base.inputBank.skill1.justReleased && this.tracker.GetTrackingTarget())
+            if (base.inputBank.skill1.justPressed)// && this.tracker.GetTrackingTarget())
             {
                 outer.SetNextStateToMain();
-                fired = true;
+                if(this.tracker.GetTrackingTarget()) fired = true;
                 return;
             }
-            if (base.inputBank.skill2.justReleased && this.tracker.GetTrackingTarget())
+            if (base.inputBank.skill2.justPressed)// && this.tracker.GetTrackingTarget())
             {
                 outer.SetNextStateToMain();
-                fired = true;
+                if (this.tracker.GetTrackingTarget()) fired = true;
                 return;
             }
-            if (base.inputBank.skill3.justReleased)
+            if (base.inputBank.skill3.justPressed)
             {
                 outer.SetNextStateToMain();
                 if (this.tracker) Destroy(this.tracker);

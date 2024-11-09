@@ -15,10 +15,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         public static float BaseDuration = 1.12f;
         //delays for projectiles feel absolute ass so only do this if you know what you're doing, otherwise it's best to keep it at 0
 
-        public static float startDuration = 0.4f;
+        public static float startDuration = 0.36f;
         public static float BaseDelayDuration = 0.15f;
 
-        public static float DamageCoefficient = 9f;
+        public static float DamageCoefficient = 10f;
 
         private bool ended = false;
         private bool cancel = false;
@@ -64,6 +64,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
 
             base.OnEnter();
 
+
             this.tracker = base.GetComponent<BayoTracker>();
             this.target = this.tracker.GetTrackingTarget();
 
@@ -92,16 +93,18 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         {
             if (inputBank)
             {
-                if (inputBank.skill1.down) cancel = true;
-                if (inputBank.skill2.down) cancel = true;
-                if (inputBank.skill3.down) cancel = true;
                 if (inputBank.jump.down)
                 {
                     cancel = true;
                     jumped = true;
                 }
-
-                if (inputBank.moveVector != Vector3.zero) cancel = true;
+                if(stopwatch >= startDuration)
+                {
+                    if (inputBank.skill1.down) cancel = true;
+                    if (inputBank.skill2.down) cancel = true;
+                    if (inputBank.skill3.down) cancel = true;
+                    if (inputBank.moveVector != Vector3.zero) cancel = true;
+                }
             }
         }
 
@@ -115,7 +118,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
             if (stopwatch >= startDuration && !ended)
             {
                 ended = true;
-                PlayEndAnim();
+                //PlayEndAnim();
             }
 
             if (CanDodge())
@@ -125,7 +128,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
                 return;
             }
 
-            if (isAuthority && stopwatch >= startDuration)
+            if (isAuthority && stopwatch >= baseDelayBeforeFiringProjectile)
             {
                 DetermineCancel();
 
@@ -175,7 +178,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         {
             Ray aimRay = GetAimRay();
             Vector3 dir = aimRay.direction;
-            dir.y = 0f;
+            dir.y = 0.11f;
             Vector3 pos = this.target.transform.position;
             pos = pos - (dir.normalized * 3);
             ProjectileManager.instance.FireProjectile(projectilePrefab, pos, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * damageCoefficient, force, Util.CheckRoll(critStat, base.characterBody.master));
@@ -185,7 +188,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         {
             base.OnExit();
 
-            if (this.tracker && !noTarget) Destroy(this.tracker);
+            if (this.tracker) Destroy(this.tracker);
 
         }
 
@@ -199,16 +202,17 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
 
             if (GetModelAnimator())
             {
-                PlayAnimation("Body", "Tetsu", "Roll.playbackRate", startDuration);
+                PlayAnimation("Body", "Tetsu", "Slash.playbackRate", startDuration * baseDuration);
             }
         }
 
-        public virtual void PlayEndAnim()
+        /*public virtual void PlayEndAnim()
         {
             if (GetModelAnimator())
             {
-                PlayAnimation("Body", "TetsuEnd", "Roll.playbackRate", duration - startDuration);
+                PlayAnimation("Body", "TetsuEnd", "Slash.playbackRate", baseDuration - startDuration * baseDuration);
             }
         }
+        */
     }
 }

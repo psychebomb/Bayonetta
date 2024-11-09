@@ -29,8 +29,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected float hopVelocity = 2.5f;
         public override void OnEnter()
         {
-            exitTime = holdTime + earlyExitPercentTime;
-            duration = exitTime + endDuration;
             damageCoefficient = 1.5f;
             attackStartPercentTime = 0.125f;
             attackEndPercentTime = 0.6f;
@@ -46,22 +44,29 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             shootRay = GetAimRay();
             gunName = gunStr;
             gunDamage = 0.5f;
-            fireTime = 0.166f;
             launch = false;
 
             characterDirection.forward = GetAimRay().direction;
+            rootMotionAccumulator = GetModelRootMotionAccumulator();
+
+            base.OnEnter();
+
+            holdTime /= this.attackSpeedStat;
+            earlyExitPercentTime /= this.attackSpeedStat;
+            endDuration /= this.attackSpeedStat;
+            fireTime = 0.166f / this.attackSpeedStat;
+            exitTime = holdTime + earlyExitPercentTime;
+            duration = exitTime + endDuration;
+            PlayAnimation("Body", animStart, playbackRateParam, earlyExitPercentTime * 2);
+
             if (characterMotor && !characterMotor.isGrounded && hopVelocity > 0f)
             {
                 characterMotor.velocity.y = 0f;
                 characterMotor.airControl = characterMotor.airControl;
                 SmallHop(characterMotor, hopVelocity);
                 launch = true;
-                juggleHop = 7f;
+                juggleHop = 7f / this.attackSpeedStat;
             }
-            rootMotionAccumulator = GetModelRootMotionAccumulator();
-            PlayAnimation("Body", animStart);
-
-            base.OnEnter();
 
         }
 
@@ -70,7 +75,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 
             if (inputBank)
             {
-                if (stopwatch >= exitTime + 0.012)
+                if (hasEnded)
                 {
                     if (inputBank.skill2.down) cancel = true;
                     if (inputBank.skill3.down) cancel = true;
@@ -84,22 +89,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 }
                 //if (stopwatch >= exitTime && inputBank.moveVector != Vector3.zero) cancel = true;
             }
-        }
-
-        private bool HoldingBack()
-        {
-            moveVect = base.inputBank.moveVector;
-            aimDir = base.inputBank.aimDirection;
-            normalized = new Vector3(aimDir.x, 0f, aimDir.z).normalized;
-            direction = Vector3.Dot(moveVect, normalized);
-            if (characterMotor && characterMotor.isGrounded)
-            {
-                if (direction < -0.5f)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
         public override void FixedUpdate()
         {
@@ -162,7 +151,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 {
                     hasEnded = true;
                     fireTime = 100f;
-                    PlayAnimation("Body", animEnd);
+                    PlayAnimation("Body", animEnd, playbackRateParam, endDuration);
                 }
             }
 

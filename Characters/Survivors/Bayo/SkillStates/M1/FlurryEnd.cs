@@ -28,14 +28,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         private bool firedProjectile = false;
         private float recoilAmplitude = 0.1f;
         private float bloom = 10;
+        private bool hasEnded = false;
 
         public override void OnEnter()
         {
 
-            duration = 1.92f;
             attackStartPercentTime = 0.25f;
             attackEndPercentTime = 0.5f;
-            earlyExit = 1f;
 
             damageCoefficient = 3f;
             procCoefficient = 1f;
@@ -46,19 +45,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             hitHopVelocity = 4f;
             characterMotor.velocity.y = 0f;
             exitToStance = true;
-            if (characterMotor.isGrounded)
-            {
-                animName = "FlurryE";
-            }
-            else
-            {
-                animName = "FlurryAE";
-                characterMotor.airControl = characterMotor.airControl;
-            }
 
             characterDirection.forward = GetAimRay().direction;
             rootMotionAccumulator = GetModelRootMotionAccumulator();
-            PlayAnimation("Body", animName, "Slash.playbackRate", duration);
 
             if (characterMotor && characterDirection)
             {
@@ -72,6 +61,22 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 base.characterBody.SetAimTimer(2f);
             }
 
+            duration = 1.92f / this.attackSpeedStat;
+            earlyExit = 1f / this.attackSpeedStat;
+
+            if (characterMotor.isGrounded)
+            {
+                animName = "FlurryE";
+            }
+            else
+            {
+                animName = "FlurryAE";
+                characterMotor.airControl = characterMotor.airControl;
+            }
+
+            PlayAnimation("Body", animName, "Slash.playbackRate", duration);
+
+
         }
 
         private void DetermineCancel()
@@ -79,7 +84,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             if (inputBank)
             {
-                if (stopwatch >= duration * attackEndPercentTime + 0.012)
+                if (hasEnded)
                 {
                     if (inputBank.skill2.down) cancel = true;
                     if (inputBank.skill3.down) cancel = true;
@@ -170,6 +175,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                     });
                     return;
                 }
+                if (!hasEnded)
+                {
+                    hasEnded = true;
+                }
 
             }
 
@@ -190,7 +199,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             {
                 Ray aimRay = GetAimRay();
                 Vector3 dir = aimRay.direction;
-                dir.y = 0f;
+                dir.y = 0.11f;
                 ProjectileManager.instance.FireProjectile(projectilePrefab, aimRay.origin, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * weaveDamage, weaveForce, Util.CheckRoll(critStat, base.characterBody.master));
             }
         }

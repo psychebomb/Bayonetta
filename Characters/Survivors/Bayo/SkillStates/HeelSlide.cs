@@ -14,6 +14,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         private Vector3 forwardDir;
         private bool hasEnded;
         private bool hasHit;
+        private bool hasStarted;
         protected AnimationCurve kickSpeed;
         public override void OnEnter()
         {
@@ -21,7 +22,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             earlyExitPercentTime = 1.36f;
             attackStartPercentTime = 0f;
             attackEndPercentTime = 1f;
-            damageCoefficient = 2f;
+            damageCoefficient = 1.5f;
             procCoefficient = 1f;
             damageType = DamageType.Generic;
             hasHit = false;
@@ -30,6 +31,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             attackRecoil = 1f;
             hitHopVelocity = 4f;
             forwardDir = GetAimRay().direction;
+            forwardDir.y = 0f;
             hitboxGroupName = "HeelGroup";
 
             characterDirection.forward = forwardDir;
@@ -37,16 +39,23 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             kickSpeed = new AnimationCurve(new Keyframe[]
             {
                 new Keyframe(0f, 1f),
-                new Keyframe(0.26f, 1.5f),
-                new Keyframe(0.27f, 9f),
-                new Keyframe(0.7f, 7f),
+                new Keyframe(0.4f, 2f),
+                new Keyframe(0.41f, 9f),
+                new Keyframe(0.8f, 6.5f),
                 new Keyframe(0.1f, 3f),
                 new Keyframe(earlyExitPercentTime, 1f),
                 new Keyframe(1.72f, 0f)
             });
 
-            PlayAnimation("Body", "HeelSlide", playbackRateParam, 0.26f);
+            PlayAnimation("Body", "HeelSlide", playbackRateParam, 0.52f);
             exitToStance = true;
+
+            Vector3 vec = forwardDir;
+            vec.y = 0f;
+            Ray ray = new Ray(GetAimRay().origin, vec);
+            shootRay = ray;
+            gunName = "muzrf";
+            gunDamage = 0.1f;
 
             base.OnEnter();
         }
@@ -75,6 +84,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 if (!hasEnded)
                 {
                     hasEnded = true;
+                    fireTime = 100f;
                     PlayAnimation("Body", "SlideExit", playbackRateParam, (duration - earlyExitPercentTime));
                 }
                 if (inputBank.skill2.down)
@@ -87,6 +97,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 {
                     outer.SetNextStateToMain();
                 }
+            }
+            if(isAuthority && !hasStarted && stopwatch>= 0.4f)
+            {
+                fireTime = 0.15f;
+                hasStarted = true;
             }
 
         }

@@ -19,7 +19,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 animEnd = "P1AE";
                 endDuration = 0.68f;
             }
-            gunStr = "gunrh4";
+            gunStr = "muzrh";
             holdTime = 0.5f - earlyExitPercentTime;
             base.OnEnter();
         }

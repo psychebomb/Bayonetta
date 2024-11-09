@@ -9,7 +9,7 @@ namespace BayoMod.Modules.Components
     {
         public float maxTrackingDistance = 50f;
         public float maxTrackingAngle = 45f;
-        public float trackerUpdateFrequency = 5f;
+        public float trackerUpdateFrequency = 30f;
 
         private HurtBox trackingTarget;
         private CharacterBody characterBody;

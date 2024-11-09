@@ -4,35 +4,22 @@ using UnityEngine;
 using EntityStates.Loader;
 using BayoMod.Survivors.Bayo.SkillStates;
 
-namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
+namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
-    public class FlurryStart : BaseSkillState
+    public class SpinStart : BaseSkillState
     {
 
-        public static string enterSoundString = PreGroundSlam.enterSoundString;
 
-        protected float duration = 0.4f;
+        protected float duration = 0.16f;
 
         private RootMotionAccumulator rootMotionAccumulator;
-
-        private string animName;
 
 
         public override void OnEnter()
         {
             base.OnEnter();
-            duration = duration / this.attackSpeedStat;
-            if (characterMotor.isGrounded)
-            {
-                animName = "FlurryStart";
-            }
-            else
-            {
-                animName = "FlurryAStart";
-                characterMotor.airControl = characterMotor.airControl;
-            }
             rootMotionAccumulator = GetModelRootMotionAccumulator();
-            PlayAnimation("Body", animName, "Slash.playbackRate", duration);
+            PlayAnimation("Body", "SpinStart", "Slash.playbackRate", duration);
             characterDirection.forward = GetAimRay().direction;
             characterMotor.velocity.y = 0f;
         }
@@ -51,7 +38,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             if (CanDodge())
             {
-                outer.SetNextState(new Dodge { currentSwing = 3 });
+                outer.SetNextState(new Dodge());
                 inputBank.skill3.hasPressBeenClaimed = true;
                 return;
             }
@@ -75,17 +62,16 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                     }
                 }
             }
-            else
-            {
-                rootMotionAccumulator.accumulatedRootMotion = Vector3.zero;
-                characterMotor.moveDirection = inputBank.moveVector;
-                characterDirection.moveVector = characterMotor.moveDirection;
-            }
 
-            if (fixedAge > duration)
+            if (fixedAge >= duration)
             {
-                outer.SetNextState(new Flurry());
+                NextState();
             }
+        }
+
+        protected virtual void NextState()
+        {
+            outer.SetNextState(new Spin());
         }
 
         public override void OnExit()

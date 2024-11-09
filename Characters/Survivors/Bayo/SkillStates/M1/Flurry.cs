@@ -4,6 +4,7 @@ using RoR2;
 using UnityEngine;
 using EntityStates.Loader;
 using UnityEngine.UIElements;
+using BayoMod.Survivors.Bayo;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 {
@@ -17,10 +18,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         private string animName;
         public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
         protected float hopVelocity = 1f;
+        protected bool flip = false;
         public override void OnEnter()
         {
-            myDuration = 2.08f;
-            duration = 3f;
             attackStartPercentTime = 0f;
             attackEndPercentTime = 1f;
             earlyExitPercentTime = 0.3f;
@@ -34,14 +34,18 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             hitHopVelocity = 4f;
             exitToStance = false;
             fireAge = 0f;
-            fireFreq = 0.2f;
-            loopTime = 1.12f;
             hasLooped = false;
             shootRay = GetAimRay();
-            gunName = "gunrh4";
+            gunName = "muzrh";
             gunDamage = 0.5f;
-            fireTime = 0.15f;
             launch = false;
+
+            if (characterMotor && characterDirection)
+            {
+                characterMotor.velocity = characterMotor.velocity * 0f;
+            }
+
+            base.OnEnter();
 
             if (characterMotor.isGrounded)
             {
@@ -52,18 +56,17 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 animName = "FlurryA";
                 characterMotor.airControl = characterMotor.airControl;
                 launch = true;
-                juggleHop = 2.5f;
+                juggleHop = 2.5f / this.attackSpeedStat;
             }
+
+            myDuration = 2.08f / this.attackSpeedStat;
+            duration = 3f / this.attackSpeedStat;
+            fireFreq = 0.2f / this.attackSpeedStat;
+            loopTime = 1.12f / this.attackSpeedStat;
+            fireTime = 0.15f / this.attackSpeedStat;
 
             characterDirection.forward = GetAimRay().direction;
-            PlayCrossfade("Body", animName, "Slash.playbackRate", loopTime, 0.05f);
-
-            if (characterMotor && characterDirection)
-            {
-                characterMotor.velocity = characterMotor.velocity * 0f;
-            }
-
-            base.OnEnter();
+            PlayCrossfade("Body", animName, playbackRateParam, loopTime, 0.05f);
 
         }
 
@@ -80,6 +83,17 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                     SmallHop(characterMotor, hopVelocity);
                 }
                 launchList.Clear();
+
+                if (!flip)
+                {
+                    flip = true;
+                    gunName = "muzlh";
+                }
+                else
+                {
+                    flip = false;
+                    gunName = "muzrh";
+                }
             }
             base.FireAttack();
         }
@@ -138,6 +152,35 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             base.FixedUpdate();
 
+        }
+
+        private void LastHit()
+        {
+            int num = launchList.Count;
+            TeamIndex team = GetTeam();
+
+            for (int i = 0; i < num; ++i)
+            {
+                HealthComponent item = launchList[i];
+                if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || (item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body"))) && item && item.transform)
+                {
+                    CharacterBody body = item.body;
+                    if (body.characterMotor && !body.characterMotor.isGrounded)
+                    {
+                        juggleHop = 10f / this.attackSpeedStat;
+                        if (base.characterBody.HasBuff(BayoBuffs.wtBuff)) juggleHop /= 3f;
+                        SmallHop(body.characterMotor, juggleHop);
+                        body.characterMotor.velocity.x = 0f;
+                        body.characterMotor.velocity.z = 0f;
+                        item.GetComponent<SetStateOnHurt>()?.SetStun(1f);
+                    }
+                }
+            }
+        }
+        public override void OnExit()
+        {
+            if(launch) LastHit();
+            base.OnExit();
         }
     }
 }
