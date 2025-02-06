@@ -1,7 +1,6 @@
 ﻿using RoR2;
 using UnityEngine;
 using BayoMod.Survivors.Bayo.SkillStates;
-using BayoMod.Modules.BaseStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
 using EntityStates.Loader;
 
@@ -9,8 +8,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 {
     public class BasePunch : BaseMeleeAttack
     {
-        
-
+        public int swingIndex;
         protected string animStart;
         protected string animEnd;
         protected float exitTime;
@@ -20,17 +18,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private bool cancel;
         private bool jumped;
         private bool hasEnded;
-        private Vector3 moveVect;
-        private Vector3 aimDir;
-        private Vector3 normalized;
-        private float direction;
         protected string gunStr;
         public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
         protected float hopVelocity = 2.5f;
         public override void OnEnter()
         {
             damageCoefficient = 1.5f;
-            attackStartPercentTime = 0.125f;
+            attackStartPercentTime = 0.2f;
             attackEndPercentTime = 0.6f;
             damageCoefficient = 3f;
             procCoefficient = 1f;
@@ -45,6 +39,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             gunName = gunStr;
             gunDamage = 0.5f;
             launch = false;
+            fireTime = 0.166f;
 
             characterDirection.forward = GetAimRay().direction;
             rootMotionAccumulator = GetModelRootMotionAccumulator();
@@ -54,7 +49,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             holdTime /= this.attackSpeedStat;
             earlyExitPercentTime /= this.attackSpeedStat;
             endDuration /= this.attackSpeedStat;
-            fireTime = 0.166f / this.attackSpeedStat;
             exitTime = holdTime + earlyExitPercentTime;
             duration = exitTime + endDuration;
             PlayAnimation("Body", animStart, playbackRateParam, earlyExitPercentTime * 2);
@@ -66,6 +60,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 SmallHop(characterMotor, hopVelocity);
                 launch = true;
                 juggleHop = 7f / this.attackSpeedStat;
+                exitToStance = false;
             }
 
         }
@@ -82,7 +77,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     if (inputBank.skill4.down) cancel = true;
                     if (inputBank.moveVector != Vector3.zero) cancel = true;
                 }
-                if (inputBank.jump.down)
+                if (inputBank.jump.justPressed)
                 {
                     cancel = true;
                     jumped = true;
@@ -150,7 +145,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 if (!hasEnded)
                 {
                     hasEnded = true;
-                    fireTime = 100f;
+                    fireTime = 9999f;
                     PlayAnimation("Body", animEnd, playbackRateParam, endDuration);
                 }
             }

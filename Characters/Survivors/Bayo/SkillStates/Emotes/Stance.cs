@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 using UnityEngine.UIElements;
 
 
-namespace BayoMod.Survivors.Bayo.SkillStates
+namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
 {
     public class Stance : BaseState
     {
@@ -28,7 +28,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             hasExit = false;
             flag1 = false;
             flag2 = false;
-            outmove = base.GetModelRootMotionAccumulator();
+            outmove = GetModelRootMotionAccumulator();
 
             PlayCrossfade("Body", "StanceIdle", "Emote.playbackRate", idleDuration, 0.05f);
 
@@ -68,7 +68,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 inputBank.jump.PushState(false);
             }
 
-            if (cancel){
+            if (cancel)
+            {
                 outer.SetNextStateToMain();
                 return;
             }
@@ -101,7 +102,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             {
                 characterMotor.velocity = Vector3.zero;
             }
-            if (isAuthority && stopwatch >= (cancelDuration + idleDuration))
+            if (isAuthority && stopwatch >= cancelDuration + idleDuration)
             {
                 outer.SetNextStateToMain();
                 return;

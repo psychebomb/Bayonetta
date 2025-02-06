@@ -9,6 +9,10 @@ using UnityEngine.UIElements;
 using BayoMod.Modules.Components;
 using BayoMod.Survivors.Bayo;
 using static EntityStates.BaseState;
+using HG;
+using EntityStates.Heretic;
+using R2API;
+using static Rewired.Controller;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -24,7 +28,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         public CameraRigController Camera;
         private Vector3 rotateAngle;
         protected float pose = 0.88f;
-        protected float poseTimer;
+        protected float poseTimer = 999f;
+        private float snapTime = 0.5f;
+        private bool snapped = false;
+        private bool sounded = false;
         private bool inPose = false;
         private bool posed = false;
         private HitStopCachedState poseCachedState;
@@ -110,8 +117,18 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             {
                 ApplyPause();
             }
+            if(poseTimer <= 0.5f && !sounded)
+            {
+                Util.PlaySound("snap", this.gameObject);
+                sounded = true;
+            }
+            if (poseTimer <= 0.46f && !snapped)
+            {
+                characterBody.AddTimedBuff(BayoBuffs.snapBuff, 0.06f);
+                snapped = true;
+            }
 
-            if(inPose)
+            if (inPose)
             {
                 stopwatch -= Time.fixedDeltaTime;
                 poseTimer -= Time.fixedDeltaTime;
@@ -135,6 +152,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 {
                     flip = true;
                     muzName = "muzlf";
+                    gunName = muzName;
                     if ((bool)component2)
                     {
                         int childIndex = component2.FindChildIndex(muzName);
@@ -149,6 +167,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 {
                     flip = false;
                     muzName = "muzrf";
+                    gunName = muzName;
                     if ((bool)component2)
                     {
                         int childIndex = component2.FindChildIndex(muzName);
@@ -210,7 +229,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                     if (inputBank.skill4.down) cancel = true;
                     if (inputBank.moveVector != Vector3.zero) cancel = true;
                 }
-                if (inputBank.jump.down)
+                if (inputBank.jump.justPressed)
                 {
                     cancel = true;
                     jumped = true;
@@ -233,9 +252,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             if (stopwatch >= earlyExitPercentTime && !hasEnded)
             {
                 hasEnded = true;
-                fireTime = 100f;
-                PlayAnimation("Body", "BreakExit", playbackRateParam, duration - earlyExitPercentTime);
+                fireTime = 9999f;
                 forwardDir = GetAimRay().direction;
+                inputBank.moveVector = Vector3.zero;
+                characterMotor.moveDirection = forwardDir;
+                characterDirection.moveVector = forwardDir;
+                PlayAnimation("Body", "BreakExit", playbackRateParam, duration - earlyExitPercentTime);
 
                 if (base.cameraTargetParams & cameraParamsOverrideHandle.isValid)
                 {
@@ -249,6 +271,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                     if (characterBody.master.playerCharacterMasterController.networkUser)
                     {
                         Camera = characterBody.master.playerCharacterMasterController.networkUser.cameraRigController;
+
                     }
                 }
             }

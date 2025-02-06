@@ -1,12 +1,8 @@
-﻿using BayoMod.Modules.BaseStates;
-using RoR2;
+﻿using RoR2;
 using UnityEngine;
-using EntityStates.Merc;
 using BayoMod.Survivors.Bayo.SkillStates;
-using UnityEngine.Networking;
-using System.Collections.Generic;
-using System.Linq;
 using BayoMod.Survivors.Bayo;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
@@ -23,7 +19,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             duration = 0.65f;
             attackStartPercentTime = 0.05f;
             attackEndPercentTime = 1f;
-            damageCoefficient = 3.95f;
+            damageCoefficient = 3.75f;
             procCoefficient = 1f;
             damageType = DamageType.Stun1s;
 
@@ -32,12 +28,15 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             hitHopVelocity = 4f;
             forwardDir = GetAimRay().direction;
             saveRay = GetAimRay();
+            voice = true;
+            voiceString = "stompabk";
+            swingSoundString = "abk";
             //bonusForce = 0.8f * forwardDir * Uppercut.upwardForceStrength;
 
             characterDirection.forward = forwardDir;
             characterBody.bodyFlags |= CharacterBody.BodyFlags.IgnoreFallDamage;
 
-            if (forwardDir.y < -0.33)
+            if (forwardDir.y < -0.5)
             {
                 kickSpeed = new AnimationCurve(new Keyframe[]
                 {
@@ -109,7 +108,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         public override void OnExit()
         {
             if (!hasExtended) { PlayAnimation("Body", "AbkExit"); }
-            if (forwardDir.y > -0.33) characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
+            if (forwardDir.y > -0.5) characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
             LastHit();
             base.OnExit();
         }
@@ -117,14 +116,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         protected override void ApplyForce(HealthComponent item)
         {
             CharacterBody body = item.body;
-            float num = 1f;
-            //Vector3 forceVec;
+            bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.5f;
 
             if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
             {
                 body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
             }
-            if (body.characterMotor &&((base.characterBody.HasBuff(BayoBuffs.wtBuff) || body.characterMotor.mass < 300)))
+            if (body.characterMotor &&((body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)))
             {
                 if (!launchList.Contains(item))
                 {
@@ -138,15 +136,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 else
                 {
                     Vector3 realSpeed = speedVec * 0.9f;
-                    //if (base.characterBody.HasBuff(BayoBuffs.wtBuff)) realSpeed /= 2f;
                     body.characterMotor.velocity = realSpeed;
                 }
             }
-            //num = num / 150f;
-            //forceVec = speedVec.normalized;
-            //forceVec.y += 30f;
-            //forceVec = forceVec * num; //Mathf.Lerp(1f, 0f, fixedAge / duration) * moveSpeedStat;
-            //item.healthComponent.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
         }
 
         private void LastHit()

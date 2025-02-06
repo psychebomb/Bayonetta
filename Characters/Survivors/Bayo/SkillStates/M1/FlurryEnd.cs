@@ -1,5 +1,4 @@
-﻿using BayoMod.Modules.BaseStates;
-using BayoMod.Survivors.Bayo.SkillStates;
+﻿using BayoMod.Survivors.Bayo.SkillStates;
 using RoR2;
 using UnityEngine;
 using EntityStates.Merc;
@@ -9,6 +8,9 @@ using RoR2.Projectile;
 using BayoMod.Survivors.Bayo;
 using static UnityEngine.ParticleSystem.PlaybackState;
 using EntityStates.ImpBossMonster;
+using System.Collections.Generic;
+using UnityEngine.Networking;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 {
@@ -32,7 +34,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
         public override void OnEnter()
         {
-
             attackStartPercentTime = 0.25f;
             attackEndPercentTime = 0.5f;
 
@@ -45,6 +46,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             hitHopVelocity = 4f;
             characterMotor.velocity.y = 0f;
             exitToStance = true;
+            voice = true;
+            voiceString = "flurryend";
 
             characterDirection.forward = GetAimRay().direction;
             rootMotionAccumulator = GetModelRootMotionAccumulator();
@@ -72,6 +75,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             {
                 animName = "FlurryAE";
                 characterMotor.airControl = characterMotor.airControl;
+                exitToStance = false;
             }
 
             PlayAnimation("Body", animName, "Slash.playbackRate", duration);
@@ -147,7 +151,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
             else
             {
-                rootMotionAccumulator.accumulatedRootMotion = Vector3.zero;
+                if (rootMotionAccumulator)
+                {
+                    Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
+                    if (vector != Vector3.zero && base.isAuthority && base.characterMotor)
+                    {
+                        base.characterMotor.rootMotion += vector;
+                    }
+                }
                 characterMotor.moveDirection = inputBank.moveVector;
                 characterDirection.moveVector = characterMotor.moveDirection;
                 characterMotor.velocity.y = Mathf.Lerp(0f, -20f, fixedAge / duration);
@@ -186,22 +197,33 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
 
         }
-        protected virtual void DoFireEffects()
+        protected void DoFireEffects()
         {
-            Util.PlaySound(SpawnState.spawnSoundString, base.gameObject);
+            Util.PlaySound("weave", base.gameObject);
             AddRecoil(-2f * recoilAmplitude, -3f * recoilAmplitude, -1f * recoilAmplitude, 1f * recoilAmplitude);
             base.characterBody.AddSpreadBloom(bloom);
         }
 
-        protected virtual void FireProjectile()
+        protected void FireProjectile()
         {
             if (base.isAuthority)
             {
                 Ray aimRay = GetAimRay();
                 Vector3 dir = aimRay.direction;
-                dir.y = 0.11f;
-                ProjectileManager.instance.FireProjectile(projectilePrefab, aimRay.origin, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * weaveDamage, weaveForce, Util.CheckRoll(critStat, base.characterBody.master));
+                Vector3 pos = this.gameObject.transform.position;
+                pos.y -= 1f;
+                dir.y = 0f;
+                pos = pos + (dir.normalized * 2.5f);
+                dir.y = 0.1f;
+                ProjectileManager.instance.FireProjectile(projectilePrefab, pos, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * weaveDamage, weaveForce, Util.CheckRoll(critStat, base.characterBody.master));
             }
         }
+
+        public override void OnExit()
+        {
+            base.OnExit();
+        }
+
+        
     }
 }

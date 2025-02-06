@@ -7,6 +7,7 @@ using BayoMod.Modules.Components;
 using EntityStates.Seeker;
 using System.Diagnostics;
 using BayoMod.Survivors.Bayo.SkillStates;
+using System.ComponentModel;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
 {
@@ -32,6 +33,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
             base.OnEnter();
 
             if (NetworkServer.active) base.characterBody.AddBuff(RoR2Content.Buffs.Slow50);
+            Util.PlaySound("portalsum", this.gameObject);
 
             this.gameObject.AddComponent<BayoTracker>();
             this.tracker = base.GetComponent<BayoTracker>();
@@ -91,12 +93,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         {
             base.OnExit();
 
-            DoEnd();
-
-        }
-
-        private void DoEnd()
-        {
             aimRequest?.Dispose();
             if (NetworkServer.active) base.characterBody.RemoveBuff(RoR2Content.Buffs.Slow50);
 
@@ -106,7 +102,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
 
             base.skillLocator.secondary.DeductStock(secondStockMax - secondStocks);
             base.skillLocator.special.DeductStock(specialStockMax - specialStocks);
-            if(fired) base.skillLocator.special.DeductStock(1);
+            if (fired) base.skillLocator.special.DeductStock(1);
+
         }
         public override InterruptPriority GetMinimumInterruptPriority()
         {

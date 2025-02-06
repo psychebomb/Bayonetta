@@ -5,6 +5,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
     {
         public override void OnEnter()
         {
+            sound = "";
             base.OnEnter();
             duration = 0.36f;
             PlayAnimation("Body", "BreakStart", "Slash.playbackRate", duration);

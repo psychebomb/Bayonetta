@@ -1,5 +1,4 @@
 ﻿using BayoMod.Survivors.Bayo;
-using BayoMod.Survivors.Bayo.SkillStates;
 using EntityStates;
 using EntityStates.Commando.CommandoWeapon;
 using EntityStates.Toolbot;
@@ -7,22 +6,15 @@ using EntityStates.Wisp1Monster;
 using EntityStates.Drone.DroneWeapon;
 using RoR2;
 using RoR2.Audio;
-using RoR2.Skills;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
-using static UnityEngine.ParticleSystem.PlaybackState;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
 
-namespace BayoMod.Modules.BaseStates
+namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 {
     public abstract class BaseMeleeAttack : BaseSkillState
     {
-        public int swingIndex;
-
         protected string hitboxGroupName = "PunchGroup";
 
         protected DamageType damageType = DamageType.Generic;
@@ -42,7 +34,7 @@ namespace BayoMod.Modules.BaseStates
         protected float hitHopVelocity = 4f;
 
         protected string swingSoundString = "";
-        protected string hitSoundString = "";
+        protected string hitSoundString = "hit";
         protected string muzzleString = "SwingCenter";
         protected string playbackRateParam = "Slash.playbackRate";
         protected GameObject swingEffectPrefab;
@@ -50,6 +42,8 @@ namespace BayoMod.Modules.BaseStates
         protected NetworkSoundEventIndex impactSound = NetworkSoundEventIndex.Invalid;
 
         public float duration;
+        public float playSwing;
+        protected bool hasSwung = false;
         protected bool hasFired;
         private float hitPauseTimer;
         protected OverlapAttack attack;
@@ -69,12 +63,14 @@ namespace BayoMod.Modules.BaseStates
         private GameObject tracerEffectPrefab = FirePistol2.tracerEffectPrefab;
         private GameObject gunEffectPrefab = FireTurret.hitEffectPrefab;
         protected float spreadBloomValue = 0f;
-        protected float fireTime = 100f;
+        protected float fireTime = 9999f;
         protected float bulletStopWatch = 0f;
         protected bool launch = false;
         protected float juggleHop = 0f;
         protected bool hasJuggled = false;
         protected readonly List<HealthComponent> launchList = new List<HealthComponent>();
+        protected string voiceString;
+        protected bool voice = false;
 
         public override void OnEnter()
         {
@@ -96,6 +92,7 @@ namespace BayoMod.Modules.BaseStates
             attack.hitBoxGroup = FindHitBoxGroup(hitboxGroupName);
             attack.isCrit = RollCrit();
             attack.impactSound = impactSound;
+            fireTime /= attackSpeedStat;
         }
 
         public override void OnExit()
@@ -166,7 +163,7 @@ namespace BayoMod.Modules.BaseStates
                     for (int i = 0; i < num; ++i)
                     {
                         HealthComponent item = attack.ignoredHealthComponentList[i];
-                        if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || (item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body"))) && item && item.transform)
+                        if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body")) && item && item.transform)
                         {
                             ApplyForce(item);
                         }
@@ -180,6 +177,7 @@ namespace BayoMod.Modules.BaseStates
             hasFired = true;
             characterDirection.forward = GetAimRay().direction;
             PlaySwingEffect();
+            if (voice) { Util.PlaySound(voiceString, gameObject); }
 
             if (isAuthority)
             {
@@ -212,7 +210,13 @@ namespace BayoMod.Modules.BaseStates
 
             bool fireStarted = stopwatch >= duration * attackStartPercentTime;
             bool fireEnded = stopwatch >= duration * attackEndPercentTime;
+            playSwing = duration * attackStartPercentTime * .75f;
 
+            if (!hasSwung && stopwatch >= playSwing)
+            {
+                hasSwung = true;
+                Util.PlaySound(swingSoundString, gameObject);
+            }
             //to guarantee attack comes out if at high attack speed the stopwatch skips past the firing duration between frames
             if (fireStarted && !fireEnded || fireStarted && fireEnded && !hasFired)
             {
@@ -223,7 +227,7 @@ namespace BayoMod.Modules.BaseStates
                 FireAttack();
             }
 
-            if(bulletStopWatch >= fireTime)
+            if (bulletStopWatch >= fireTime)
             {
                 bulletStopWatch -= fireTime;
                 FireBullet();
@@ -255,14 +259,21 @@ namespace BayoMod.Modules.BaseStates
             if (!launchList.Contains(item))
             {
                 launchList.Add(item);
-                //Chat.AddMessage("juggled");
+
                 if (body.characterMotor && !body.characterMotor.isGrounded)
                 {
-                    if (base.characterBody.HasBuff(BayoBuffs.wtBuff)) juggleHop /= 3f;
-                    SmallHop(body.characterMotor, juggleHop);
+                    if (characterBody.HasBuff(BayoBuffs.wtBuff)) juggleHop /= 3f;
                     body.characterMotor.velocity.x = 0f;
                     body.characterMotor.velocity.z = 0f;
                     item.GetComponent<SetStateOnHurt>()?.SetStun(1f);
+                    if (body.HasBuff(BayoBuffs.wtDebuff))
+                    {
+                        body.characterMotor.velocity.y = 0f;
+                    }
+                    else
+                    {
+                        SmallHop(body.characterMotor, juggleHop);
+                    }
                 }
             }
         }
@@ -272,7 +283,7 @@ namespace BayoMod.Modules.BaseStates
             Ray aimRay = shootRay;
             EffectManager.SimpleMuzzleFlash(FirePistol2.muzzleEffectPrefab, gameObject, gunName, false);
             AddRecoil(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
-            if (base.isAuthority)
+            if (isAuthority)
             {
                 BulletAttack bulletAttack = new BulletAttack();
                 bulletAttack.owner = gameObject;
@@ -287,26 +298,17 @@ namespace BayoMod.Modules.BaseStates
                 bulletAttack.tracerEffectPrefab = tracerEffectPrefab;
                 bulletAttack.muzzleName = gunName;
                 bulletAttack.hitEffectPrefab = gunEffectPrefab;
-                bulletAttack.isCrit = Util.CheckRoll(0.5f, base.characterBody.master);
+                //bulletAttack.isCrit = Util.CheckRoll(0.5f, base.characterBody.master);
+                bulletAttack.isCrit = RollCrit();
                 bulletAttack.radius = 0.75f;
                 bulletAttack.smartCollision = true;
                 bulletAttack.damageType = DamageType.Generic;
+                bulletAttack.procCoefficient = 0.5f;
+                bulletAttack.damageColorIndex = DamageColorIndex.Void;
                 bulletAttack.Fire();
             }
-            base.characterBody.AddSpreadBloom(spreadBloomValue);
-            Util.PlaySound(FirePistol2.firePistolSoundString, base.gameObject);
-        }
-
-        public override void OnSerialize(NetworkWriter writer)
-        {
-            base.OnSerialize(writer);
-            writer.Write(swingIndex);
-        }
-
-        public override void OnDeserialize(NetworkReader reader)
-        {
-            base.OnDeserialize(reader);
-            swingIndex = reader.ReadInt32();
+            characterBody.AddSpreadBloom(spreadBloomValue);
+            Util.PlaySound("shoot", gameObject);
         }
     }
 }

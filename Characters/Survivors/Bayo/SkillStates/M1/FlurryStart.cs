@@ -33,6 +33,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
             rootMotionAccumulator = GetModelRootMotionAccumulator();
             PlayAnimation("Body", animName, "Slash.playbackRate", duration);
+            //Util.PlaySound("flurspin", this.gameObject);
             characterDirection.forward = GetAimRay().direction;
             characterMotor.velocity.y = 0f;
         }
@@ -77,7 +78,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
             else
             {
-                rootMotionAccumulator.accumulatedRootMotion = Vector3.zero;
+                if (rootMotionAccumulator)
+                {
+                    Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
+                    if (vector != Vector3.zero && base.isAuthority && base.characterMotor)
+                    {
+                        base.characterMotor.rootMotion += vector;
+                    }
+                }
                 characterMotor.moveDirection = inputBank.moveVector;
                 characterDirection.moveVector = characterMotor.moveDirection;
             }

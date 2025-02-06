@@ -6,6 +6,7 @@ using EntityStates.Loader;
 using EntityStates.Merc;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace BayoMod.Survivors.Bayo.SkillStates
 {
@@ -22,17 +23,18 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         protected string hitboxGroupName = "FallGroup";
         private OverlapAttack fallAttack;
         protected DamageType damageType = DamageType.Generic;
-        protected float fallDamage = 3f;
+        protected float fallDamage = 2.5f;
         protected float fireAge = 0f;
         protected float procCoefficient = 1f;
         protected Vector3 downForce =  Vector3.down * 0.8f;
         protected GameObject hitEffectPrefab;
         protected NetworkSoundEventIndex impactSound = NetworkSoundEventIndex.Invalid;
 
-        protected string kickSoundString = GroundLight.comboAttackSoundString;
-        protected string hitSoundString = "";
+        protected string kickSoundString = "falling";
+        protected string hitSoundString = "hit";
         protected float attackRecoil = 1f;
         protected float hitStopDuration = 0;
+        protected float fireFreq = 0.25f;
 
         private bool hasFired;
         private float hitPauseTimer;
@@ -48,6 +50,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             base.OnEnter();
             animator = GetModelAnimator();
             hasFired = false;
+            fireFreq /= this.attackSpeedStat;
             SetupFallAttack();
             if (isAuthority)
             {
@@ -58,15 +61,27 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             characterMotor.airControl = airControl;
             characterDirection.forward = GetAimRay().direction;
             PlayAnimation("Body", "FallKick");
-            Util.PlaySound(kickSoundString, gameObject);
+            //Util.PlaySound(kickSoundString, gameObject);
 
         }
 
         private void SetupFallAttack()
         {
-            fallAttack = InitMeleeOverlap(fallDamage, GroundLight.comboHitEffectPrefab, GetModelTransform(), hitboxGroupName);
+            //fallAttack = InitMeleeOverlap(fallDamage, GroundLight.comboHitEffectPrefab, GetModelTransform(), hitboxGroupName);
+            //fallAttack.damageType = damageType;
+            //fallAttack.procCoefficient = procCoefficient;
+            //fallAttack.isCrit = RollCrit();
+            //fallAttack.impactSound = impactSound;
+
+            fallAttack = new OverlapAttack();
             fallAttack.damageType = damageType;
+            fallAttack.attacker = gameObject;
+            fallAttack.inflictor = gameObject;
+            fallAttack.teamIndex = GetTeam();
+            fallAttack.damage = fallDamage * damageStat;
             fallAttack.procCoefficient = procCoefficient;
+            fallAttack.hitEffectPrefab = hitEffectPrefab;
+            fallAttack.hitBoxGroup = FindHitBoxGroup(hitboxGroupName);
             fallAttack.isCrit = RollCrit();
             fallAttack.impactSound = impactSound;
         }
@@ -80,12 +95,11 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                     AddRecoil(-1f * attackRecoil, -2f * attackRecoil, -0.5f * attackRecoil, 0.5f * attackRecoil);
                 }
             }
-            if (fireAge >= 0.25f)
+            if (fireAge >= fireFreq)
             {
                 fireAge = 0f;
                 fallAttack.ResetIgnoredHealthComponents();
                 launchList.Clear();
-                fallAttack.Fire();
                 hasFired = false;
             }
             if (isAuthority && fallAttack.Fire())
@@ -184,6 +198,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         {
             characterMotor.airControl = previousAirControl;
             characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
+            launchList.Clear();
             base.OnExit();
         }
 

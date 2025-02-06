@@ -1,10 +1,10 @@
-﻿using BayoMod.Modules.BaseStates;
-using BayoMod.Survivors.Bayo.SkillStates;
+﻿using BayoMod.Survivors.Bayo.SkillStates;
 using RoR2;
 using UnityEngine;
 using EntityStates.Loader;
 using UnityEngine.UIElements;
 using System.ComponentModel;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 
 namespace BayoMod.Survivors.Bayo.SkillStates
 {
@@ -68,6 +68,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
             base.OnEnter();
 
+            fireFreq /=this.attackSpeedStat;
+
         }
 
         protected virtual void PlayAnim()
@@ -85,7 +87,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             {
                 fireAge = 0f;
                 attack.ResetIgnoredHealthComponents();
-                attack.Fire();
+                //attack.Fire();
                 hasFired = false;
                 if(clear) launchList.Clear();
             }
@@ -137,7 +139,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             if (stopwatch >= earlyExitPercentTime && !hasEnded)
             {
                 hasEnded = true;
-                fireTime = 100f;
+                fireTime = 9999f;
                 PlayAnimation("Body", "BackKickExit", playbackRateParam, duration - earlyExitPercentTime);
             }
         }
