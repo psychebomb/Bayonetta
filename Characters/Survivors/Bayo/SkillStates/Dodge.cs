@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
 using System;
 using R2API;
-
+using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
 
 namespace BayoMod.Survivors.Bayo.SkillStates
 {
@@ -16,7 +16,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         public static float finalSpeedCoefficient = 2f;
         protected bool cancel;
 
-        public static string dodgeSoundString = "Roll";
+        public static string dodgeSoundString = "dodge";
 
         private float rollSpeed;
         private float mSpeed;
@@ -27,6 +27,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         protected float earlyExit = 0.525f;
         protected bool jumped;
         protected float stopwatch;
+        private float baseSpeed;
+        private float speedMult;
 
         protected float evadeWatch;
         protected bool inEvade = false;
@@ -81,17 +83,38 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
             PlayAnimation("Body", "Roll", "Roll.playbackRate", duration);
             Util.PlaySound(dodgeSoundString, gameObject);
+            Util.PlaySound("evade", gameObject);
+
+            baseSpeed = 7f;
+            if (this.characterBody.isSprinting) { baseSpeed *= this.characterBody.sprintingSpeedMultiplier; }
+
+            float armorTime = (earlyExit + 0.13333333f);
+            float dodgeTime = 0.25f;
+
+            if (this.moveSpeedStat - baseSpeed > 0)
+            {
+                speedMult = 1 + ((this.moveSpeedStat - baseSpeed) / baseSpeed);
+                //Chat.AddMessage("mult: " + speedMult.ToString());
+                armorTime *= speedMult;
+                armorTime = Math.Min(armorTime, 1f);
+                dodgeTime *= speedMult;
+                dodgeTime = Math.Min(dodgeTime, earlyExit + 0.13333333f);
+
+            }
+
+            //Chat.AddMessage("armorTime: " + armorTime.ToString());
+            //Chat.AddMessage("dodgeTime: " + dodgeTime.ToString());
 
             if (NetworkServer.active)
             {
-                characterBody.AddTimedBuff(BayoBuffs.armorBuff, earlyExit + 0.13333333f);
+                characterBody.AddTimedBuff(BayoBuffs.armorBuff, armorTime);
                 if(characterBody.HasBuff(BayoBuffs.wtBuff)|| characterBody.HasBuff(BayoBuffs.wtCoolDown))
                 {
-                    characterBody.AddTimedBuff(RoR2Content.Buffs.HiddenInvincibility, 0.25f);
+                    characterBody.AddTimedBuff(RoR2Content.Buffs.HiddenInvincibility, dodgeTime);
                 }
                 else
                 {
-                    characterBody.AddTimedBuff(BayoBuffs.dodgeBuff, 0.25f);
+                    characterBody.AddTimedBuff(BayoBuffs.dodgeBuff, dodgeTime);
                 }
             }
         }
@@ -176,7 +199,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             }
             previousPosition = transform.position;
 
-            if (isAuthority && stopwatch >= earlyExit)
+            if (isAuthority && stopwatch >= earlyExit && !inEvade)
             {
                 DetermineCancel();
                 if (inputBank.skill1.down)
@@ -204,26 +227,27 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         public override void OnExit()
         {
+            int wtDur = 6;
+            int hardlights = this.characterBody.inventory.GetItemCount(RoR2Content.Items.UtilitySkillMagazine);
+            wtDur += (hardlights * 3);
+
             if (cancel) PlayAnimation("FullBody, Override", "BufferEmpty");
             if (evadeDone && NetworkServer.active)
             {
+                Util.PlaySound("wtv", this.gameObject);
                 if (rlyGoodTiming)
                 {
-                    characterBody.AddTimedBuff(BayoBuffs.wtBuff, 6f);
-                    //for (int k = 1; k <= 10f; k++)
-                    //{
-                    //    characterBody.AddTimedBuff(BayoBuffs.wtCoolDown, k + 6);
-                    //}
-                    //Chat.AddMessage("6 seconds");
+                    for (int k = 1; k <= wtDur; k++)
+                    {
+                        characterBody.AddTimedBuff(BayoBuffs.wtBuff, k);
+                    }
                 }
                 else
                 {
-                    //for (int k = 1; k <= 12f; k++)
-                    //{
-                    //    characterBody.AddTimedBuff(BayoBuffs.wtCoolDown, k + 4);
-                    //}
-                    characterBody.AddTimedBuff(BayoBuffs.wtBuff, 4f);
-                    //Chat.AddMessage("4 seconds");
+                    for (int k = 1; k <= (wtDur - 2); k++)
+                    {
+                        characterBody.AddTimedBuff(BayoBuffs.wtBuff, k);
+                    }
                 }
             }
             base.OnExit();
@@ -295,10 +319,20 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             if (characterBody.HasBuff(BayoBuffs.evadeSuccess))
             {
                 characterBody.RemoveBuff(BayoBuffs.evadeSuccess);
+                Util.PlaySound("ds", this.gameObject);
                 evadeWatch = evadeTime;
                 characterBody.AddTimedBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility, (earlyExit - stopwatch + evadeTime));
                 inEvade = true;
-                if (stopwatch < 0.1f) rlyGoodTiming = true;
+                float goodTime = 0.1f;
+                if(moveSpeedStat - baseSpeed > 0)
+                {
+                    goodTime *= speedMult;
+                    goodTime = Math.Min(goodTime, earlyExit + 0.13333333f);
+                }
+
+                //Chat.AddMessage("goodTime: " + goodTime.ToString());
+
+                if (stopwatch < goodTime) rlyGoodTiming = true;
             }
         }
 
@@ -318,6 +352,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 }, 0.35f);
             }
         }
+
 
     }
 }

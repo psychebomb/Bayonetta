@@ -18,6 +18,8 @@ namespace BayoMod.Survivors.Bayo
 
         public static BuffDef wtDebuff;
 
+        public static BuffDef snapBuff;
+
         public static void Init(AssetBundle assetBundle)
         {
             armorBuff = Modules.Content.CreateAndAddBuff("BayoArmorBuff",
@@ -41,14 +43,20 @@ namespace BayoMod.Survivors.Bayo
             wtBuff = Modules.Content.CreateAndAddBuff("BayoWTBuff",
                 LegacyResourcesAPI.Load<BuffDef>("BuffDefs/Overheat").iconSprite,
                 Color.magenta,
-                false,
+                true,
+                false);
+
+            snapBuff = Modules.Content.CreateAndAddBuff("BayoSnapBuff",
+                LegacyResourcesAPI.Load<BuffDef>("BuffDefs/Overheat").iconSprite,
+                Color.white,
+                true,
                 false);
 
             wtCoolDown = Modules.Content.CreateAndAddBuff("BayoWTCDBuff",
                 LegacyResourcesAPI.Load<BuffDef>("BuffDefs/Overheat").iconSprite,
                 Color.gray,
                 true,
-                false);
+                true);
 
             wtDebuff = Modules.Content.CreateAndAddBuff("BayoWTDebuff",
                 LegacyResourcesAPI.Load<BuffDef>("BuffDefs/Overheat").iconSprite,

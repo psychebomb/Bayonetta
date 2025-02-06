@@ -20,6 +20,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             muzName = "muzrf";
             gDam = 0.25f;
             frTime = 0.1f;
+            damageType = DamageType.Stun1s;
+            Util.PlaySound("spin", this.gameObject);
             base.OnEnter();
         }
 
@@ -84,6 +86,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 launchList.Add(item);
                 float num = 1f;
                 Vector3 forceVec;
+                bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.5f;
 
                 if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
                 {
@@ -91,11 +94,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 }
                 if (body.characterMotor)
                 {
-                    if (base.characterBody.HasBuff(BayoBuffs.wtBuff))
-                    {
-                        num = body.characterMotor.mass;/// 2f;
-                    }
-                    else if ( body.characterMotor.mass < 300)
+                     if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)
                     {
                         num = body.characterMotor.mass;
                     }
@@ -106,7 +105,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 }
                 else if (item.GetComponent<Rigidbody>())
                 {
-                    if (base.characterBody.HasBuff(BayoBuffs.wtBuff) ||body.characterMotor.mass < 300)
+                    if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)
                     {
                         num = body.rigidbody.mass;
                     }

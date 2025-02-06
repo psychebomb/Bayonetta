@@ -12,28 +12,24 @@ using BayoMod.Characters.Survivors.Bayo.SkillStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Weave;
 using UnityEngine.Networking;
-using IL.RoR2.Projectile;
+using RoR2.Projectile;
+using static UnityEngine.ParticleSystem.PlaybackState;
+using static BayoMod.Modules.Skins;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
+using BayoMod.Modules.Components;
+using static R2API.SoundAPI;
 
 namespace BayoMod.Survivors.Bayo
 {
     public class BayoSurvivor : SurvivorBase<BayoSurvivor>
     {
-        //used to load the assetbundle for this character. must be unique
-        public override string assetBundleName => "bayobundle"; //if you do not change this, you are giving permission to deprecate the mod
-
-        //the name of the prefab we will create. conventionally ending in "Body". must be unique
-        public override string bodyName => "BayoBody"; //if you do not change this, you get the point by now
-
-        //name of the ai master for vengeance and goobo. must be unique
-        public override string masterName => "BayoMonsterMaster"; //if you do not
-
-        //the names of the prefabs you set up in unity that we will use to build your character
-        public override string modelPrefabName => "mdlBayo";
-        public override string displayPrefabName => "mdlBayoDisplay";
+        public override string assetBundleName => "bayobundle";
+        public override string bodyName => "BayoBody";
+        public override string masterName => "BayoMonsterMaster";
+        public override string modelPrefabName => "mdlBayonettaa";
+        public override string displayPrefabName => "mdlBayonettaaDisplay";
 
         public const string BAYO_PREFIX = BayoPlugin.DEVELOPER_PREFIX + "_BAYO_";
-
-        //used when registering your survivor's language tokens
         public override string survivorTokenPrefix => BAYO_PREFIX;
         
         public override BodyInfo bodyInfo => new BodyInfo
@@ -43,14 +39,14 @@ namespace BayoMod.Survivors.Bayo
             subtitleNameToken = BAYO_PREFIX + "SUBTITLE",
 
             characterPortrait = assetBundle.LoadAsset<Texture>("texBayoIcon"),
-            bodyColor = Color.white,
+            bodyColor = Color.red,
             sortPosition = 100,
 
             crosshair = Asset.LoadCrosshair("Standard"),
             podPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/SurvivorPod"),
 
-            maxHealth = 140f,
-            healthRegen = 1.5f,
+            maxHealth = 110f,
+            healthRegen = 1f,
             armor = 0f,
 
             jumpCount = 2,
@@ -277,6 +273,36 @@ namespace BayoMod.Survivors.Bayo
                     childName = "gunlf4",
                     //dontHotpoo = true,
                 },
+                new CustomRendererInfo
+                {
+                    childName = "sleeve1",
+                    //dontHotpoo = true,
+                },
+                new CustomRendererInfo
+                {
+                    childName = "sleeve2",
+                    //dontHotpoo = true,
+                },
+                new CustomRendererInfo
+                {
+                    childName = "sleeve3",
+                    //dontHotpoo = true,
+                },
+                new CustomRendererInfo
+                {
+                    childName = "sleeve4",
+                    //dontHotpoo = true,
+                },
+                new CustomRendererInfo
+                {
+                    childName = "sleeve5",
+                    //dontHotpoo = true,
+                },
+                new CustomRendererInfo
+                {
+                    childName = "sleeve6",
+                    //dontHotpoo = true,
+                },
         };
 
         public override UnlockableDef characterUnlockableDef => BayoUnlockables.characterUnlockableDef;
@@ -294,30 +320,19 @@ namespace BayoMod.Survivors.Bayo
 
         private GameObject wtWard;
 
-        private float reducedGravity = 0.65f;
-
-        private float lessGravity = 0.8f;
+        private float lessGravity = 0.85f;
 
         private float lesserGravity = 0.97f;
 
-        //private float stopwatch = 0f;
+        private uint sound = 0;
 
-        //private bool launched = false;
+        // wicked weave skill overrides
 
-
-
-        // bazooka skill overrides
         internal static SkillDef tetsuSkillDef;
         internal static SkillDef stompSkillDef;
         internal static SkillDef weaveCancelSkillDef;
         public override void Initialize()
         {
-            //uncomment if you have multiple characters
-            //ConfigEntry<bool> characterEnabled = Config.CharacterEnableConfig("Survivors", "Henry");
-
-            //if (!characterEnabled.Value)
-            //    return;
-
             base.Initialize();
         }
 
@@ -343,6 +358,8 @@ namespace BayoMod.Survivors.Bayo
 
             AdditionalBodySetup();
 
+            AddTVE();
+
             AddHooks();
         }
 
@@ -350,8 +367,6 @@ namespace BayoMod.Survivors.Bayo
         {
             AddHitboxes();
             bodyPrefab.AddComponent<BayoWeaponComponent>();
-            //bodyPrefab.AddComponent<HuntressTrackerComopnent>();
-            //anything else here
         }
 
         public void AddHitboxes()
@@ -365,14 +380,10 @@ namespace BayoMod.Survivors.Bayo
 
         public override void InitializeEntityStateMachines() 
         {
-            //clear existing state machines from your cloned body (probably commando)
-            //omit all this if you want to just keep theirs
             Prefabs.ClearEntityStateMachines(bodyPrefab);
 
             //the main "Body" state machine has some special properties
             Prefabs.AddMainEntityStateMachine(bodyPrefab, "Body", typeof(BayoCharacterMain), typeof(EntityStates.SpawnTeleporterState));
-            //if you set up a custom main characterstate, set it up here
-                //don't forget to register custom entitystates in your HenryStates.cs
 
             Prefabs.AddEntityStateMachine(bodyPrefab, "Weapon");
             Prefabs.AddEntityStateMachine(bodyPrefab, "Weapon2");
@@ -383,7 +394,6 @@ namespace BayoMod.Survivors.Bayo
         {
             //remove the genericskills from the commando body we cloned
             Skills.ClearGenericSkills(bodyPrefab);
-            //add our own
             //AddPassiveSkill();
             AddPrimarySkills();
             AddSecondarySkills();
@@ -412,7 +422,6 @@ namespace BayoMod.Survivors.Bayo
                 skillName = "BayonettaPassive",
                 skillNameToken = BAYO_PREFIX + "PASSIVE_NAME",
                 skillDescriptionToken = BAYO_PREFIX + "PASSIVE_DESCRIPTION",
-                keywordTokens = new string[] { "KEYWORD_AGILE" },
                 skillIcon = assetBundle.LoadAsset<Sprite>("texPassiveIcon"),
 
                 //unless you're somehow activating your passive like a skill, none of the following is needed.
@@ -443,23 +452,19 @@ namespace BayoMod.Survivors.Bayo
             });
             Skills.AddSkillsToFamily(passiveGenericSkill.skillFamily, passiveSkillDef1);
         }
-
-        //if this is your first look at skilldef creation, take a look at Secondary first
         private void AddPrimarySkills()
         {
             Skills.CreateGenericSkillWithSkillFamily(bodyPrefab, SkillSlot.Primary);
 
-            //the primary skill is created using a constructor for a typical primary
-            //it is also a SteppedSkillDef. Custom Skilldefs are very useful for custom behaviors related to casting a skill. see ror2's different skilldefs for reference
             SkillDef primarySkillDef1 = Skills.CreateSkillDef(new SkillDefInfo
             (
                    "BayoCombo",
                    BAYO_PREFIX + "PRIMARY_COMBO_NAME",
                    BAYO_PREFIX + "PRIMARY_COMBO_DESCRIPTION",
-                   assetBundle.LoadAsset<Sprite>("texPrimaryIcon"),
+                   assetBundle.LoadAsset<Sprite>("texM1"),
                    new EntityStates.SerializableEntityStateType(typeof(Punch1)),
                    "Body",
-                   true
+                   false
 
 
                ));
@@ -474,13 +479,12 @@ namespace BayoMod.Survivors.Bayo
         {
             Skills.CreateGenericSkillWithSkillFamily(bodyPrefab, SkillSlot.Secondary);
 
-            //here is a basic skill def with all fields accounted for
             SkillDef secondarySkillDef1 = Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = "BayoAbk",
                 skillNameToken = BAYO_PREFIX + "SECONDARY_ABK_NAME",
                 skillDescriptionToken = BAYO_PREFIX + "SECONDARY_ABK_DESCRIPTION",
-                skillIcon = assetBundle.LoadAsset<Sprite>("texUtilityIcon"),
+                skillIcon = assetBundle.LoadAsset<Sprite>("texM2"),
 
                 activationState = new EntityStates.SerializableEntityStateType(typeof(M2Entry)),
                 activationStateMachineName = "Body",
@@ -503,6 +507,8 @@ namespace BayoMod.Survivors.Bayo
                 canceledFromSprinting = false,
                 cancelSprintingOnActivation = true,
                 forceSprintDuringState = false,
+
+                keywordTokens = new string[6] { "KEYWORD_BAYO_ABK", "KEYWORD_BAYO_SPIN", "KEYWORD_BAYO_DOWN", "KEYWORD_BAYO_HEEL", "KEYWORD_BAYO_BREAK", "KEYWORD_BAYO_RISE" }
             });
 
             Skills.AddSecondarySkills(bodyPrefab, secondarySkillDef1);
@@ -512,13 +518,12 @@ namespace BayoMod.Survivors.Bayo
         {
             Skills.CreateGenericSkillWithSkillFamily(bodyPrefab, SkillSlot.Utility);
 
-            //here's a skilldef of a typical movement skill.
             SkillDef utilitySkillDef1 = Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = "BayoEvade",
                 skillNameToken = BAYO_PREFIX + "UTILITY_DODGE_NAME",
                 skillDescriptionToken = BAYO_PREFIX + "UTILITY_DODGE_DESCRIPTION",
-                skillIcon = assetBundle.LoadAsset<Sprite>("texUtilityIcon"),
+                skillIcon = assetBundle.LoadAsset<Sprite>("texUtility"),
 
                 activationState = new EntityStates.SerializableEntityStateType(typeof(Dodge)),
                 activationStateMachineName = "Body",
@@ -541,6 +546,8 @@ namespace BayoMod.Survivors.Bayo
                 canceledFromSprinting = false,
                 cancelSprintingOnActivation = false,
                 forceSprintDuringState = true,
+
+                keywordTokens = new string[1] { "KEYWORD_BAYO_WT" }
             });
 
             Skills.AddUtilitySkills(bodyPrefab, utilitySkillDef1);
@@ -550,13 +557,12 @@ namespace BayoMod.Survivors.Bayo
         {
             Skills.CreateGenericSkillWithSkillFamily(bodyPrefab, SkillSlot.Special);
 
-            //a basic skill. some fields are omitted and will just have default values
             SkillDef specialSkillDef1 = Skills.CreateSkillDef(new SkillDefInfo
             {
                 skillName = "WeaveEntry",
                 skillNameToken = BAYO_PREFIX + "SPECIAL_WEAVEIN_NAME",
                 skillDescriptionToken = BAYO_PREFIX + "SPECIAL_WEAVEIN_DESCRIPTION",
-                skillIcon = assetBundle.LoadAsset<Sprite>("texSpecialIcon"),
+                skillIcon = assetBundle.LoadAsset<Sprite>("texSpecial"),
 
                 activationState = new EntityStates.SerializableEntityStateType(typeof(WeaveEntry)),
                 activationStateMachineName = "Weapon",
@@ -586,7 +592,7 @@ namespace BayoMod.Survivors.Bayo
                 skillName = "BayoTetsu",
                 skillNameToken = BAYO_PREFIX + "SPECIAL_TETSU_NAME",
                 skillDescriptionToken = BAYO_PREFIX + "SPECIAL_TETSU_DESCRIPTION",
-                skillIcon = assetBundle.LoadAsset<Sprite>("texSpecialIcon"),
+                skillIcon = assetBundle.LoadAsset<Sprite>("texTetsu"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(Tetsu)),
                 activationStateMachineName = "Body",
                 baseMaxStock = 1,
@@ -610,7 +616,7 @@ namespace BayoMod.Survivors.Bayo
                 skillName = "BayoStomp",
                 skillNameToken = BAYO_PREFIX + "SPECIAL_STOMP_NAME",
                 skillDescriptionToken = BAYO_PREFIX + "SPECIAL_STOMP_DESCRIPTION",
-                skillIcon = assetBundle.LoadAsset<Sprite>("texSpecialIcon"),
+                skillIcon = assetBundle.LoadAsset<Sprite>("texStomp"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(Stomp)),
                 activationStateMachineName = "Body",
                 baseMaxStock = 1,
@@ -634,7 +640,7 @@ namespace BayoMod.Survivors.Bayo
                 skillName = "WeaveExit",
                 skillNameToken = BAYO_PREFIX + "SPECIAL_WEEAVEOUT_NAME",
                 skillDescriptionToken = BAYO_PREFIX + "SPECIAL_WEAVEOUT_DESCRIPTION",
-                skillIcon = assetBundle.LoadAsset<Sprite>("texSecondaryIcon"),
+                skillIcon = assetBundle.LoadAsset<Sprite>("texCancel"),
                 activationState = new EntityStates.SerializableEntityStateType(typeof(WeaveDummy)),
                 activationStateMachineName = "Body",
                 baseMaxStock = 1,
@@ -730,8 +736,6 @@ namespace BayoMod.Survivors.Bayo
             skinController.skins = skins.ToArray();
         }
         #endregion skins
-
-        //Character Master is what governs the AI of your character when it is not controlled by a player (artifact of vengeance, goobo)
         public override void InitializeCharacterMaster()
         {
             //you must only do one of these. adding duplicate masters breaks the game.
@@ -746,13 +750,126 @@ namespace BayoMod.Survivors.Bayo
             //assetBundle.LoadMaster(bodyPrefab, masterName);
         }
 
+        //Adds both screen overlays
+        private static void AddTVE()
+        {
+            if (Modules.Config.overlayOn.Value)
+            {
+                TempVisualEffectAPI.AddTemporaryVisualEffect(BayoAssets.wtOverlay, HasWT);
+            }
+            TempVisualEffectAPI.AddTemporaryVisualEffect(BayoAssets.wtOverlay2, SnapOverlay);
+        }
+
+        static bool HasWT(CharacterBody body)
+        {
+            return body.HasBuff(BayoBuffs.wtBuff);
+        }
+        static bool SnapOverlay(CharacterBody body)
+        {
+            return body.HasBuff(BayoBuffs.snapBuff);
+        }
         private void AddHooks()
         {
             R2API.RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
             On.RoR2.HealthComponent.TakeDamage += DamageHook;
-            On.RoR2.CharacterBody.OnBuffFirstStackGained += WTHookk;
+            On.RoR2.CharacterBody.OnBuffFirstStackGained += WTHook;
             On.RoR2.CharacterBody.OnBuffFinalStackLost += CdHook;
             On.RoR2.CharacterMotor.FixedUpdate += WtGravityHook;
+            On.RoR2.CharacterDeathBehavior.OnDeath += DeathHook;
+            On.RoR2.UserProfile.SetSurvivorPreference += LobbySoundHook;
+            On.RoR2.GlobalEventManager.ProcessHitEnemy += WeaveHit;
+            On.RoR2.SkillLocator.ApplyAmmoPack += WTBandHook;
+            On.RoR2.CharacterMaster.Respawn += ReviveHook;
+        }
+
+        private CharacterBody ReviveHook(On.RoR2.CharacterMaster.orig_Respawn orig, CharacterMaster self, Vector3 footPosition, Quaternion rotation, bool wasRevivedMidStage)
+        {
+            CharacterBody body = orig(self, footPosition, rotation, wasRevivedMidStage);
+
+            if (body.name.Contains("BayoBody") && wasRevivedMidStage== true)
+            {
+                Util.PlaySound("revive", body.gameObject);
+            }
+
+            return body;
+        }
+
+        private void WTBandHook(On.RoR2.SkillLocator.orig_ApplyAmmoPack orig, SkillLocator self)
+        {
+            
+            CharacterBody body = self.gameObject.GetComponent<CharacterBody>();
+
+            if (body.HasBuff(BayoBuffs.wtCoolDown))
+            {
+                body.ClearTimedBuffs(BayoBuffs.wtCoolDown.buffIndex);
+            }
+            if (body.HasBuff(BayoBuffs.wtBuff))
+            {
+                for (int k = 1; k <= 4; k++)
+                {
+                    body.AddTimedBuff(BayoBuffs.wtBuff, k);
+                }
+            }
+
+            orig(self);
+        }
+
+        private void LobbySoundHook(On.RoR2.UserProfile.orig_SetSurvivorPreference orig, UserProfile self, SurvivorDef newSurvivorPreference)
+        {
+            if (newSurvivorPreference.bodyPrefab.name.Contains("BayoBody"))
+            {
+                //sound = AkSoundEngine.PostEvent(1432588725, newSurvivorPreference.bodyPrefab);
+                Util.PlaySound("select", newSurvivorPreference.bodyPrefab);
+            }
+            else
+            {
+                //AkSoundEngine.StopPlayingID(sound);
+            }
+
+            orig(self, newSurvivorPreference);
+        }
+
+        private void DeathHook(On.RoR2.CharacterDeathBehavior.orig_OnDeath orig, CharacterDeathBehavior self)
+        {
+            if (self.gameObject.name.Contains("BayoBody"))
+            {
+                Util.PlaySound("dead", self.gameObject);
+            }
+
+            orig(self);
+        }
+
+        private void WeaveHit(On.RoR2.GlobalEventManager.orig_ProcessHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
+        {
+
+            //if (damageInfo != null && damageInfo.inflictor != null && damageInfo.inflictor.GetComponent<ProjectileDamage>() != null)
+            if (damageInfo != null && damageInfo.inflictor != null && damageInfo.inflictor.GetComponent<WickedWeave>() != null)
+            {
+                Util.PlaySound("hitw", victim);
+                CharacterBody body = (victim ? victim.GetComponent<CharacterBody>() : null);
+                bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.33f;
+                if (body.HasBuff(BayoBuffs.wtDebuff) || (healthCheck && !body.isChampion))
+                {
+                    float num = 1f;
+                    Vector3 forceVec;
+
+                    if (body.characterMotor && body.characterMotor.mass >= 100)
+                    {
+                        num = body.characterMotor.mass - 100f;
+                        body.characterMotor.Motor.ForceUnground();
+                    }
+                    if (victim.GetComponent<HealthComponent>().GetComponent<Rigidbody>() && body.rigidbody.mass >= 100)
+                    {
+                        num = body.rigidbody.mass - 100f;
+                    }
+                    
+                    forceVec = (damageInfo.force/100) * num;
+                    //float down = damageInfo.force.normalized.y;
+                    victim.GetComponent<HealthComponent>().TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
+                }
+            }
+
+            orig(self, damageInfo, victim);
         }
 
         private void WtGravityHook(On.RoR2.CharacterMotor.orig_FixedUpdate orig, CharacterMotor self)
@@ -762,12 +879,12 @@ namespace BayoMod.Survivors.Bayo
             {
                 if ((self.velocity.y <= 3f)&& (self.velocity.y >= -3f))
                 {
-                    self.velocity.y *= reducedGravity;
+                    self.velocity.y *= lessGravity;
                     self.velocity.y -= Time.fixedDeltaTime * Physics.gravity.y;
                 }
-                if(self.velocity.y < 0)
+                if(self.velocity.y < -1f)
                 {
-                    self.velocity.y -= Time.fixedDeltaTime * Physics.gravity.y * 1.8f;
+                    self.velocity.y -= Time.fixedDeltaTime * Physics.gravity.y * 2f;
                 }
                 if ((self.velocity.x <= 7f) && (self.velocity.x >= -7f))
                 {
@@ -781,15 +898,16 @@ namespace BayoMod.Survivors.Bayo
                 self.velocity.x *= lesserGravity;
                 self.velocity.z *= lesserGravity;
 
-                if (self.velocity.y < 0.2f && self.velocity.y > 0) self.velocity.y = 0.2f;
-                if (self.velocity.y > -0.2f && self.velocity.y < 0) self.velocity.y = -0.2f;
-                if (self.velocity.x < 0.2f && self.velocity.x > 0) self.velocity.x = 0.2f;
-                if (self.velocity.x > -0.2f && self.velocity.x < 0) self.velocity.x = -0.2f;
-                if (self.velocity.z < 0.2f && self.velocity.z > 0) self.velocity.z = 0.2f;
-                if (self.velocity.z > -0.2f && self.velocity.z < 0) self.velocity.z = -0.2f;
+                if (self.velocity.y < 0.5f && self.velocity.y > 0) self.velocity.y = 0.5f;
+                if (self.velocity.y > -1f && self.velocity.y < 0) self.velocity.y = -1f;
+                //if (self.velocity.x < 1f && self.velocity.x > 0) self.velocity.x = 1f;
+                //if (self.velocity.x > -1f && self.velocity.x < 0) self.velocity.x = -1f;
+                //if (self.velocity.z < 1f && self.velocity.z > 0) self.velocity.z = 1f;
+                //if (self.velocity.z > -1f && self.velocity.z < 0) self.velocity.z = -1f;
 
             }
             orig(self);
+            
         }
 
         private void CdHook(On.RoR2.CharacterBody.orig_OnBuffFinalStackLost orig, CharacterBody self, BuffDef buffDef)
@@ -797,40 +915,59 @@ namespace BayoMod.Survivors.Bayo
             if (NetworkServer.active)
             {
                 bool flagg = (buffDef == BayoBuffs.wtBuff);
-                if (flagg && wtWard)
+                bool flagg2 = (buffDef == RoR2Content.Buffs.NoCooldowns && self.gameObject.name.Contains("BayoBody"));
+                int alien = self.inventory.GetItemCount(RoR2Content.Items.AlienHead);
+                int light = self.inventory.GetItemCount(DLC1Content.Items.HalfAttackSpeedHalfCooldowns);
+                int pure = self.inventory.GetItemCount(RoR2Content.Items.LunarBadLuck);
+                float cd = 8f;
+
+                for (int k = 0; k < alien; k++)
+                {
+                    cd *= 0.75f;
+                }
+                for (int k = 0; k < light; k++)
+                {
+                    cd *= 0.5f;
+                }
+                for (int k = 0; k < pure; k++)
+                {
+                    cd -= 2f;
+                }
+                if(cd < 0) cd = 0;
+
+                if ((flagg && !self.HasBuff(RoR2Content.Buffs.NoCooldowns)) ||(!self.HasBuff(BayoBuffs.wtBuff) && flagg2) && wtWard)
                 {
                     Object.Destroy(wtWard);
-                    //wtWard = null;
+                    Util.PlaySound("wtexit", self.gameObject);
+                    AkSoundEngine.StopPlayingID(sound);
                 }
                 if (flagg && !self.HasBuff(BayoBuffs.wtCoolDown))
                 {
-                    for (int k = 1; k <= 12f; k++)
+                    for (int k = 1; k <= cd; k++)
                     {
                         self.AddTimedBuff(BayoBuffs.wtCoolDown, k);
                     }
-                }
-                flagg = buffDef == BayoBuffs.wtDebuff;
-                if(flagg && self.characterMotor)
-                {
-                    //self.characterMotor.veclocity
                 }
             }
 
             orig(self, buffDef);
         }
 
-        private void WTHookk(On.RoR2.CharacterBody.orig_OnBuffFirstStackGained orig, CharacterBody self, BuffDef buffDef)
+        private void WTHook(On.RoR2.CharacterBody.orig_OnBuffFirstStackGained orig, CharacterBody self, BuffDef buffDef)
         {
             if (NetworkServer.active)
             {
-                bool flagg = (buffDef == BayoBuffs.wtBuff);
-                if (flagg && !wtWard)
+                bool shouldActivate = (buffDef == BayoBuffs.wtBuff ||
+                    (buffDef == RoR2Content.Buffs.NoCooldowns && self.gameObject.name.Contains("BayoBody")));
+                if (shouldActivate && !wtWard)
                 {
                     wtWard = Object.Instantiate(BayoAssets.wardPrefab);
-                    //wtWard.GetComponent<TeamFilter>().teamIndex = self.teamComponent.teamIndex;
-                    wtWard.GetComponent<BuffWard>().Networkradius = 25f + self.radius;
+                    wtWard.GetComponent<TeamFilter>().teamIndex = self.teamComponent.teamIndex;
+                    wtWard.GetComponent<BuffWard>().Networkradius = 25 + self.radius;
                     wtWard.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(self.gameObject);
+                    sound = AkSoundEngine.PostEvent(1517750988, self.gameObject);
                 }
+
             }
 
             orig(self, buffDef);
@@ -845,26 +982,41 @@ namespace BayoMod.Survivors.Bayo
             }
             if (sender.HasBuff(BayoBuffs.wtBuff))
             {
-                args.armorAdd += 200;
+                if(!Modules.Config.wtInvul.Value) args.armorAdd += 350;
             }
             if (sender.HasBuff(BayoBuffs.wtDebuff))
             {
-                args.moveSpeedReductionMultAdd += 0.95f;
-                args.baseMoveSpeedAdd += -0.9f;
-                args.attackSpeedReductionMultAdd += 0.95f;
+                args.moveSpeedReductionMultAdd += 0.975f;
+                args.baseMoveSpeedAdd += -0.95f;
+                args.attackSpeedReductionMultAdd += 0.975f;
             }
         }
 
         private void DamageHook(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
+
+            bool flag = (ulong)(damageInfo.damageType & DamageType.BypassArmor) != 0;
+
             if (NetworkServer.active && self.body.HasBuff(BayoBuffs.dodgeBuff) && damageInfo.damage > 0f)
             {
-                if (self.body.HasBuff(BayoBuffs.dodgeBuff)) self.body.RemoveBuff(BayoBuffs.dodgeBuff);
-                self.body.AddTimedBuff(BayoBuffs.evadeSuccess, 0.1f);
-                damageInfo.rejected = true;
+                if(!flag)
+                {
+                    if (self.body.HasBuff(BayoBuffs.dodgeBuff)) self.body.RemoveBuff(BayoBuffs.dodgeBuff);
+                    self.body.AddTimedBuff(BayoBuffs.evadeSuccess, 0.1f);
+                    damageInfo.rejected = true;
+                }
+            }
+
+            if (NetworkServer.active && self.body.HasBuff(BayoBuffs.wtBuff) && damageInfo.damage > 0f && Modules.Config.wtInvul.Value)
+            {
+                if (!flag)
+                {
+                    damageInfo.rejected = true;
+                }
             }
 
             orig(self, damageInfo);
         }
+
     }
 }

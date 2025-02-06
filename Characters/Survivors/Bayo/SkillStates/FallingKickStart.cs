@@ -1,14 +1,13 @@
 ﻿using EntityStates;
 using RoR2;
 using UnityEngine;
-using EntityStates.Loader;
 
 namespace BayoMod.Survivors.Bayo.SkillStates
 {
     public class FallingKickStart : BaseSkillState
     {
 
-        public static string enterSoundString = PreGroundSlam.enterSoundString;
+        public static string enterSoundString = "fallslide";
 
         protected float duration = 0.44f;
 
@@ -21,6 +20,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             rootMotionAccumulator = GetModelRootMotionAccumulator();
             PlayAnimation("Body", "FallKickStart", "Slash.playbackRate", duration);
             Util.PlaySound(enterSoundString, gameObject);
+            Util.PlaySound("fallstart", gameObject);
             characterMotor.Motor.ForceUnground();
             characterMotor.disableAirControlUntilCollision = false;
             characterMotor.velocity.y = 0f;

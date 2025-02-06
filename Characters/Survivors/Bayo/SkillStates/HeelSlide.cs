@@ -1,8 +1,8 @@
-﻿using BayoMod.Modules.BaseStates;
-using RoR2;
+﻿using RoR2;
 using UnityEngine;
 using EntityStates.Merc;
 using BayoMod.Survivors.Bayo.SkillStates;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -22,7 +22,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             earlyExitPercentTime = 1.36f;
             attackStartPercentTime = 0f;
             attackEndPercentTime = 1f;
-            damageCoefficient = 1.5f;
+            damageCoefficient = 1f;
             procCoefficient = 1f;
             damageType = DamageType.Generic;
             hasHit = false;
@@ -64,6 +64,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         {
             base.FixedUpdate();
 
+            Ray ray = new Ray(GetAimRay().origin, forwardDir);
+            shootRay = ray;
+
             if (CanDodge())
             {
                 outer.SetNextState(new Dodge());
@@ -100,7 +103,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             }
             if(isAuthority && !hasStarted && stopwatch>= 0.4f)
             {
-                fireTime = 0.15f;
+                fireTime = 0.15f / attackSpeedStat;
+                Util.PlaySound("fallslide", this.gameObject);
+                Util.PlaySound("heelslide", this.gameObject);
                 hasStarted = true;
             }
 

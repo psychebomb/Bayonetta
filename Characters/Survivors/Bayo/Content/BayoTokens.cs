@@ -1,6 +1,7 @@
 ﻿using System;
 using BayoMod.Modules;
 using BayoMod.Survivors.Bayo.Achievements;
+using R2API;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -12,7 +13,7 @@ namespace BayoMod.Survivors.Bayo
 
             ////uncomment this to spit out a lanuage file with all the above tokens that people can translate
             ////make sure you set Language.usingLanguageFolder and printingEnabled to true
-            //Language.PrintOutput("Henry.txt");
+            //Language.PrintOutput("Bayo.txt");
             ////refer to guide on how to build and distribute your mod with the proper folders
         }
 
@@ -20,24 +21,25 @@ namespace BayoMod.Survivors.Bayo
         {
             string prefix = BayoSurvivor.BAYO_PREFIX;
 
-            string desc = "BAYO is a skilled fighter who makes use of a wide arsenal of weaponry to take down his foes.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine
-             + "< ! > Sword is a good all-rounder while Boxing Gloves are better for laying a beatdown on more powerful foes." + Environment.NewLine + Environment.NewLine
-             + "< ! > Pistol is a powerful anti air, with its low cooldown and high damage." + Environment.NewLine + Environment.NewLine
-             + "< ! > Roll has a lingering armor buff that helps to use it aggressively." + Environment.NewLine + Environment.NewLine
-             + "< ! > Bomb can be used to wipe crowds with ease." + Environment.NewLine + Environment.NewLine;
+            string desc = "Bayonetta is a versatile melee-ranged hybrid, able to weave in and out of danger in order to dish out high damage.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine
+             + "< ! > If bayonetta dodges while in using Bullet Arts, she'll continue the combo sequence where she left off as long as the button for Bullet Arts is held." + Environment.NewLine + Environment.NewLine
+             + "< ! > Umbran Techniques is an extremely versatile move, letting Bayonetta close gaps or launch enemies in a variety of different directions. Look for the right opportunity to use each version." + Environment.NewLine + Environment.NewLine
+             + "< ! > The added armor and slow effect from witch time gives Bayonetta a much needed layer of protection from up-close threats. Use witch time as an opportunity to close the gap and use Bayonetta's high-damaging short range options." + Environment.NewLine + Environment.NewLine
+             + "< ! > Many of Bayonetta's moves can be cancelled early with a jump. All of Bayonetta's moves are cancellable with Dodge." + Environment.NewLine + Environment.NewLine
+             + "< ! > Similar to the effects of witch time, heavier enemies below half health will also receive more knockback from Bayonetta's moves." + Environment.NewLine + Environment.NewLine;
 
-            string outro = "..and so he left, searching for a new identity.";
-            string outroFailure = "..and so he vanished, forever a blank slate.";
+            string outro = "..and so she left, still in search for answers to her mysterious destiny.";
+            string outroFailure = "..and so she vanished, but as long as there is light, THE SHADOW REMAINS CAST!";
 
             Language.Add(prefix + "NAME", "Bayonetta");
             Language.Add(prefix + "DESCRIPTION", desc);
-            Language.Add(prefix + "SUBTITLE", "The Chosen One");
-            Language.Add(prefix + "LORE", "sample lore");
+            Language.Add(prefix + "SUBTITLE", "The Famed Witch");
+            Language.Add(prefix + "LORE", "girl idfk its just bayonetta");
             Language.Add(prefix + "OUTRO_FLAVOR", outro);
             Language.Add(prefix + "OUTRO_FAILURE", outroFailure);
 
             #region Skins
-            Language.Add(prefix + "MASTERY_SKIN_NAME", "Alternate");
+            Language.Add(prefix + "BAYO2_SKIN_NAME", "Famed");
             #endregion
 
             #region Passive
@@ -46,38 +48,45 @@ namespace BayoMod.Survivors.Bayo
             #endregion
 
             #region Primary
-            Language.Add(prefix + "PRIMARY_COMBO_NAME", "Combo");
-            Language.Add(prefix + "PRIMARY_COMBO_DESCRIPTION", Tokens.agilePrefix + $"punch them idk");
+            Language.Add(prefix + "PRIMARY_COMBO_NAME", "Bullet Arts");
+            Language.Add(prefix + "PRIMARY_COMBO_DESCRIPTION", $"Perform a 5 hit punch sequence, dealing <style=cIsDamage>{150f}%</style> damage for the first four hits." +
+                $" The last hit is a flurry attack that deals <style=cIsDamage>{135f}%</style> damage each hit and summons a wicked weave when released, dealing <style=cIsDamage>{1200f}%</style> damage." +
+                $" Bayonetta will also continuously fire her guns during the sequence, each shot dealing <style=cIsDamage>{50f}%</style> damage.");
             #endregion
 
             #region Secondary
             Language.Add(prefix + "SECONDARY_ABK_NAME", "Umbran Techniques");
-            Language.Add(prefix + "SECONDARY_ABK_DESCRIPTION", Tokens.agilePrefix + $"Perform a variety of different moves depending on airstate and if back is held");
+            Language.Add(prefix + "SECONDARY_ABK_DESCRIPTION",  $"Perform a variety of different moves depending on movment inputs and whether or not Bayonetta is grounded");
+
+            LanguageAPI.Add("KEYWORD_BAYO_ABK", $"<style=cKeywordName>After Burner Kick</style> <style=cIsUtility>Input: aerial, hold forward + m2.</style> <style=cSub>Launch into the air with a blazing kick, knocking back lighter enemies and dealing <style=cIsDamage>{375f}%</style> damage.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_SPIN", $"<style=cKeywordName>Heel Tornado</style> <style=cIsUtility>Input: aerial, hold neutral + m2.</style> <style=cSub>Perform a spinning kick, continuously dealing <style=cIsDamage>{200f}%</style> damage. Knocks away lighter enemies.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_DOWN", $"<style=cKeywordName>Death Drop</style> <style=cIsUtility>Input: aerial, hold back + m2.</style> <style=cSub>Quickly descend with a kick, continuously dealing <style=cIsDamage>{250f}%</style> damage and sending enemies downward.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_HEEL", $"<style=cKeywordName>Heel Slide</style> <style=cIsUtility>Input: grounded, hold forward + m2.</style> <style=cSub>Slide forwards at high speed, dealing <style=cIsDamage>{100f}%</style> damage." +
+                $" Continue holding the move down after stopping to perform a rising kick, launching lighter enemies and dealing <style=cIsDamage>{300f}%</style> damage.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_BREAK", $"<style=cKeywordName>Breakdance</style> <style=cIsUtility>Input: grounded, hold neutral + m2.</style> <style=cSub>Perform a breakdance, continuously dealing <style=cIsDamage>{125f}%</style> damage per hit.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_RISE", $"<style=cKeywordName>Full Moon Shoot</style> <style=cIsUtility>Input: grounded, hold back + m2.</style> <style=cSub>Perform a backflip that launches lighter enemies, dealing <style=cIsDamage>{395f}%</style> damage." +
+                $" Continue holding the move down to keep spinning, continuously dealing <style=cIsDamage>{125f}%</style> damage.</style>");
             #endregion
 
             #region Utility
             Language.Add(prefix + "UTILITY_DODGE_NAME", "Dodge");
-            Language.Add(prefix + "UTILITY_DODGE_DESCRIPTION", "DODGE a shorter distance, gaining <style=cIsUtility>300 armor</style>. <style=cIsUtility>You cannot be hit during the roll.</style>");
+            Language.Add(prefix + "UTILITY_DODGE_DESCRIPTION", "Dodge a short distance, gaining brief invincibilty and <style=cIsUtility>100 armor.</style> If you are hit during the invincibilty, activate <style=cIsUtility>Witch Time.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_WT", $"<style=cKeywordName>Witch Time</style> <style=cSub>Gain <style=cIsUtility>350 armor.</style> Enemies and projectiles near Bayonetta are greatly slowed, and moves that normally only launch lighter enemies will now launch all non-boss enemies.</style>");
             #endregion
 
             #region Special
-            Language.Add(prefix + "SPECIAL_WEAVEIN_NAME", "Wicked Weaves");
-            Language.Add(prefix + "SPECIAL_WEAVEIN_DESCRIPTION", $"juninhiyandiayo");
-            Language.Add(prefix + "SPECIAL_TETSU_NAME", "Tetsu");
+            Language.Add(prefix + "SPECIAL_WEAVEIN_NAME", "Tetsuzanko/Heel Stomp");
+            Language.Add(prefix + "SPECIAL_WEAVEIN_DESCRIPTION", $"Lock onto enemies and use primary or secondary buttons to summon a wicked weave at their location, dealing <style=cIsDamage>{1000f}%</style> damage.");
+            Language.Add(prefix + "SPECIAL_TETSU_NAME", "Tetsuzanko");
             Language.Add(prefix + "SPECIAL_TETSU_DESCRIPTION", $"juninhiyandiayooo");
             Language.Add(prefix + "SPECIAL_WEEAVEOUT_NAME", "Cancel");
             Language.Add(prefix + "SPECIAL_WEAVEOUT_DESCRIPTION", $"Cancel");
-            Language.Add(prefix + "SPECIAL_STOMP_NAME", "Stomp");
+            Language.Add(prefix + "SPECIAL_STOMP_NAME", "Heel Stomp");
             Language.Add(prefix + "SPECIAL_STOMP_DESCRIPTION", $"TEYIAHHH");
-            Language.Add(prefix + "SPECIAL_TETSUDUM_NAME", "Tetsu");
-            Language.Add(prefix + "SPECIAL_TETSUDUM_DESCRIPTION", $"juninhiyandiayo");
-            Language.Add(prefix + "SPECIAL_STOMPDUM_NAME", "Stomp");
-            Language.Add(prefix + "SPECIAL_STOMPDUM_DESCRIPTION", $"TEYIAH");
-
             #endregion
 
             #region Achievements
-            Language.Add(Tokens.GetAchievementNameToken(BayoMasteryAchievement.identifier), "Bayoetta: Mastery");
+            Language.Add(Tokens.GetAchievementNameToken(BayoMasteryAchievement.identifier), "Bayonetta: Mastery");
             Language.Add(Tokens.GetAchievementDescriptionToken(BayoMasteryAchievement.identifier), "As Bayonetta, beat the game or obliterate on Monsoon.");
             #endregion
         }

@@ -1,9 +1,10 @@
-﻿using BayoMod.Modules.BaseStates;
-using RoR2;
+﻿using RoR2;
 using UnityEngine;
 using EntityStates.Merc;
 using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Survivors.Bayo;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
+using System;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -39,7 +40,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             attackRecoil = 1f;
             hitHopVelocity = 4f;
             launch = true;
-            
+            voice = true;
+            voiceString = "rise";
+            swingSoundString = "risekick";
             
             forwardDir = Vector3.up;
             rollSpeed = 0f;
@@ -137,23 +140,19 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         protected override void ApplyForce(HealthComponent item)
         {
             CharacterBody body = item.body;
+            float baseSpeed = 7f;
+            float speedMult = 1f;
+
             if (!launchList.Contains(item))
             {
                 launchList.Add(item);
                 float num = 1f;
                 Vector3 forceVec;
+                bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.5f;
 
-                if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
-                {
-                    body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
-                }
                 if (body.characterMotor)
                 {
-                    if (base.characterBody.HasBuff(BayoBuffs.wtBuff))
-                    {
-                        num = body.characterMotor.mass;///2f;
-                    }
-                    else if (body.characterMotor.mass < 300)
+                    if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)
                     {
                         num = body.characterMotor.mass;
                     }
@@ -163,10 +162,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                     }
                     body.characterMotor.velocity.x = 0f;
                     body.characterMotor.velocity.z = 0f;
+                    body.characterMotor.Motor.ForceUnground();
                 }
                 else if (item.GetComponent<Rigidbody>())
                 {
-                    if (base.characterBody.HasBuff(BayoBuffs.wtBuff) || body.characterMotor.mass < 300)
+                    if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)
                     {
                         num = body.rigidbody.mass;
                     }
@@ -176,7 +176,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                     }
 
                 }
-                num = num * (22f / 7f * moveSpeedStat);
+                if (this.characterBody.isSprinting) { baseSpeed *= this.characterBody.sprintingSpeedMultiplier; }
+                if (this.moveSpeedStat - baseSpeed > 0)
+                {
+                    speedMult = ((this.moveSpeedStat - baseSpeed) / baseSpeed) * 0.5f;
+                    speedMult += 1f;
+                }
+                num = num * (22f * speedMult);
                 forceVec = Vector3.up * num;
                 item.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
             }

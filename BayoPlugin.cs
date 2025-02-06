@@ -17,14 +17,9 @@ namespace BayoMod
     [BepInPlugin(MODUID, MODNAME, MODVERSION)]
     public class BayoPlugin : BaseUnityPlugin
     {
-        // if you do not change this, you are giving permission to deprecate the mod-
-        //  please change the names to your own stuff, thanks
-        //   this shouldn't even have to be said
         public const string MODUID = "com.psyche.BayoMod";
         public const string MODNAME = "Bayonetta Survivor";
-        public const string MODVERSION = "0.0.1";
-
-        // a prefix for name tokens to prevent conflicts- please capitalize all name tokens for convention
+        public const string MODVERSION = "0.5.0";
         public const string DEVELOPER_PREFIX = "PSYCHE";
 
         public static BayoPlugin instance;

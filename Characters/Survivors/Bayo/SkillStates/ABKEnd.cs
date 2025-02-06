@@ -1,8 +1,7 @@
-﻿using BayoMod.Modules.BaseStates;
-using RoR2;
+﻿using RoR2;
 using UnityEngine;
-using EntityStates.Merc;
 using BayoMod.Survivors.Bayo.SkillStates;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {

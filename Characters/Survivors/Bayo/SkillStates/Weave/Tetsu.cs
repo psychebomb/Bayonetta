@@ -5,20 +5,20 @@ using UnityEngine;
 using RoR2.Projectile;
 using BayoMod.Survivors.Bayo;
 using BayoMod.Survivors.Bayo.SkillStates;
-using EntityStates.ImpBossMonster;
-using UnityEngine.Networking;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
 {
     public class Tetsu : GenericProjectileBaseState
     {
         public static float BaseDuration = 1.12f;
-        //delays for projectiles feel absolute ass so only do this if you know what you're doing, otherwise it's best to keep it at 0
 
         public static float startDuration = 0.36f;
         public static float BaseDelayDuration = 0.15f;
+        public string voiceString = "tetsu";
 
         public static float DamageCoefficient = 10f;
+        public GameObject projpref = BayoAssets.fistProjectilePrefab;
 
         private bool ended = false;
         private bool cancel = false;
@@ -30,21 +30,22 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         protected HurtBox target;
         private bool targetIsValid;
         protected CameraTargetParams.AimRequest aimRequest;
-
+        protected float fForce = 3500f;
         public override void OnEnter()
         {
-            projectilePrefab = BayoAssets.fistProjectilePrefab;
+            projectilePrefab = projpref;
+
             //base.effectPrefab = Modules.Assets.SomeMuzzleEffect;
             //targetmuzzle = "muzzleThrow"
 
-            attackSoundString = SpawnState.spawnSoundString;
+            attackSoundString = "weave";
 
             baseDuration = BaseDuration;
             baseDelayBeforeFiringProjectile = BaseDelayDuration;
 
             damageCoefficient = DamageCoefficient;
             //proc coefficient is set on the components of the projectile prefab
-            force = 3000f;
+            force = fForce;
 
             //base.projectilePitchBonus = 0;
             //base.minSpread = 0;
@@ -164,12 +165,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
                     base.characterMotor.rootMotion += vector;
                 }
             }
+
         }
 
         public override void FireProjectile()
         {
             if (base.isAuthority && this.targetIsValid)
             {
+                Util.PlaySound(voiceString, this.gameObject);
                 Fire();
             }
         }
@@ -178,16 +181,15 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         {
             Ray aimRay = GetAimRay();
             Vector3 dir = aimRay.direction;
-            dir.y = 0.11f;
+            dir.y = 0.1f;
             Vector3 pos = this.target.transform.position;
-            pos = pos - (dir.normalized * 3);
+            pos = pos - (dir.normalized * 1f);
+            pos.y -= 3f;
             ProjectileManager.instance.FireProjectile(projectilePrefab, pos, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * damageCoefficient, force, Util.CheckRoll(critStat, base.characterBody.master));
         }
-
         public override void OnExit()
         {
             base.OnExit();
-
             if (this.tracker) Destroy(this.tracker);
 
         }

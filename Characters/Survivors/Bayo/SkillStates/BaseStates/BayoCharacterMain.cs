@@ -4,10 +4,13 @@ using BayoMod.Survivors.Bayo.SkillStates;
 using UnityEngine;
 using BayoMod.Modules.Components;
 using BayoMod.Survivors.Bayo;
+using RoR2.Skills;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.Weave;
 
 
 
-namespace BayoMod.Characters.Survivors.Bayo.SkillStates
+namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 {
     public class BayoCharacterMain : GenericCharacterMain
     {
@@ -17,7 +20,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         public override void OnEnter()
         {
             useRootMotion = true;
-            this.tracker = base.GetComponent<BayoTracker>();
+            tracker = GetComponent<BayoTracker>();
             base.OnEnter();
         }
         public override void FixedUpdate()
@@ -25,18 +28,23 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 
             base.FixedUpdate();
 
-            if (this.tracker) Destroy(this.tracker);
+            if (tracker) Destroy(tracker);
 
-            if (Util.HasEffectiveAuthority(base.gameObject) && base.characterMotor.isGrounded)
+            if (Util.HasEffectiveAuthority(gameObject) && characterMotor.isGrounded)
             {
                 if (Input.GetKeyDown(Modules.Config.emote1Keybind.Value))
                 {
                     outer.SetNextState(new Emote1());
                     return;
                 }
+                if (Input.GetKeyDown(Modules.Config.emote2Keybind.Value))
+                {
+                    EntityStateMachine.FindByCustomName(this.gameObject, "Weapon").SetNextState(new Strut());
+                    return;
+                }
             }
 
-            if (base.characterMotor.isGrounded && !fallRemoved)
+            if (characterMotor.isGrounded && !fallRemoved)
             {
                 characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
                 fallRemoved = true;
@@ -46,7 +54,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         public override void Update()
         {
             base.Update();
-            useRootMotion = (base.characterBody && base.characterBody.rootMotionInMainState);
+            useRootMotion = characterBody && characterBody.rootMotionInMainState;
         }
     }
 }

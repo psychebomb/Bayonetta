@@ -14,12 +14,15 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 
         private RootMotionAccumulator rootMotionAccumulator;
 
+        protected string sound = "flurspin";
+
 
         public override void OnEnter()
         {
             base.OnEnter();
             rootMotionAccumulator = GetModelRootMotionAccumulator();
             PlayAnimation("Body", "SpinStart", "Slash.playbackRate", duration);
+            Util.PlaySound(sound, gameObject);
             characterDirection.forward = GetAimRay().direction;
             characterMotor.velocity.y = 0f;
         }

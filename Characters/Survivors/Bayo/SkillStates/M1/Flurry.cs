@@ -1,10 +1,10 @@
-﻿using BayoMod.Modules.BaseStates;
-using BayoMod.Survivors.Bayo.SkillStates;
+﻿using BayoMod.Survivors.Bayo.SkillStates;
 using RoR2;
 using UnityEngine;
 using EntityStates.Loader;
 using UnityEngine.UIElements;
 using BayoMod.Survivors.Bayo;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 {
@@ -12,12 +12,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
     {
         protected float fireAge;
         protected float fireFreq;
-        protected float loopTime;
-        protected bool hasLooped;
+        protected float animTime;
         protected float myDuration;
         private string animName;
         public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
-        protected float hopVelocity = 1f;
+        protected float hopVelocity = 1.25f;
         protected bool flip = false;
         public override void OnEnter()
         {
@@ -25,7 +24,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             attackEndPercentTime = 1f;
             earlyExitPercentTime = 0.3f;
 
-            damageCoefficient = 1.5f;
+            damageCoefficient = 1.35f;
             procCoefficient = 0.75f;
             damageType = DamageType.Generic;
             pushForce = 300f;
@@ -34,16 +33,19 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             hitHopVelocity = 4f;
             exitToStance = false;
             fireAge = 0f;
-            hasLooped = false;
             shootRay = GetAimRay();
             gunName = "muzrh";
             gunDamage = 0.5f;
             launch = false;
+            fireTime = 0.15f;
 
             if (characterMotor && characterDirection)
             {
                 characterMotor.velocity = characterMotor.velocity * 0f;
             }
+
+            Util.PlaySound("flurry", this.gameObject);
+            Util.PlaySound("falling", this.gameObject);
 
             base.OnEnter();
 
@@ -59,14 +61,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 juggleHop = 2.5f / this.attackSpeedStat;
             }
 
-            myDuration = 2.08f / this.attackSpeedStat;
+            myDuration = 2.666f / this.attackSpeedStat;
             duration = 3f / this.attackSpeedStat;
             fireFreq = 0.2f / this.attackSpeedStat;
-            loopTime = 1.12f / this.attackSpeedStat;
-            fireTime = 0.15f / this.attackSpeedStat;
+            animTime = 0.9333f / this.attackSpeedStat;
 
             characterDirection.forward = GetAimRay().direction;
-            PlayCrossfade("Body", animName, playbackRateParam, loopTime, 0.05f);
+            PlayAnimation("Body", animName, playbackRateParam, animTime);
 
         }
 
@@ -76,7 +77,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             {
                 fireAge = 0f;
                 attack.ResetIgnoredHealthComponents();
-                attack.Fire();
+                //attack.Fire();
                 hasFired = false;
                 if (characterMotor && !characterMotor.isGrounded && hopVelocity > 0f)
                 {
@@ -131,15 +132,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
 
             fireAge += Time.fixedDeltaTime;
-
-            if (stopwatch >= loopTime)
-            {
-                if (!hasLooped)
-                {
-                    hasLooped = true;
-                    PlayCrossfade("Body", animName, "Slash.playbackRate", loopTime, 0.05f);
-                }   
-            }
 
             if (isAuthority && stopwatch >= earlyExitPercentTime)
             {

@@ -1,49 +1,43 @@
 ﻿using RoR2;
 using UnityEngine;
 using BayoMod.Modules;
-using System;
 using RoR2.Projectile;
-using On.EntityStates.Seeker;
 using R2API;
 using UnityEngine.AddressableAssets;
-using System.Xml.Linq;
-using System.Security.Cryptography;
 using UnityEngine.Networking;
+using UnityEngine.Rendering.PostProcessing;
+using BayoMod.Modules.Components;
 
 namespace BayoMod.Survivors.Bayo
 {
     public static class BayoAssets
     {
-        // particle effects
-        public static GameObject swordSwingEffect;
-        public static GameObject swordHitImpactEffect;
-
-        public static GameObject bombExplosionEffect;
-
-        // networked hit sounds
-        public static NetworkSoundEventDef swordHitSoundEvent;
-
         //projectiles
-        public static GameObject bombProjectilePrefab;
 
         public static GameObject fistProjectilePrefab;
 
+        public static GameObject footProjectilePrefab;
+
         public static GameObject bulletMuz;
+
+        public static GameObject wtOverlay;
+
+        public static GameObject wtOverlay2;
 
         private static AssetBundle _assetBundle;
 
         internal static GameObject trackerPrefab;
 
-        internal static GameObject wardPrefab;
+        public static GameObject wardPrefab;
 
-        internal static GameObject railPrefab;
+        public static GameObject tempWard;
+
+        public static PostProcessProfile profile;
 
         public static void Init(AssetBundle assetBundle)
         {
 
             _assetBundle = assetBundle;
-
-            swordHitSoundEvent = Content.CreateAndAddNetworkSoundEventDef("BayoSwordHit");
 
             CreateEffects();
 
@@ -59,112 +53,93 @@ namespace BayoMod.Survivors.Bayo
         #region effects
         private static void CreateEffects()
         {
-            CreateBombExplosionEffect();
-
-            swordSwingEffect = _assetBundle.LoadEffect("HenrySwordSwingEffect", true);
-            swordHitImpactEffect = _assetBundle.LoadEffect("ImpactHenrySlash");
-            bulletMuz = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Bandit2/MuzzleflashBandit2.prefab").WaitForCompletion().InstantiateClone("BayoMuzz", false);
-            UnityEngine.Object.Destroy(bulletMuz.GetComponent<VFXAttributes>());
-            UnityEngine.Object.Destroy(bulletMuz.GetComponent<ShakeEmitter>());
-            ContentAddition.AddEffect(bulletMuz);
+            CreateOverlay();
         }
 
-        private static void CreateBombExplosionEffect()
+        private static void CreateOverlay()
         {
-            bombExplosionEffect = _assetBundle.LoadEffect("BombExplosionEffect", "HenryBombExplosion");
-
-            if (!bombExplosionEffect)
-                return;
-
-            ShakeEmitter shakeEmitter = bombExplosionEffect.AddComponent<ShakeEmitter>();
-            shakeEmitter.amplitudeTimeDecay = true;
-            shakeEmitter.duration = 0.5f;
-            shakeEmitter.radius = 200f;
-            shakeEmitter.scaleShakeRadiusWithLocalScale = false;
-
-            shakeEmitter.wave = new Wave
+            if (Modules.Config.overlayOn.Value)
             {
-                amplitude = 1f,
-                frequency = 40f,
-                cycleOffset = 0f
-            };
+                wtOverlay = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/VoidFogMildEffect.prefab").WaitForCompletion().InstantiateClone("WTOver", false);
+                UnityEngine.Object.Destroy(wtOverlay.transform.Find("VisualEffect/BleedOverTime").gameObject);
+                UnityEngine.Object.Destroy(wtOverlay.transform.Find("VisualEffect/Small Sparks").gameObject);
+                UnityEngine.Object.Destroy(wtOverlay.transform.Find("VisualEffect/Smoke").gameObject);
+                UnityEngine.Object.Destroy(wtOverlay.transform.Find("VisualEffect/Point Light").gameObject);
+                UnityEngine.Object.Destroy(wtOverlay.transform.Find("CameraEffect/Shake").gameObject);
 
+                profile = wtOverlay.transform.Find("CameraEffect/PP").gameObject.GetComponent<PostProcessVolume>().profile;
+                profile.RemoveSettings<ColorGrading>();
+                profile.RemoveSettings<ChromaticAberration>();
+                profile.GetSetting<Vignette>().intensity.value = 0.3f;
+                RampFog rf = profile.GetSetting<RampFog>();
+                rf.fogColorStart.value = new Color(0.2f, 0.0980392156862745f, 0.4f, 0.09f);
+                rf.fogIntensity.value = 0.9f;
+                rf.fogPower.value = 0.75f;
+
+                wtOverlay.transform.Find("CameraEffect/PP").gameObject.GetComponent<PostProcessVolume>().sharedProfile = profile;
+            }
+
+            wtOverlay2 = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/VoidFogMildEffect.prefab").WaitForCompletion().InstantiateClone("WTOver2", false);
+            UnityEngine.Object.Destroy(wtOverlay2.transform.Find("VisualEffect/BleedOverTime").gameObject);
+            UnityEngine.Object.Destroy(wtOverlay2.transform.Find("VisualEffect/Small Sparks").gameObject);
+            UnityEngine.Object.Destroy(wtOverlay2.transform.Find("VisualEffect/Smoke").gameObject);
+            wtOverlay2.transform.Find("VisualEffect/Point Light").gameObject.GetComponent<Light>().color = Color.white;
+            UnityEngine.Object.Destroy(wtOverlay2.transform.Find("CameraEffect/Shake").gameObject);
+            //wtOverlay2.GetComponent<TemporaryVisualEffect>().visualTransform = null;
+
+            //wtOverlay.transform.Find("CameraEffect/PP").gameObject.GetComponent<PostProcessVolume>();
         }
+
         #endregion effects
 
         #region projectiles
         private static void CreateProjectiles()
         {
-            CreateBombProjectile();
-            CreateFistProjectile();
+            CreateWeaveProjectiles();
             CreateWard();
-            Content.AddProjectilePrefab(bombProjectilePrefab);
-            Content.AddProjectilePrefab(fistProjectilePrefab);
+            PrefabAPI.RegisterNetworkPrefab(fistProjectilePrefab);
+            PrefabAPI.RegisterNetworkPrefab(footProjectilePrefab);
+            //Content.AddProjectilePrefab(fistProjectilePrefab);
+            //Content.AddProjectilePrefab(footProjectilePrefab);
             ContentAddition.AddNetworkedObject(wardPrefab);
         }
 
-        private static void CreateBombProjectile()
+        private static void CreateWeaveProjectiles()
         {
-            //highly recommend setting up projectiles in editor, but this is a quick and dirty way to prototype if you want
-            bombProjectilePrefab = Asset.CloneProjectilePrefab("CommandoGrenadeProjectile", "HenryBombProjectile");
-
-            //remove their ProjectileImpactExplosion component and start from default values
-            UnityEngine.Object.Destroy(bombProjectilePrefab.GetComponent<ProjectileImpactExplosion>());
-            ProjectileImpactExplosion bombImpactExplosion = bombProjectilePrefab.AddComponent<ProjectileImpactExplosion>();
-            
-            bombImpactExplosion.blastRadius = 16f;
-            bombImpactExplosion.blastDamageCoefficient = 1f;
-            bombImpactExplosion.falloffModel = BlastAttack.FalloffModel.None;
-            bombImpactExplosion.destroyOnEnemy = true;
-            bombImpactExplosion.lifetime = 12f;
-            bombImpactExplosion.impactEffect = bombExplosionEffect;
-            bombImpactExplosion.lifetimeExpiredSound = Content.CreateAndAddNetworkSoundEventDef("HenryBombExplosion");
-            bombImpactExplosion.timerAfterImpact = true;
-            bombImpactExplosion.lifetimeAfterImpact = 0.1f;
-
-            ProjectileController bombController = bombProjectilePrefab.GetComponent<ProjectileController>();
-
-            if (_assetBundle.LoadAsset<GameObject>("HenryBombGhost") != null)
-                bombController.ghostPrefab = _assetBundle.CreateProjectileGhostPrefab("HenryBombGhost");
-            
-            bombController.startSound = "";
-        }
-
-        private static void CreateFistProjectile()
-        {
-            //highly recommend setting up projectiles in editor, but this is a quick and dirty way to prototype if you want
-            //fistProjectilePrefab = Asset.CloneProjectilePrefab("UnseenHandMovingProjectile", "FistProjectile");
-            //RoR2/Base/Bandit2/Bandit2SlashBlade.prefab
-            //Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Bandit2/Bandit2SlashBlade.prefab").WaitForCompletion()
-            fistProjectilePrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC2/Seeker/UnseenHandMovingProjectile.prefab").WaitForCompletion().InstantiateClone("WeaveProjectile", false);
-            //remove their ProjectileImpactExplosion component and start from default values
-            UnityEngine.Object.Destroy(fistProjectilePrefab.GetComponent<ProjectileSimple>());
-            UnityEngine.Object.Destroy(fistProjectilePrefab.GetComponent<RotateObject>());
-            UnityEngine.Object.Destroy(fistProjectilePrefab.GetComponent<UnseenHandHealingProjectile>());
-            ProjectileSimple fistSimple = fistProjectilePrefab.AddComponent<ProjectileSimple>();
-
-            fistSimple.lifetime = 0.5f;
-            fistSimple.desiredForwardSpeed = 1;
-            fistSimple.updateAfterFiring = true;
-            fistSimple.enableVelocityOverLifetime = true;
-            fistSimple.velocityOverLifetime = new AnimationCurve(new Keyframe[] { new Keyframe(0, 0), new Keyframe(0.075f, 60), new Keyframe(0.2f, 60), new Keyframe(0.205f, -60), new Keyframe(0.25f, -60), new Keyframe(0.255f, 0) });
-
-            ProjectileController fistController = fistProjectilePrefab.GetComponent<ProjectileController>();
-
-            ShakeEmitter shakeEmitter = fistProjectilePrefab.AddComponent<ShakeEmitter>();
-            shakeEmitter.amplitudeTimeDecay = true;
-            shakeEmitter.duration = 0.4f;
-            shakeEmitter.radius = 100f;
-            shakeEmitter.scaleShakeRadiusWithLocalScale = false;
-
-            shakeEmitter.wave = new Wave
+            if (_assetBundle.LoadAsset<GameObject>("footproj") != null && _assetBundle.LoadAsset<GameObject>("weavefoot") != null)
             {
-                amplitude = 1f,
-                frequency = 30f,
-                cycleOffset = 0f
-            };
-
-            fistController.startSound = "";
+                footProjectilePrefab = _assetBundle.LoadAsset<GameObject>("footproj");
+                footProjectilePrefab.GetComponent<ProjectileController>().ghostPrefab = _assetBundle.CreateProjectileGhostPrefab("weavefoot");
+                footProjectilePrefab.AddComponent<WickedWeave>();
+                ShakeEmitter shakeEmitter = footProjectilePrefab.AddComponent<ShakeEmitter>();
+                shakeEmitter.amplitudeTimeDecay = true;
+                shakeEmitter.duration = 0.36f;
+                shakeEmitter.radius = 100f;
+                shakeEmitter.scaleShakeRadiusWithLocalScale = false;
+                shakeEmitter.wave = new Wave
+                {
+                    amplitude = 0.5f,
+                    frequency = 10f,
+                    cycleOffset = 0f
+                };
+            }
+            if (_assetBundle.LoadAsset<GameObject>("fistproj") != null && _assetBundle.LoadAsset<GameObject>("weavehand") != null)
+            {
+                fistProjectilePrefab = _assetBundle.LoadAsset<GameObject>("fistproj");
+                fistProjectilePrefab.GetComponent<ProjectileController>().ghostPrefab = _assetBundle.CreateProjectileGhostPrefab("weavehand");
+                fistProjectilePrefab.AddComponent<WickedWeave>();
+                ShakeEmitter shakeEmitter = fistProjectilePrefab.AddComponent<ShakeEmitter>();
+                shakeEmitter.amplitudeTimeDecay = true;
+                shakeEmitter.duration = 0.36f;
+                shakeEmitter.radius = 100f;
+                shakeEmitter.scaleShakeRadiusWithLocalScale = false;
+                shakeEmitter.wave = new Wave
+                {
+                    amplitude = 0.5f,
+                    frequency = 10f,
+                    cycleOffset = 0f
+                };
+            }
         }
         #endregion projectiles
 
@@ -189,59 +164,42 @@ namespace BayoMod.Survivors.Bayo
 
         private static void CreateWard()
         {
-            /*
-            wardPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/EliteHaunted/AffixHauntedWard.prefab").WaitForCompletion().InstantiateClone("WtWardPrefab", false);
-            railPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/Railgunner/RailgunnerMineAltDetonated.prefab").WaitForCompletion();
-            //UnityEngine.Object.Destroy(wardPrefab.GetComponent<BuffWard>());
-
+            wardPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/Railgunner/RailgunnerMineAltDetonated.prefab").WaitForCompletion().InstantiateClone("WtWardPrefab", true);
+            
             BuffWard buffWard = wardPrefab.GetComponent<BuffWard>();
-
-            buffWard.radius = 25f;
             buffWard.buffDef = BayoBuffs.wtDebuff;
             buffWard.invertTeamFilter = true;
-
-            wardPrefab.GetComponent<TeamFilter>().defaultTeam = TeamIndex.Player;
-
-            NetworkIdentity ni = wardPrefab.GetComponent<NetworkIdentity>();
-
-            //ni.localPlayerAuthority = true;
-
-            SphereCollider sc = wardPrefab.AddComponent<SphereCollider>();
-
-            sc.isTrigger = true;
-            sc.radius = 25f;
-            sc.center = Vector3.zero;
-
-
-            wardPrefab.AddComponent<SlowDownProjectiles>();
-            wardPrefab.GetComponent<SlowDownProjectiles>().teamFilter = wardPrefab.GetComponent<TeamFilter>();
-            wardPrefab.GetComponent<SlowDownProjectiles>().slowDownCoefficient = 0.1f;
-
-            //sdp.teamFilter = wardPrefab.GetComponent<TeamFilter>();
-
-            //sdp.Equals(sdp1);
-
-            //sdp.slowDownCoefficient = 0.1f;
-            */
-            wardPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/Railgunner/RailgunnerMineAltDetonated.prefab").WaitForCompletion().InstantiateClone("WtWardPrefab", false);
-
-            BuffWard buffWard = wardPrefab.GetComponent<BuffWard>();
-
             buffWard.radius = 25f;
-            buffWard.buffDef = BayoBuffs.wtDebuff;
-            buffWard.invertTeamFilter = true;
-            buffWard.interval = 0.25f;
+            buffWard.interval = 0.2f;
+            buffWard.expires = false;
 
             SphereCollider sc = wardPrefab.GetComponent<SphereCollider>();
-
             sc.radius = 25f;
 
-            wardPrefab.GetComponent<TeamFilter>().defaultTeam = TeamIndex.Player;
+            SlowDownProjectiles sdp = wardPrefab.GetComponent<SlowDownProjectiles>();
+            sdp.slowDownCoefficient = 0.075f;
 
-            wardPrefab.AddComponent<NetworkedBodyAttachment>();
-            wardPrefab.GetComponent<NetworkedBodyAttachment>().shouldParentToAttachedBody = true;
+            NetworkedBodyAttachment nba = wardPrefab.AddComponent<NetworkedBodyAttachment>();
+            nba.shouldParentToAttachedBody = true;
+            wardPrefab.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
+            Rigidbody rb = wardPrefab.GetComponent<Rigidbody>();
+            rb.angularDrag = 0.05f;
+            rb.interpolation = RigidbodyInterpolation.None;
 
-            wardPrefab.GetComponent<SlowDownProjectiles>().slowDownCoefficient = 0.075f;
+            tempWard = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/EliteHaunted/AffixHauntedWard.prefab").WaitForCompletion().InstantiateClone("TempBayoWard", false);
+            var sphere = wardPrefab.transform.Find("AreaIndicator/Sphere").gameObject.GetComponent<MeshRenderer>();
+            Material mat = tempWard.transform.Find("Indicator/IndicatorSphere").gameObject.GetComponent<MeshRenderer>().material;
+            //Material mat = Addressables.LoadAssetAsync<Material>("RoR2/Base/EliteHaunted/matHauntedEliteAreaIndicator.mat").WaitForCompletion();
+            int num = mat.GetTexturePropertyNameIDs()[3];
+            mat.SetTexture(num, _assetBundle.LoadAsset<Texture>("texRampWt"));
+            Material[] mats = { mat };
+            sphere.materials = mats;
+            
+            UnityEngine.Object.Destroy(wardPrefab.transform.Find("AreaIndicator/Point Light").gameObject);
+            UnityEngine.Object.Destroy(wardPrefab.transform.Find("AreaIndicator/ChargeIn").gameObject);
+            UnityEngine.Object.Destroy(wardPrefab.transform.Find("AreaIndicator/Core").gameObject);
+            UnityEngine.Object.Destroy(wardPrefab.transform.Find("AreaIndicator/SoftGlow").gameObject);
+
         }
 
     }

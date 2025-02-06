@@ -21,6 +21,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
             gunStr = "muzrh";
             holdTime = 0.5f - earlyExitPercentTime;
+            voiceString = "p1v";
+            swingSoundString = "p1p3";
+            voice = true;
             base.OnEnter();
         }
     }
