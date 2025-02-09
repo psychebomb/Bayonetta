@@ -367,6 +367,7 @@ namespace BayoMod.Survivors.Bayo
         {
             AddHitboxes();
             bodyPrefab.AddComponent<BayoWeaponComponent>();
+            displayPrefab.transform.Find("DistantSound").gameObject.GetComponent<RTPCController>().akSoundString = "select";
         }
 
         public void AddHitboxes()
@@ -529,7 +530,7 @@ namespace BayoMod.Survivors.Bayo
                 activationStateMachineName = "Body",
                 interruptPriority = EntityStates.InterruptPriority.Pain,
 
-                baseRechargeInterval = 1.25f,
+                baseRechargeInterval = 1.125f,
                 baseMaxStock = 1,
 
                 rechargeStock = 1,
@@ -776,24 +777,73 @@ namespace BayoMod.Survivors.Bayo
             On.RoR2.CharacterBody.OnBuffFinalStackLost += CdHook;
             On.RoR2.CharacterMotor.FixedUpdate += WtGravityHook;
             On.RoR2.CharacterDeathBehavior.OnDeath += DeathHook;
-            On.RoR2.UserProfile.SetSurvivorPreference += LobbySoundHook;
             On.RoR2.GlobalEventManager.ProcessHitEnemy += WeaveHit;
             On.RoR2.SkillLocator.ApplyAmmoPack += WTBandHook;
             On.RoR2.CharacterMaster.Respawn += ReviveHook;
+            //On.RoR2.CharacterMaster.RespawnExtraLife += ReviveHooka;
+            //On.RoR2.CharacterMaster.RespawnExtraLifeHealAndRevive += ReviveHookb;
+            //On.RoR2.CharacterMaster.RespawnExtraLifeShrine += ReviveHookc;
+            //On.RoR2.CharacterMaster.RespawnExtraLifeVoid += ReviveHookd;
         }
+
+        #region revie hooks so annoyinggggg
+        /*
+        private void ReviveHookd(On.RoR2.CharacterMaster.orig_RespawnExtraLifeVoid orig, CharacterMaster self)
+        {
+            orig(self);
+
+            if (self.GetBodyObject().name.Contains("BayoBody"))
+            {
+                Util.PlaySound("revive", self.GetBodyObject());
+            }
+        }
+
+        private void ReviveHookc(On.RoR2.CharacterMaster.orig_RespawnExtraLifeShrine orig, CharacterMaster self)
+        {
+            orig(self);
+
+            if (self.GetBodyObject().name.Contains("BayoBody"))
+            {
+                Util.PlaySound("revive", self.GetBodyObject());
+            }
+        }
+        private void ReviveHookb(On.RoR2.CharacterMaster.orig_RespawnExtraLifeHealAndRevive orig, CharacterMaster self)
+        {
+            orig(self);
+
+            if (self.GetBodyObject().name.Contains("BayoBody"))
+            {
+                Util.PlaySound("revive", self.GetBodyObject());
+            }
+        }
+        private void ReviveHooka(On.RoR2.CharacterMaster.orig_RespawnExtraLife orig, CharacterMaster self)
+        {
+            orig(self);
+
+            if (self.GetBodyObject().name.Contains("BayoBody"))
+            {
+                Util.PlaySound("revive", self.GetBodyObject());
+            }
+        }
+
+        */
 
         private CharacterBody ReviveHook(On.RoR2.CharacterMaster.orig_Respawn orig, CharacterMaster self, Vector3 footPosition, Quaternion rotation, bool wasRevivedMidStage)
         {
+
             CharacterBody body = orig(self, footPosition, rotation, wasRevivedMidStage);
 
-            if (body.name.Contains("BayoBody") && wasRevivedMidStage== true)
+            if (wasRevivedMidStage == true)
             {
-                Util.PlaySound("revive", body.gameObject);
+                if (self.GetBodyObject().name.Contains("BayoBody"))
+                {
+                    Util.PlaySound("revive", self.GetBodyObject());
+                }
             }
-
             return body;
         }
 
+        #endregion
         private void WTBandHook(On.RoR2.SkillLocator.orig_ApplyAmmoPack orig, SkillLocator self)
         {
             
@@ -813,22 +863,6 @@ namespace BayoMod.Survivors.Bayo
 
             orig(self);
         }
-
-        private void LobbySoundHook(On.RoR2.UserProfile.orig_SetSurvivorPreference orig, UserProfile self, SurvivorDef newSurvivorPreference)
-        {
-            if (newSurvivorPreference.bodyPrefab.name.Contains("BayoBody"))
-            {
-                //sound = AkSoundEngine.PostEvent(1432588725, newSurvivorPreference.bodyPrefab);
-                Util.PlaySound("select", newSurvivorPreference.bodyPrefab);
-            }
-            else
-            {
-                //AkSoundEngine.StopPlayingID(sound);
-            }
-
-            orig(self, newSurvivorPreference);
-        }
-
         private void DeathHook(On.RoR2.CharacterDeathBehavior.orig_OnDeath orig, CharacterDeathBehavior self)
         {
             if (self.gameObject.name.Contains("BayoBody"))

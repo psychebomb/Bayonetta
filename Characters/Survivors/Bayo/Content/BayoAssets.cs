@@ -97,10 +97,10 @@ namespace BayoMod.Survivors.Bayo
         {
             CreateWeaveProjectiles();
             CreateWard();
+            Content.AddProjectilePrefab(fistProjectilePrefab);
+            Content.AddProjectilePrefab(footProjectilePrefab);
             PrefabAPI.RegisterNetworkPrefab(fistProjectilePrefab);
             PrefabAPI.RegisterNetworkPrefab(footProjectilePrefab);
-            //Content.AddProjectilePrefab(fistProjectilePrefab);
-            //Content.AddProjectilePrefab(footProjectilePrefab);
             ContentAddition.AddNetworkedObject(wardPrefab);
         }
 

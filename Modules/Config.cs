@@ -18,9 +18,9 @@ namespace BayoMod.Modules
         {
             emote1Keybind = BayoPlugin.instance.Config.Bind<KeyCode>(new ConfigDefinition("Keybinds", "Emote1"), KeyCode.Alpha1, new ConfigDescription("I've got a fever, and the only cure is more dead angels"));
             emote2Keybind = BayoPlugin.instance.Config.Bind<KeyCode>(new ConfigDefinition("Keybinds", "Strut"), KeyCode.Alpha2, new ConfigDescription("Dreadful!"));
-            musicOn = BayoPlugin.instance.Config.Bind<bool>("01 - Other Settings", "Strut music", true, "Toggle's whether Bayonetta's strut emote plays music.");
-            overlayOn = BayoPlugin.instance.Config.Bind<bool>("01 - Other Settings", "Witch time screen overlay", true, "Causes a screen overlay effect to occur during witch time when enabled.");
-            wtInvul = BayoPlugin.instance.Config.Bind<bool>("01 - Other Settings", "Witch time invulnerability", false, "Gives Bayonetta invincibilty instead of an armor boost during with time when enabled.");
+            musicOn = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Strut music", true, "Toggle's whether Bayonetta's strut emote plays music.");
+            overlayOn = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Witch time screen overlay", true, "Causes a screen overlay effect to occur during witch time when enabled.");
+            wtInvul = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Witch time invulnerability", false, "Gives Bayonetta invincibilty instead of an armor boost during with time when enabled.");
         }
 
     }
