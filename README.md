@@ -5,11 +5,11 @@ Multiplayer Compatible! (from what I've tested)
 Feel free to message me (ppsychee) on the RoR2 Modding Discord for any issues that arise, as well as for any general feedback!!
 
 ## Screenshots
-<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/select.jpg?raw=true"/>
-<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/booooom.jpg?raw=true"/>
-<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/heel.jpg?raw=true"/>
-<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/stomp.jpg?raw=true"/>
-<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/bayogif.gif?raw=true"/>
+<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/select.jpg?raw=true"/>
+<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/booooom.jpg?raw=true"/>
+<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/heel.jpg?raw=true"/>
+<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/stomp.jpg?raw=true"/>
+<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/bayogif.gif?raw=true"/>
 
 ## Skills
 ### Primary: Bullet Arts

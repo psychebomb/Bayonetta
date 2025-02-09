@@ -1,14 +1,8 @@
 ﻿using RoR2;
 using EntityStates;
-using BayoMod.Survivors.Bayo.SkillStates;
 using UnityEngine;
 using BayoMod.Modules.Components;
-using BayoMod.Survivors.Bayo;
-using RoR2.Skills;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
-using BayoMod.Characters.Survivors.Bayo.SkillStates.Weave;
-
-
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 {
