@@ -19,7 +19,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private bool fallRemoved = false;
         public override void OnEnter()
         {
-            useRootMotion = true;
             tracker = GetComponent<BayoTracker>();
             base.OnEnter();
         }
