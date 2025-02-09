@@ -5,21 +5,21 @@ Multiplayer Compatible! (from what I've tested)
 Feel free to message me (ppsychee) on the RoR2 Modding Discord for any issues that arise, as well as for any general feedback!!
 
 ## Screenshots
-<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/select.jpg"/>
-<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/boooooom.jpg"/>
-<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/heel.jpg"/>
-<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/stomp.jpg"/>
-<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/bayogif.gif"/>
+<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/select.jpg?raw=true"/>
+<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/booooom.jpg?raw=true"/>
+<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/heel.jpg?raw=true"/>
+<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/stomp.jpg?raw=true"/>
+<img width="720" src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/bayogif.gif?raw=true"/>
 
 ## Skills
 ### Primary: Bullet Arts
-<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/texM1.png"/>
+<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/texM1.png?raw=true"/>
 
 Perform a 5 hit punch sequence, dealing 150% damage for the first four hits. The last hit is a flurry attack that deals 135% damage each hit and summons a wicked weave when released, dealing 1400% damage. Bayonetta will also continuously fire her guns during the sequence, each shot dealing 50% damage.
 If dodge is used during this sequence, Bayonetta will pick up the sequence where she left off as long as M1 is still held. Additionally, using this move against airborne enemies will juggle them, stunning them and knocking them upwards.
 
 #### Secondary: Umbran Techniques
-<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/texM2.png"/>
+<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/texM2.png?raw=true"/>
 
 Perform a variety of different moves depending on movement inputs and whether or not Bayonetta is grounded.
 <table>
@@ -66,14 +66,14 @@ Perform a variety of different moves depending on movement inputs and whether or
 
 
 #### Utility: Dodge
-<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/texUtility.png"/>
+<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/texUtility.png?raw=true"/>
 
 Dodge a short distance, gaining brief invincibility and 100 armor. If you are hit during the invincibility, activate **Witch Time.**
 
 While in Witch Time, Gain 350 armor. Enemies and projectiles near Bayonetta are greatly slowed, and moves that normally only launch lighter enemies will now launch all non-boss enemies. Enemies will also have their gravity altered, allowing for new followups.
 
 ### Special: Tetsuzanko/Heel Stomp
-<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/texSpecial.png"/>
+<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/texSpecial.png?raw=true"/>
 
 Lock onto enemies and use primary or secondary buttons to summon a wicked weave at their location, dealing 1200% damage.
 
