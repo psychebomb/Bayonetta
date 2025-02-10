@@ -54,7 +54,7 @@ Perform a variety of different moves depending on movement inputs and whether or
   <tr>
     <td>Grounded + Neutral</td>
     <td>Breakdance</td>
-    <td>PPerform a breakdance, continuously dealing 125% damage per hit to all enemies around you. Juggles airborne opponents similar to M1. Jump cancellable.</td>
+    <td>Perform a breakdance, continuously dealing 125% damage per hit to all enemies around you. Juggles airborne opponents similar to M1. Jump cancellable.</td>
   </tr>
   <tr>
     <td>Grounded + Backward</td>
@@ -90,7 +90,18 @@ Bayonetta has special interactions with items that reduce cooldowns:
 - Some animations/sounds not playing properly in multiplayer.
 - Emotes that lower in-game music will lower the music for all players, not just the client.
 
-## Changelog     
+## Changelog
+- 0.1.2
+    - Base stats changed to be more in line with other melee characters:
+        - Base Health: 110 -> 160
+        - Base Health Regen: 1/s -> 2.5/s
+        - Base Armor: 0 -> 20
+    - Small tweaks to M1:
+        - Grounded version now moves her a little more distance forward
+        - Bayonetta now has air control during the final hit of aerial M1
+    - Fixed Luminous Shot not activating
+- 0.1.1
+    - Hopefully fixed file structure causing mod not to work :')   
 - 0.1.0
     - Initial Thunderstore Release :))))))
 

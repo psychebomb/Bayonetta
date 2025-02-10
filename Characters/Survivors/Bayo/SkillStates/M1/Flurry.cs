@@ -26,7 +26,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             damageCoefficient = 1.35f;
             procCoefficient = 0.75f;
-            damageType = DamageType.Generic;
+            damageType = DamageTypeCombo.GenericPrimary;
             pushForce = 300f;
             hitStopDuration = 0.012f;
             attackRecoil = 1f;

@@ -49,6 +49,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         {
             base.FixedUpdate();
             characterDirection.forward = GetAimRay().direction;
+            characterDirection.moveVector = GetAimRay().direction;
 
             if (CanDodge())
             {
@@ -72,6 +73,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                     Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
                     if (vector != Vector3.zero && base.isAuthority && base.characterMotor)
                     {
+                        vector *= 2f;
                         base.characterMotor.rootMotion += vector;
                     }
                 }
