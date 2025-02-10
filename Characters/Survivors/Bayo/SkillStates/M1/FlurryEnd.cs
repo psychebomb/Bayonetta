@@ -31,6 +31,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         private float recoilAmplitude = 0.1f;
         private float bloom = 10;
         private bool hasEnded = false;
+        private Vector3 dir;
 
         public override void OnEnter()
         {
@@ -39,7 +40,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             damageCoefficient = 2f;
             procCoefficient = 1f;
-            damageType = DamageType.Generic;
+            damageType = DamageTypeCombo.GenericPrimary;
             pushForce = 0f;
             hitStopDuration = 0.05f;
             attackRecoil = 1f;
@@ -51,11 +52,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             characterDirection.forward = GetAimRay().direction;
             rootMotionAccumulator = GetModelRootMotionAccumulator();
-
-            if (characterMotor && characterDirection)
-            {
-                characterMotor.velocity = characterMotor.velocity * 0f;
-            }
 
             base.OnEnter();
 
@@ -70,6 +66,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             if (characterMotor.isGrounded)
             {
                 animName = "FlurryE";
+                characterMotor.velocity = characterMotor.velocity * 0f;
             }
             else
             {
@@ -130,14 +127,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 return;
             }
 
-            characterDirection.forward = GetAimRay().direction;
-
             if (characterMotor.isGrounded)
             {
                 if (isAuthority && characterMotor)
                 {
                     inputBank.moveVector = Vector3.zero;
                     characterMotor.moveDirection = Vector3.zero;
+                    characterMotor.velocity = characterMotor.velocity * 0f;
                 }
 
                 if (rootMotionAccumulator)
@@ -151,6 +147,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
             else
             {
+                
                 if (rootMotionAccumulator)
                 {
                     Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
@@ -159,21 +156,27 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                         base.characterMotor.rootMotion += vector;
                     }
                 }
+                
                 characterMotor.moveDirection = inputBank.moveVector;
                 characterDirection.moveVector = characterMotor.moveDirection;
-                characterMotor.velocity.y = Mathf.Lerp(0f, -20f, fixedAge / duration);
+                characterMotor.velocity.y = 0;
             }
 
-            if (characterMotor && characterDirection)
+            if (stopwatch >= duration*attackStartPercentTime)
             {
-                characterMotor.velocity = characterMotor.velocity * 0f;
-            }
+                if (!firedProjectile)
+                {
+                    firedProjectile = true;
+                    FireProjectile();
+                    DoFireEffects();
+                }
 
-            if (stopwatch >= duration*attackStartPercentTime && !firedProjectile)
+                characterDirection.forward = dir;
+                characterDirection.moveVector = dir;
+            }
+            else
             {
-                firedProjectile = true;
-                FireProjectile();
-                DoFireEffects();
+                characterDirection.forward = GetAimRay().direction;
             }
 
             if (isAuthority && (stopwatch >= earlyExit))
@@ -208,14 +211,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         {
             if (base.isAuthority)
             {
-                Ray aimRay = GetAimRay();
-                Vector3 dir = aimRay.direction;
+                dir = GetAimRay().direction;
                 Vector3 pos = this.gameObject.transform.position;
                 pos.y -= 1f;
                 dir.y = 0f;
                 pos = pos + (dir.normalized * 2.5f);
                 dir.y = 0.1f;
-                ProjectileManager.instance.FireProjectile(projectilePrefab, pos, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * weaveDamage, weaveForce, Util.CheckRoll(critStat, base.characterBody.master));
+                ProjectileManager.instance.FireProjectile(projectilePrefab, pos, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * weaveDamage, weaveForce, Util.CheckRoll(critStat, base.characterBody.master), DamageColorIndex.Default, null, -1,DamageTypeCombo.GenericPrimary);
             }
         }
 

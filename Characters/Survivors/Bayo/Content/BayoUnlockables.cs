@@ -11,6 +11,7 @@ namespace BayoMod.Survivors.Bayo
 
         public static void Init()
         {
+
             masterySkinUnlockableDef = Modules.Content.CreateAndAddUnlockbleDef(
                 BayoMasteryAchievement.unlockableIdentifier,
                 Modules.Tokens.GetAchievementNameToken(BayoMasteryAchievement.identifier),

@@ -28,7 +28,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             attackEndPercentTime = 0.6f;
             damageCoefficient = 3f;
             procCoefficient = 1f;
-            damageType = DamageType.Generic;
+            damageType = DamageTypeCombo.GenericPrimary;
             pushForce = 100f;
             hitStopDuration = 0.012f;
             attackRecoil = 1f;
@@ -123,6 +123,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
                     if (vector != Vector3.zero && base.isAuthority && base.characterMotor)
                     {
+                        vector *= 2f;
                         base.characterMotor.rootMotion += vector;
                     }
                 }
