@@ -6,6 +6,7 @@ using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
 using System;
 using R2API;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
+using System.ComponentModel;
 
 namespace BayoMod.Survivors.Bayo.SkillStates
 {
@@ -41,6 +42,10 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         private CharacterCameraParams dodgeCam;
         public static CharacterCameraParams cameraParams;
         protected bool rlyGoodTiming = false;
+        private float dodgeTime;
+        private float armorTime;
+        private bool buffDone = false;
+        private Vector3 origScale;
 
         public override void OnEnter()
         {
@@ -88,8 +93,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             baseSpeed = 7f;
             if (this.characterBody.isSprinting) { baseSpeed *= this.characterBody.sprintingSpeedMultiplier; }
 
-            float armorTime = (earlyExit + 0.13333333f);
-            float dodgeTime = 0.25f;
+            armorTime = (earlyExit + 0.13333333f);
+            dodgeTime = 0.25f;
 
             if (this.moveSpeedStat - baseSpeed > 0)
             {
@@ -117,6 +122,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                     characterBody.AddTimedBuff(BayoBuffs.dodgeBuff, dodgeTime);
                 }
             }
+
+            //ResizeHurtbox();
         }
 
         private void RecalculateRollSpeed()
@@ -147,6 +154,27 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 }
 
                 if (inputBank.moveVector != Vector3.zero) cancel = true;
+            }
+        }
+
+        private void ResizeHurtbox()
+        {
+            ModelLocator component = gameObject.GetComponent<ModelLocator>();
+            ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
+            if ((bool)component2)
+            {
+                int childIndex = component2.FindChildIndex("MainHurtbox");
+                Transform trans = component2.FindChild(childIndex);
+                if (NetworkServer.active && characterBody.HasBuff(BayoBuffs.dodgeBuff))
+                {
+                    origScale = trans.localScale;
+                    Vector3 newScale = new Vector3((float)origScale.x * 7, (float)origScale.y * 3.5f, (float)origScale.z * 7);
+                    trans.set_localScale_Injected(ref newScale);
+                }
+                else
+                {
+                    trans.set_localScale_Injected(ref origScale);
+                }
             }
         }
 
@@ -198,6 +226,12 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 characterMotor.velocity = vector;
             }
             previousPosition = transform.position;
+
+            if(isAuthority && stopwatch > dodgeTime && !buffDone)
+            {
+                //ResizeHurtbox();
+                buffDone = true;
+            }
 
             if (isAuthority && stopwatch >= earlyExit && !inEvade)
             {

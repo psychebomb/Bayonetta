@@ -26,6 +26,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private CharacterCameraParams cameraParams;
         private CameraTargetParams.CameraParamsOverrideHandle cameraParamsOverrideHandle;
         private bool music;
+        private bool zoom;
         //private float currentMaster = float.Parse(AudioManager.cvVolumeMaster.GetString(), CultureInfo.InvariantCulture) / 100f;
         //private float actualMSX = float.Parse(AudioManager.cvVolumeParentMsx.GetString(), CultureInfo.InvariantCulture);
         private string oldMusic;
@@ -57,7 +58,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 }
             }
 
-            if (base.cameraTargetParams)
+            zoom = Modules.Config.eZoom.Value;
+            if (base.cameraTargetParams && zoom)
             {
                 cameraParamsOverrideHandle = base.cameraTargetParams.AddParamsOverride(new CameraTargetParams.CameraParamsOverrideRequest
                 {
@@ -96,7 +98,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         public override void FixedUpdate()
         {
             stopwatch += Time.fixedDeltaTime;
-            this.characterBody.moveSpeed = 6.5f * 0.635f;
             cancel = false;
             jumped = false;
             DetermineCancel();
@@ -107,15 +108,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 float decr = Mathf.Lerp(float.Parse(oldMusic, CultureInfo.InvariantCulture), 0f, stopwatch / animDuration);
                 convar.SetString(decr.ToString());
             }
-            else
-            {
-            }
 
             if (cancel)
             {
                 outer.SetNextStateToMain();
                 return;
             }
+
+            this.characterBody.moveSpeed = 6.5f * 0.635f;
 
             if (rootmotion && !flag1)
             {
@@ -127,10 +127,16 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     characterDirection.moveVector = Vector3.zero;
                 }
             }
-            else if (flag1)
+            else if (flag1 && isAuthority)
             {
+                /*
+                if(inputBank.moveVector == Vector3.zero)
+                {
+                    inputBank.moveVector = characterDirection.forward;
+                }
+                */
                 characterMotor.moveDirection = inputBank.moveVector;
-                characterDirection.moveVector = characterMotor.moveDirection;
+                //characterDirection.moveVector = characterMotor.moveDirection;
 
             }
 
@@ -154,7 +160,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 AkSoundEngine.StopPlayingID(sound);
             }
 
-            if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid)
+            if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid && zoom)
             {
                 cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle, 0.5f);
             }

@@ -13,9 +13,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private RootMotionAccumulator rootmotion;
         protected bool cancel;
         protected float stopwatch;
+        protected float zoomDur = 1f;
  
         protected bool jumped;
         protected bool flag1;
+        private bool zoom;
 
         private CharacterCameraParams cameraParams;
         private CameraTargetParams.CameraParamsOverrideHandle cameraParamsOverrideHandle;
@@ -32,13 +34,15 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             cameraParams.name = "BreakFirst";
             cameraParams.data.wallCushion = 0.1f;
             cameraParams.data.idealLocalCameraPos = new Vector3(0f, -1.5f, -7f);
-            if (base.cameraTargetParams)
+
+            zoom = Modules.Config.eZoom.Value;
+            if (base.cameraTargetParams && zoom)
             {
                 cameraParamsOverrideHandle = base.cameraTargetParams.AddParamsOverride(new CameraTargetParams.CameraParamsOverrideRequest
                 {
                     cameraParamsData = cameraParams.data,
                     priority = 1f
-                }, 1f);
+                }, zoomDur);
             }
 
         }
@@ -105,7 +109,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             characterBody.hideCrosshair = false;
             if (NetworkServer.active) base.characterBody.RemoveBuff(RoR2Content.Buffs.Slow60);
 
-            if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid)
+            if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid && zoom)
             {
                 cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle, 0.5f);
             }

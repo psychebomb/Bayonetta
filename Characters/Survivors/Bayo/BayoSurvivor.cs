@@ -13,7 +13,6 @@ using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Weave;
 using UnityEngine.Networking;
 using RoR2.Projectile;
-using static UnityEngine.ParticleSystem.PlaybackState;
 using static BayoMod.Modules.Skins;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using BayoMod.Modules.Components;
@@ -779,15 +778,15 @@ namespace BayoMod.Survivors.Bayo
             On.RoR2.CharacterDeathBehavior.OnDeath += DeathHook;
             On.RoR2.GlobalEventManager.ProcessHitEnemy += WeaveHit;
             On.RoR2.SkillLocator.ApplyAmmoPack += WTBandHook;
-            On.RoR2.CharacterMaster.Respawn += ReviveHook;
-            //On.RoR2.CharacterMaster.RespawnExtraLife += ReviveHooka;
-            //On.RoR2.CharacterMaster.RespawnExtraLifeHealAndRevive += ReviveHookb;
-            //On.RoR2.CharacterMaster.RespawnExtraLifeShrine += ReviveHookc;
-            //On.RoR2.CharacterMaster.RespawnExtraLifeVoid += ReviveHookd;
+            //On.RoR2.CharacterMaster.Respawn += ReviveHook;
+            On.RoR2.CharacterMaster.RespawnExtraLife += ReviveHooka;
+            On.RoR2.CharacterMaster.RespawnExtraLifeHealAndRevive += ReviveHookb;
+            On.RoR2.CharacterMaster.RespawnExtraLifeShrine += ReviveHookc;
+            On.RoR2.CharacterMaster.RespawnExtraLifeVoid += ReviveHookd;
         }
 
         #region revie hooks so annoyinggggg
-        /*
+        
         private void ReviveHookd(On.RoR2.CharacterMaster.orig_RespawnExtraLifeVoid orig, CharacterMaster self)
         {
             orig(self);
@@ -825,9 +824,6 @@ namespace BayoMod.Survivors.Bayo
                 Util.PlaySound("revive", self.GetBodyObject());
             }
         }
-
-        */
-
         private CharacterBody ReviveHook(On.RoR2.CharacterMaster.orig_Respawn orig, CharacterMaster self, Vector3 footPosition, Quaternion rotation, bool wasRevivedMidStage)
         {
 
@@ -982,6 +978,19 @@ namespace BayoMod.Survivors.Bayo
                         self.AddTimedBuff(BayoBuffs.wtCoolDown, k);
                     }
                 }
+                if(buffDef == BayoBuffs.dodgeBuff)
+                {
+                    ModelLocator component = self.gameObject.GetComponent<ModelLocator>();
+                    ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
+                    if ((bool)component2)
+                    {
+                        int childIndex = component2.FindChildIndex("MainHurtbox");
+                        Transform trans = component2.FindChild(childIndex);
+                        Vector3 origScale = trans.localScale;
+                        Vector3 newScale = new Vector3((float)origScale.x / 6, (float)origScale.y / 3f, (float)origScale.z / 6);
+                        trans.set_localScale_Injected(ref newScale);
+                    }
+                }
             }
 
             orig(self, buffDef);
@@ -1000,6 +1009,20 @@ namespace BayoMod.Survivors.Bayo
                     wtWard.GetComponent<BuffWard>().Networkradius = 25 + self.radius;
                     wtWard.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(self.gameObject);
                     sound = AkSoundEngine.PostEvent(1517750988, self.gameObject);
+                }
+
+                if (buffDef == BayoBuffs.dodgeBuff)
+                {
+                    ModelLocator component = self.gameObject.GetComponent<ModelLocator>();
+                    ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
+                    if ((bool)component2)
+                    {
+                        int childIndex = component2.FindChildIndex("MainHurtbox");
+                        Transform trans = component2.FindChild(childIndex);
+                        Vector3 origScale = trans.localScale;
+                        Vector3 newScale = new Vector3((float)origScale.x * 6, (float)origScale.y * 3f, (float)origScale.z * 6);
+                        trans.set_localScale_Injected(ref newScale);
+                    }
                 }
 
             }

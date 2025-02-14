@@ -142,6 +142,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 if (inputBank.skill1.down)
                 {
                     SetStep();
+                    return;
                 }
                 if (!hasEnded)
                 {
