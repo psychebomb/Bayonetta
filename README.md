@@ -91,6 +91,13 @@ Bayonetta has special interactions with items that reduce cooldowns:
 - Emotes that lower in-game music will lower the music for all players, not just the client.
 
 ## Changelog
+- 0.2.0
+    - New Emote! You may need to update your config file
+    - Added a config option to enable/disable zoom in during emotes
+    - Increased Witch Time's activation hitbox
+        - Increased wt cooldown's duration to 10 seconds to compensate for easier wt activation
+    - Updated tracker to more accurately lock in on targets based on aim direction
+    - Fixed issue where M1 didn't function properly at high attack speed
 - 0.1.2
     - Base stats changed to be more in line with other melee characters:
         - Base Health: 110 -> 160
