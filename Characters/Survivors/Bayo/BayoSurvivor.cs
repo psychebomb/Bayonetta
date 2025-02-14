@@ -949,7 +949,7 @@ namespace BayoMod.Survivors.Bayo
                 int alien = self.inventory.GetItemCount(RoR2Content.Items.AlienHead);
                 int light = self.inventory.GetItemCount(DLC1Content.Items.HalfAttackSpeedHalfCooldowns);
                 int pure = self.inventory.GetItemCount(RoR2Content.Items.LunarBadLuck);
-                float cd = 8f;
+                float cd = 10f;
 
                 for (int k = 0; k < alien; k++)
                 {
