@@ -32,6 +32,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 }
                 if (Input.GetKeyDown(Modules.Config.emote2Keybind.Value))
                 {
+                    outer.SetNextState(new Emote2());
+                    return;
+                }
+                if (Input.GetKeyDown(Modules.Config.emote3Keybind.Value))
+                {
                     EntityStateMachine.FindByCustomName(this.gameObject, "Weapon").SetNextState(new Strut());
                     return;
                 }

@@ -9,7 +9,7 @@ namespace BayoMod.Modules.Components
     {
         public float maxTrackingDistance = 50f;
         public float maxTrackingAngle = 45f;
-        public float trackerUpdateFrequency = 30f;
+        public float trackerUpdateFrequency = 10f;
 
         private HurtBox trackingTarget;
         private CharacterBody characterBody;
@@ -72,7 +72,7 @@ namespace BayoMod.Modules.Components
             this.search.filterByLoS = true;
             this.search.searchOrigin = aimRay.origin;
             this.search.searchDirection = aimRay.direction;
-            this.search.sortMode = BullseyeSearch.SortMode.Distance;
+            this.search.sortMode = BullseyeSearch.SortMode.Angle;
             this.search.maxDistanceFilter = this.maxTrackingDistance;
             this.search.maxAngleFilter = this.maxTrackingAngle;
             this.search.RefreshCandidates();

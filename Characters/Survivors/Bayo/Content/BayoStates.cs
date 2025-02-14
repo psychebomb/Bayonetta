@@ -83,6 +83,8 @@ namespace BayoMod.Survivors.Bayo
 
             Modules.Content.AddEntityState(typeof(Emote1));
 
+            Modules.Content.AddEntityState(typeof(Emote2));
+
             Modules.Content.AddEntityState(typeof(Strut));
             #endregion
         }

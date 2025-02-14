@@ -71,6 +71,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected readonly List<HealthComponent> launchList = new List<HealthComponent>();
         protected string voiceString;
         protected bool voice = false;
+        protected bool durOverride = false;
 
         public override void OnEnter()
         {
@@ -233,7 +234,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 FireBullet();
             }
 
-            if (stopwatch >= duration && isAuthority)
+            if (stopwatch >= duration && isAuthority && !durOverride)
             {
                 if (exitToStance) { outer.SetNextState(new Stance()); }
                 else { outer.SetNextStateToMain(); }

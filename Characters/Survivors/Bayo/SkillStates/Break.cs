@@ -29,7 +29,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         private Vector3 rotateAngle;
         protected float pose = 0.88f;
         protected float poseTimer = 999f;
-        private float snapTime = 0.5f;
         private bool snapped = false;
         private bool sounded = false;
         private bool inPose = false;

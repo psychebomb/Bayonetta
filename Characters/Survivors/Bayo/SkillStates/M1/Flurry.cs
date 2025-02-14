@@ -63,6 +63,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             myDuration = 2.666f / this.attackSpeedStat;
             duration = 3f / this.attackSpeedStat;
+            durOverride = true;
             fireFreq = 0.2f / this.attackSpeedStat;
             animTime = 0.9333f / this.attackSpeedStat;
 
@@ -101,7 +102,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
         public override void FixedUpdate()
         {
-        
+
             if (CanDodge())
             {
                 outer.SetNextState(new Dodge { currentSwing = 4 });
@@ -171,7 +172,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         }
         public override void OnExit()
         {
-            if(launch) LastHit();
+            if (launch) LastHit();
             base.OnExit();
         }
     }
