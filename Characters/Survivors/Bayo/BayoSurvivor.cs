@@ -17,6 +17,10 @@ using static BayoMod.Modules.Skins;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using BayoMod.Modules.Components;
 using static R2API.SoundAPI;
+using EntityStates;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
+using System.Globalization;
+using EntityStates.BrotherMonster;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -319,6 +323,8 @@ namespace BayoMod.Survivors.Bayo
 
         private GameObject wtWard;
 
+        private GameObject pObj;
+
         private float lessGravity = 0.85f;
 
         private float lesserGravity = 0.97f;
@@ -365,7 +371,7 @@ namespace BayoMod.Survivors.Bayo
         private void AdditionalBodySetup()
         {
             AddHitboxes();
-            bodyPrefab.AddComponent<BayoWeaponComponent>();
+            bodyPrefab.AddComponent<PunishTracker>();
             displayPrefab.transform.Find("DistantSound").gameObject.GetComponent<RTPCController>().akSoundString = "select";
         }
 
@@ -783,10 +789,77 @@ namespace BayoMod.Survivors.Bayo
             On.RoR2.CharacterMaster.RespawnExtraLifeHealAndRevive += ReviveHookb;
             On.RoR2.CharacterMaster.RespawnExtraLifeShrine += ReviveHookc;
             On.RoR2.CharacterMaster.RespawnExtraLifeVoid += ReviveHookd;
+            On.RoR2.SetStateOnHurt.SetStunInternal += PunishHook1;
+            On.RoR2.SetStateOnHurt.OverrideStunInternal += PunishHook2;
+        }
+        private void PunishHook2(On.RoR2.SetStateOnHurt.orig_OverrideStunInternal orig, SetStateOnHurt self, float duration)
+        {
+            if (self.targetStateMachine.GetComponentInParent<CharacterBody>().HasBuff(BayoBuffs.punishable))
+            {
+                if (self.targetStateMachine)
+                {
+                    if (self.targetStateMachine.state is PunishStun)
+                    {
+                        PunishStun stunState = self.targetStateMachine.state as PunishStun;
+                        if (stunState.timeRemaining < duration)
+                        {
+                            stunState.ExtendStun(duration - stunState.timeRemaining);
+                        }
+                    }
+                    else if (duration > 0f)
+                    {
+                        PunishStun stunState = new PunishStun();
+                        stunState.stunDuration = duration;
+                        self.targetStateMachine.SetInterruptState(stunState, InterruptPriority.Stun);
+                    }
+                }
+                EntityStateMachine[] array = self.idleStateMachine;
+                for (int i = 0; i < array.Length; i++)
+                {
+                    array[i].SetNextStateToMain();
+                }
+            }
+            else
+            {
+                orig(self, duration);
+            }
+        }
+
+        private void PunishHook1(On.RoR2.SetStateOnHurt.orig_SetStunInternal orig, SetStateOnHurt self, float duration)
+        {
+            if (self.targetStateMachine.GetComponentInParent<CharacterBody>().HasBuff(BayoBuffs.punishable))
+            {
+                if (self.targetStateMachine)
+                {
+                    if (self.targetStateMachine.state is PunishStun)
+                    {
+                        PunishStun stunState = self.targetStateMachine.state as PunishStun;
+                        if(stunState.timeRemaining < duration)
+                        {
+                            stunState.ExtendStun(duration - stunState.timeRemaining);
+                        }
+                    }
+                    else
+                    {
+                        PunishStun stunState = new PunishStun();
+                        stunState.stunDuration = duration;
+                        self.targetStateMachine.SetInterruptState(stunState, InterruptPriority.Stun);
+                    }
+                }
+                EntityStateMachine[] array = self.idleStateMachine;
+                for (int i = 0; i < array.Length; i++)
+                {
+                    array[i].SetNextStateToMain();
+                }
+            }
+            else
+            {
+                orig(self, duration);
+            }
         }
 
         #region revie hooks so annoyinggggg
-        
+
         private void ReviveHookd(On.RoR2.CharacterMaster.orig_RespawnExtraLifeVoid orig, CharacterMaster self)
         {
             orig(self);
@@ -894,8 +967,13 @@ namespace BayoMod.Survivors.Bayo
                     }
                     
                     forceVec = (damageInfo.force/100) * num;
-                    //float down = damageInfo.force.normalized.y;
                     victim.GetComponent<HealthComponent>().TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
+                }
+                float down = damageInfo.force.normalized.y;
+                if (down <= -0.75f && !body.isChampion)
+                {
+                    body.AddTimedBuff(BayoBuffs.punishable, 2f);
+                    victim.GetComponent<HealthComponent>().GetComponent<SetStateOnHurt>()?.SetStun(2f);
                 }
             }
 
@@ -904,15 +982,15 @@ namespace BayoMod.Survivors.Bayo
 
         private void WtGravityHook(On.RoR2.CharacterMotor.orig_FixedUpdate orig, CharacterMotor self)
         {
-            
-            if(self.body.HasBuff(BayoBuffs.wtDebuff) && !self.isGrounded)
+
+            if (self.body.HasBuff(BayoBuffs.wtDebuff) && !self.isGrounded)
             {
-                if ((self.velocity.y <= 3f)&& (self.velocity.y >= -3f))
+                if ((self.velocity.y <= 3f) && (self.velocity.y >= -3f))
                 {
                     self.velocity.y *= lessGravity;
                     self.velocity.y -= Time.fixedDeltaTime * Physics.gravity.y;
                 }
-                if(self.velocity.y < -1f)
+                if (self.velocity.y < -1f)
                 {
                     self.velocity.y -= Time.fixedDeltaTime * Physics.gravity.y * 2f;
                 }
@@ -945,7 +1023,7 @@ namespace BayoMod.Survivors.Bayo
             if (NetworkServer.active)
             {
                 bool flagg = (buffDef == BayoBuffs.wtBuff);
-                bool flagg2 = (buffDef == RoR2Content.Buffs.NoCooldowns && self.gameObject.name.Contains("BayoBody"));
+                bool flagg2 = (buffDef == RoR2Content.Buffs.NoCooldowns && self.gameObject && self.gameObject.name.Contains("BayoBody"));
                 int alien = self.inventory.GetItemCount(RoR2Content.Items.AlienHead);
                 int light = self.inventory.GetItemCount(DLC1Content.Items.HalfAttackSpeedHalfCooldowns);
                 int pure = self.inventory.GetItemCount(RoR2Content.Items.LunarBadLuck);
@@ -965,7 +1043,7 @@ namespace BayoMod.Survivors.Bayo
                 }
                 if(cd < 0) cd = 0;
 
-                if ((flagg && !self.HasBuff(RoR2Content.Buffs.NoCooldowns)) ||(!self.HasBuff(BayoBuffs.wtBuff) && flagg2) && wtWard)
+                if (((flagg && !self.HasBuff(RoR2Content.Buffs.NoCooldowns)) ||(!self.HasBuff(BayoBuffs.wtBuff) && flagg2)) && wtWard)
                 {
                     Object.Destroy(wtWard);
                     Util.PlaySound("wtexit", self.gameObject);
@@ -981,14 +1059,17 @@ namespace BayoMod.Survivors.Bayo
                 if(buffDef == BayoBuffs.dodgeBuff)
                 {
                     ModelLocator component = self.gameObject.GetComponent<ModelLocator>();
-                    ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
-                    if ((bool)component2)
+                    if (component)
                     {
-                        int childIndex = component2.FindChildIndex("MainHurtbox");
-                        Transform trans = component2.FindChild(childIndex);
-                        Vector3 origScale = trans.localScale;
-                        Vector3 newScale = new Vector3((float)origScale.x / 6, (float)origScale.y / 3f, (float)origScale.z / 6);
-                        trans.set_localScale_Injected(ref newScale);
+                        ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
+                        if ((bool)component2)
+                        {
+                            int childIndex = component2.FindChildIndex("MainHurtbox");
+                            Transform trans = component2.FindChild(childIndex);
+                            Vector3 origScale = trans.localScale;
+                            Vector3 newScale = new Vector3((float)origScale.x / 6, (float)origScale.y / 3f, (float)origScale.z / 6);
+                            trans.set_localScale_Injected(ref newScale);
+                        }
                     }
                 }
             }
@@ -1014,17 +1095,19 @@ namespace BayoMod.Survivors.Bayo
                 if (buffDef == BayoBuffs.dodgeBuff)
                 {
                     ModelLocator component = self.gameObject.GetComponent<ModelLocator>();
-                    ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
-                    if ((bool)component2)
+                    if (component)
                     {
-                        int childIndex = component2.FindChildIndex("MainHurtbox");
-                        Transform trans = component2.FindChild(childIndex);
-                        Vector3 origScale = trans.localScale;
-                        Vector3 newScale = new Vector3((float)origScale.x * 6, (float)origScale.y * 3f, (float)origScale.z * 6);
-                        trans.set_localScale_Injected(ref newScale);
+                        ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
+                        if ((bool)component2)
+                        {
+                            int childIndex = component2.FindChildIndex("MainHurtbox");
+                            Transform trans = component2.FindChild(childIndex);
+                            Vector3 origScale = trans.localScale;
+                            Vector3 newScale = new Vector3((float)origScale.x * 6, (float)origScale.y * 3f, (float)origScale.z * 6);
+                            trans.set_localScale_Injected(ref newScale);
+                        }
                     }
                 }
-
             }
 
             orig(self, buffDef);

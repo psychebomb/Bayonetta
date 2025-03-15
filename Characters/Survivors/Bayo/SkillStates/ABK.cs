@@ -3,6 +3,7 @@ using UnityEngine;
 using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Survivors.Bayo;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
+using UnityEngine.Assertions.Must;
 
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
@@ -11,6 +12,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
     {
         private Vector3 forwardDir;
         private bool hasExtended;
+        private string animName;
         protected AnimationCurve kickSpeed;
         protected Vector3 speedVec;
         protected Ray saveRay;
@@ -44,6 +46,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 new Keyframe(0.2f, 7f),
                 new Keyframe(0.5f, 7f),
                 });
+                animName = "AbkDown";
             }
             else
             {
@@ -55,9 +58,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 new Keyframe(0.75f, 1.5f)
                 });
                 launch = true;
+                animName = "Abk";
             }
 
-            PlayAnimation("Body", "Abk", playbackRateParam, duration);
+            PlayAnimation("Body", animName, playbackRateParam, duration);
             characterMotor.Motor.ForceUnground();
             exitToStance = false;
             hasExtended = false;
@@ -139,6 +143,30 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                     body.characterMotor.velocity = realSpeed;
                 }
             }
+            else if(body.rigidbody && ((body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.rigidbody.mass < 300)))
+            {
+                if (!launchList.Contains(item))
+                {
+                    launchList.Add(item);
+                    float dist = Vector3.Distance(base.characterBody.transform.position, body.transform.position);
+                    if (dist > 2.5f)
+                    {
+                        body.rigidbody.position += speedVec.normalized * -1 * (dist - 2.5f);
+                    }
+                }
+                else
+                {
+                    Vector3 realSpeed = speedVec * 0.9f;
+                    body.rigidbody.velocity = realSpeed;
+                    if (item.GetComponent<RigidbodyMotor>())
+                    {
+                        item.GetComponent<RigidbodyMotor>().canTakeImpactDamage = false;
+                        
+                    }
+                    //body.rigidbody.detectCollisions = false;
+                    
+                }
+            }
         }
 
         private void LastHit()
@@ -155,6 +183,16 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                     if (body.characterMotor)
                     {
                         body.characterMotor.velocity = speedVec.normalized * (1.5f * 0.9f);
+                    }
+                    else if (body.rigidbody)
+                    {
+                        body.rigidbody.velocity = speedVec.normalized * (1.5f * 0.9f);
+                        //body.rigidbody.detectCollisions = true;
+                        if (item.GetComponent<RigidbodyMotor>())
+                        {
+                            item.GetComponent<RigidbodyMotor>().canTakeImpactDamage = true;
+
+                        }
                     }
                 }
             }

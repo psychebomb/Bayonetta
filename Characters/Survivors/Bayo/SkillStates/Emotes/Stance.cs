@@ -10,7 +10,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
 {
     public class Stance : BaseState
     {
-        public static float idleDuration = 3f;
+        public static float idleDuration = 1.5f;
         public static float cancelDuration = 0.5f;
         private RootMotionAccumulator outmove;
         private Animator animator;
@@ -52,7 +52,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
                     jumped = true;
                 }
 
+                if (inputBank.interact.down) cancel = true;
                 if (inputBank.moveVector != Vector3.zero) cancel = true;
+                if (Input.GetKeyDown(Modules.Config.emote1Keybind.Value)) cancel = true;
+                if (Input.GetKeyDown(Modules.Config.emote2Keybind.Value)) cancel = true;
+                if (Input.GetKeyDown(Modules.Config.emote3Keybind.Value)) cancel = true;
             }
         }
         public override void FixedUpdate()

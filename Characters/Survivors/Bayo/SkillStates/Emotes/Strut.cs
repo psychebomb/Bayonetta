@@ -47,14 +47,22 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             cameraParams.data.idealLocalCameraPos = new Vector3(0f, -1.5f, -7f);
 
             music = Modules.Config.musicOn.Value;
+            bool client = Modules.Config.musicClient.Value;
             if (music)
             {
-                sound = AkSoundEngine.PostEvent(2930662992, this.gameObject);
+                if (client && isAuthority)
+                {
+                    sound = AkSoundEngine.PostEvent(2930662992, this.gameObject);
+                }
+                else if (!client)
+                {
+                    sound = AkSoundEngine.PostEvent(2930662992, this.gameObject);
+                }
                 convar = RoR2.Console.instance.FindConVar("volume_music");
-                // set in game music volume to 0 so we hear the new music only.
                 if (convar != null)
                 {
                     oldMusic = convar.GetString();
+                    convar.SetString("0");
                 }
             }
 
@@ -103,11 +111,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             DetermineCancel();
             base.FixedUpdate();
 
+            /*
             if (music && Util.HasEffectiveAuthority(this.gameObject))
             {
                 float decr = Mathf.Lerp(float.Parse(oldMusic, CultureInfo.InvariantCulture), 0f, stopwatch / animDuration);
                 convar.SetString(decr.ToString());
             }
+            */
 
             if (cancel)
             {

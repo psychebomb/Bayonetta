@@ -1,11 +1,12 @@
 ﻿using EntityStates;
 using RoR2;
+using System;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
+namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
 {
-    public class BaseEmote : BaseState
+    public class e2temp : BaseState
     {
         public float animDuration;
         public float cancelDuration;
@@ -13,16 +14,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private RootMotionAccumulator rootmotion;
         protected bool cancel;
         protected float stopwatch;
-        protected float zoomDur = 1f;
- 
+
+        private bool camActiv = false;
+        private bool voiced = false;
+
         protected bool jumped;
         protected bool flag1;
-        protected bool half = false;
         private bool zoom;
-
-        protected float x = 0;
-        protected float y = -1.5f;
-        protected float z = -7f;
 
         private CharacterCameraParams cameraParams;
         private CameraTargetParams.CameraParamsOverrideHandle cameraParamsOverrideHandle;
@@ -30,6 +28,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         public override void OnEnter()
         {
             rootmotion = GetModelRootMotionAccumulator();
+            animString = "urhalo";
+            animDuration = 1.96f;
             flag1 = false;
             characterBody.hideCrosshair = true;
             PlayAnimation("FullBody, Override", animString, "Emote.playbackRate", animDuration);
@@ -38,7 +38,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             cameraParams = ScriptableObject.CreateInstance<CharacterCameraParams>();
             cameraParams.name = "BreakFirst";
             cameraParams.data.wallCushion = 0.1f;
-            cameraParams.data.idealLocalCameraPos = new Vector3(x, y, z);
+            cameraParams.data.idealLocalCameraPos = new Vector3(1.35f, -1.75f, -5f);
 
             zoom = Modules.Config.eZoom.Value;
             if (base.cameraTargetParams && zoom)
@@ -47,7 +47,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 {
                     cameraParamsData = cameraParams.data,
                     priority = 1f
-                }, zoomDur);
+                }, 0.01f);
             }
 
         }
@@ -92,14 +92,45 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 return;
             }
 
+            if (!camActiv)
+            {
+                camActiv = true;
+                /*
+                if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid && zoom)
+                {
+                    cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle, 1.96f);
+                }
+                */
+
+                cameraParams = ScriptableObject.CreateInstance<CharacterCameraParams>();
+                cameraParams.name = "BreakSec";
+                cameraParams.data.wallCushion = 0.1f;
+                cameraParams.data.idealLocalCameraPos = new Vector3(-0.7f, -2.75f, -5f);
+
+                zoom = Modules.Config.eZoom.Value;
+                if (base.cameraTargetParams && zoom)
+                {
+                    cameraParamsOverrideHandle = base.cameraTargetParams.AddParamsOverride(new CameraTargetParams.CameraParamsOverrideRequest
+                    {
+                        cameraParamsData = cameraParams.data,
+                        priority = 1.1f
+                    }, 1.96f);
+                }
+            }
+
             if (rootmotion && !flag1)
             {
                 Vector3 vector = rootmotion.ExtractRootMotion();
                 if (isAuthority && characterMotor)
                 {
-                    //if (half) vector *= .5f;
                     characterMotor.rootMotion = vector;
                 }
+            }
+
+            if (fixedAge > 0.33f && !voiced)
+            {
+                Util.PlaySound("ktaunt", this.gameObject);
+                voiced = true;
             }
 
             if (isAuthority && stopwatch >= animDuration)

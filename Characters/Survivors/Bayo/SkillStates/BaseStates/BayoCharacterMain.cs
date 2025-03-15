@@ -3,6 +3,7 @@ using EntityStates;
 using UnityEngine;
 using BayoMod.Modules.Components;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 {
@@ -10,9 +11,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
     {
 
         private BayoTracker tracker;
+        private PunishTracker pTracker;
         private bool fallRemoved = false;
         public override void OnEnter()
         {
+            pTracker = GetComponent<PunishTracker>();
             tracker = GetComponent<BayoTracker>();
             base.OnEnter();
         }
@@ -40,12 +43,34 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     EntityStateMachine.FindByCustomName(this.gameObject, "Weapon").SetNextState(new Strut());
                     return;
                 }
+                if (Input.GetKeyDown(Modules.Config.emote4Keybind.Value))
+                {
+                    outer.SetNextState(new LetsDance());
+                    return;
+                }
+                if (pTracker)
+                {
+                    if (pTracker.GetTrackingTarget() && inputBank.interact.down)
+                    {
+                        outer.SetNextState(new PunishEntry());
+                        return;
+                    }
+                }
             }
 
-            if (characterMotor.isGrounded && !fallRemoved)
+            if (characterMotor.isGrounded)
             {
-                characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
-                fallRemoved = true;
+                if (!fallRemoved)
+                {
+                    characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
+                    fallRemoved = true;
+                }
+                
+                if(pTracker) pTracker.enabled = true;
+            }
+            if (pTracker && !characterMotor.isGrounded)
+            {
+                pTracker.enabled = false;
             }
         }
 
@@ -53,6 +78,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         {
             base.Update();
             useRootMotion = characterBody && characterBody.rootMotionInMainState;
+        }
+
+        public override void OnExit()
+        {
+            //if(pTracker) Destroy(pTracker);
+            base.OnExit();
         }
     }
 }

@@ -1,18 +1,9 @@
-﻿using EntityStates;
-using RoR2;
+﻿using RoR2;
 using UnityEngine;
-using EntityStates.Loader;
 using BayoMod.Survivors.Bayo.SkillStates;
 using UnityEngine.Networking;
 using RoR2.CameraModes;
-using UnityEngine.UIElements;
-using BayoMod.Modules.Components;
 using BayoMod.Survivors.Bayo;
-using static EntityStates.BaseState;
-using HG;
-using EntityStates.Heretic;
-using R2API;
-using static Rewired.Controller;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -43,12 +34,17 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             earlyEnd = 2.64f;
             attackEnd = 0.653f;
             rootMotionAccumulator = GetModelRootMotionAccumulator();
-            if (NetworkServer.active) base.characterBody.AddBuff(RoR2Content.Buffs.Slow50);
+            if (NetworkServer.active)
+            {
+                base.characterBody.AddBuff(RoR2Content.Buffs.Slow50);
+                base.characterBody.AddBuff(BayoBuffs.armorBuff);
+            }
             CreateCameras();
 
             muzName = "muzrf";
             gDam = 0.5f;
             frTime = 0.15f;
+            damage = 1.5f;
 
             base.OnEnter();
 
@@ -278,7 +274,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 
         public override void OnExit()
         {
-            if (NetworkServer.active) base.characterBody.RemoveBuff(RoR2Content.Buffs.Slow50);
+            if (NetworkServer.active)
+            {
+                base.characterBody.RemoveBuff(RoR2Content.Buffs.Slow50);
+                base.characterBody.RemoveBuff(BayoBuffs.armorBuff);
+            }
             if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid)
             {
                 cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle);

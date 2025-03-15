@@ -10,16 +10,17 @@ namespace BayoMod.Modules.Components
         public float maxTrackingDistance = 50f;
         public float maxTrackingAngle = 45f;
         public float trackerUpdateFrequency = 10f;
+        public BullseyeSearch.SortMode sort = BullseyeSearch.SortMode.Angle;
 
         private HurtBox trackingTarget;
         private CharacterBody characterBody;
         private TeamComponent teamComponent;
         private InputBankTest inputBank;
         private float trackerUpdateStopwatch;
-        private Indicator indicator;
+        protected Indicator indicator;
         private readonly BullseyeSearch search = new BullseyeSearch();
 
-        private void Awake()
+        protected virtual void Awake()
         {
             this.indicator = new Indicator(base.gameObject, BayoAssets.trackerPrefab);
         }
@@ -66,13 +67,13 @@ namespace BayoMod.Modules.Components
             }
         }
 
-        private void SearchForTarget(Ray aimRay)
+        protected virtual void SearchForTarget(Ray aimRay)
         {
             this.search.teamMaskFilter = TeamMask.GetUnprotectedTeams(this.teamComponent.teamIndex);
             this.search.filterByLoS = true;
             this.search.searchOrigin = aimRay.origin;
             this.search.searchDirection = aimRay.direction;
-            this.search.sortMode = BullseyeSearch.SortMode.Angle;
+            this.search.sortMode = sort;
             this.search.maxDistanceFilter = this.maxTrackingDistance;
             this.search.maxAngleFilter = this.maxTrackingAngle;
             this.search.RefreshCandidates();

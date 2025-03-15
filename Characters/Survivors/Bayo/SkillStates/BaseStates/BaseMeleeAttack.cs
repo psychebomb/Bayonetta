@@ -66,8 +66,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected float fireTime = 9999f;
         protected float bulletStopWatch = 0f;
         protected bool launch = false;
+        private bool opFired = false;
         protected float juggleHop = 0f;
         protected bool hasJuggled = false;
+        protected readonly List<HurtBox> results = new List<HurtBox>();
+        protected readonly List<HurtBox> results2 = new List<HurtBox>();
         protected readonly List<HealthComponent> launchList = new List<HealthComponent>();
         protected string voiceString;
         protected bool voice = false;
@@ -102,6 +105,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             {
                 RemoveHitstop();
             }
+            results.Clear();
+            results2.Clear();
             launchList.Clear();
             base.OnExit();
         }
@@ -152,20 +157,28 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         {
             if (isAuthority)
             {
-                if (attack.Fire())
+                if (attack.Fire(results))
                 {
                     OnHitEnemyAuthority();
+                    opFired = true;
+                    for (int i = 0; i < this.results.Count; i++)
+                    {
+                        if(!results2.Contains(this.results[i])) results2.Add(this.results[i]);
+                    }
+                    Chat.AddMessage("number:" + this.results.Count.ToString());
                 }
-                if (NetworkServer.active && launch)
+                if (launch && opFired)
                 {
-                    int num = attack.ignoredHealthComponentList.Count;
+                    Chat.AddMessage("number2:" + this.results2.Count.ToString());
                     TeamIndex team = GetTeam();
 
-                    for (int i = 0; i < num; ++i)
+                    for (int i = 0; i < this.results2.Count; i++)
                     {
-                        HealthComponent item = attack.ignoredHealthComponentList[i];
+                        HealthComponent item = this.results2[i].healthComponent;
+                        Chat.AddMessage("number in list:" + (i+1).ToString());
                         if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body")) && item && item.transform)
                         {
+                            Chat.AddMessage("attempting force");
                             ApplyForce(item);
                         }
                     }
