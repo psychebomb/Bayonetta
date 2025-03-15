@@ -166,13 +166,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 }
                 else if (item.GetComponent<Rigidbody>())
                 {
-                    if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)
+                    if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.rigidbody.mass < 300)
                     {
-                        num = body.rigidbody.mass;
+                        num = body.rigidbody.mass /2;
                     }
                     else
                     {
-                        num = 100;
+                        num = 50;
                     }
 
                 }

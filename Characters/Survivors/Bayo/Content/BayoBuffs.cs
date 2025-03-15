@@ -20,6 +20,8 @@ namespace BayoMod.Survivors.Bayo
 
         public static BuffDef snapBuff;
 
+        public static BuffDef punishable;
+
         public static void Init(AssetBundle assetBundle)
         {
             armorBuff = Modules.Content.CreateAndAddBuff("BayoArmorBuff",
@@ -60,6 +62,12 @@ namespace BayoMod.Survivors.Bayo
 
             wtDebuff = Modules.Content.CreateAndAddBuff("BayoWTDebuff",
                 LegacyResourcesAPI.Load<BuffDef>("BuffDefs/Overheat").iconSprite,
+                Color.black,
+                false,
+                true);
+
+            punishable = Modules.Content.CreateAndAddBuff("BayoPunishable",
+                LegacyResourcesAPI.Load<BuffDef>("BuffDefs/HiddenInvincibility").iconSprite,
                 Color.black,
                 false,
                 true);

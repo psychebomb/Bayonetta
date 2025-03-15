@@ -43,8 +43,11 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         private HitStopCachedState hitStopCachedState;
         protected string playbackRateParam = "Slash.playbackRate";
 
+        protected readonly List<HurtBox> results = new List<HurtBox>();
+        protected readonly List<HurtBox> results2 = new List<HurtBox>();
         private readonly List<HealthComponent> launchList = new List<HealthComponent>();
         private bool launch = true;
+        private bool opFired = false;
         public override void OnEnter()
         {
             base.OnEnter();
@@ -102,18 +105,22 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 launchList.Clear();
                 hasFired = false;
             }
-            if (isAuthority && fallAttack.Fire())
+            if (isAuthority && fallAttack.Fire(results))
             {
                 OnHitEnemyAuthority();
+                opFired = true;
+                for (int i = 0; i < this.results.Count; i++)
+                {
+                    if (!results2.Contains(this.results[i])) results2.Add(this.results[i]);
+                }
             }
-            if (NetworkServer.active && launch)
+            if (isAuthority && NetworkServer.active && launch && opFired)
             {
-                int num = fallAttack.ignoredHealthComponentList.Count;
                 TeamIndex team = GetTeam();
 
-                for (int i = 0; i < num; ++i)
+                for (int i = 0; i < this.results2.Count; i++)
                 {
-                    HealthComponent item = fallAttack.ignoredHealthComponentList[i];
+                    HealthComponent item = this.results2[i].healthComponent;
                     if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || (item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body"))) && item && item.transform)
                     {
                         ApplyForce(item);
@@ -198,6 +205,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         {
             characterMotor.airControl = previousAirControl;
             characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
+            results.Clear();
+            results2.Clear();
             launchList.Clear();
             base.OnExit();
         }
@@ -208,22 +217,25 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             if (!launchList.Contains(item))
             {
                 launchList.Add(item);
-                float num = 1f;
+                float num = 100f;
                 Vector3 forceVec;
 
-                if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
-                {
-                    body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
-                }
                 if (body.characterMotor)
                 {
-                    num = body.characterMotor.mass;
-                    body.characterMotor.velocity.x = 0f;
-                    body.characterMotor.velocity.z = 0f;
+                    if (!body.characterMotor.isGrounded)
+                    {
+                        num = body.characterMotor.mass;
+                        body.characterMotor.velocity.x = 0f;
+                        body.characterMotor.velocity.z = 0f;
+                        body.AddTimedBuff(BayoBuffs.punishable, 2f);
+                        item.GetComponent<SetStateOnHurt>()?.SetStun(2f);
+                    }
                 }
                 else if (item.GetComponent<Rigidbody>())
                 {
                     num = body.rigidbody.mass;
+                    body.AddTimedBuff(BayoBuffs.punishable, 2f);
+                    item.GetComponent<SetStateOnHurt>()?.SetStun(2f);
                 }
                 num = num * 24f;
                 forceVec = downForce * num;

@@ -46,6 +46,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         private float armorTime;
         private bool buffDone = false;
         private Vector3 origScale;
+        private bool debug = false;
 
         public override void OnEnter()
         {
@@ -156,28 +157,6 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 if (inputBank.moveVector != Vector3.zero) cancel = true;
             }
         }
-
-        private void ResizeHurtbox()
-        {
-            ModelLocator component = gameObject.GetComponent<ModelLocator>();
-            ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
-            if ((bool)component2)
-            {
-                int childIndex = component2.FindChildIndex("MainHurtbox");
-                Transform trans = component2.FindChild(childIndex);
-                if (NetworkServer.active && characterBody.HasBuff(BayoBuffs.dodgeBuff))
-                {
-                    origScale = trans.localScale;
-                    Vector3 newScale = new Vector3((float)origScale.x * 7, (float)origScale.y * 3.5f, (float)origScale.z * 7);
-                    trans.set_localScale_Injected(ref newScale);
-                }
-                else
-                {
-                    trans.set_localScale_Injected(ref origScale);
-                }
-            }
-        }
-
         public override void FixedUpdate()
         {
             base.FixedUpdate();
@@ -190,19 +169,25 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             if (!inEvade)
             {
                 stopwatch += Time.fixedDeltaTime;
-                HandleBuffs();
+                if(NetworkServer.active) HandleBuffs();
             }
             else
             {
+                if (!debug)
+                {
+                    Chat.AddMessage("in evade");
+                    debug = true;
+                }
                 evadeWatch -= Time.fixedDeltaTime;
                 if (!slowed)
                 {
+                    Chat.AddMessage("should slow here");
                     slowed = true;
-                    hitStopCachedState = CreateHitStopCachedState(characterMotor, animator, "Roll.playbackRate");
+                    hitStopCachedState = CreateHitStopCachedState(this.characterMotor, this.animator, "Roll.playbackRate");
                     mSpeed *= (1f / 3f);
                     CreateCamera();
                 }
-                if (animator) animator.SetFloat("Roll.playbackRate", 0.33333f);
+                if (this.animator) this.animator.SetFloat("Roll.playbackRate", 0.33333f);
 
                 if (evadeWatch < 0f && !evadeDone)
                 {
@@ -211,7 +196,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                     mSpeed *= 3f;
                     earlyExit -= 0.13333f;
                     cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle, 0.25f);
-                    ConsumeHitStopCachedState(hitStopCachedState, characterMotor, animator);
+                    ConsumeHitStopCachedState(hitStopCachedState, this.characterMotor, this.animator);
                 }
             }
 

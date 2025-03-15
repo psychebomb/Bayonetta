@@ -37,6 +37,7 @@ namespace BayoMod.Survivors.Bayo
             Language.Add(prefix + "LORE", "girl idfk its just bayonetta");
             Language.Add(prefix + "OUTRO_FLAVOR", outro);
             Language.Add(prefix + "OUTRO_FAILURE", outroFailure);
+            Language.Add(prefix + "PUNISH_PROMPT", "Punish!");
 
             #region Skins
             Language.Add(prefix + "BAYO2_SKIN_NAME", "Famed");
@@ -63,7 +64,7 @@ namespace BayoMod.Survivors.Bayo
             LanguageAPI.Add("KEYWORD_BAYO_DOWN", $"<style=cKeywordName>Death Drop</style> <style=cIsUtility>Input: aerial, hold back + m2.</style> <style=cSub>Quickly descend with a downwards kick, continuously dealing <style=cIsDamage>{250f}%</style> damage and spiking enemies.</style>");
             LanguageAPI.Add("KEYWORD_BAYO_HEEL", $"<style=cKeywordName>Heel Slide</style> <style=cIsUtility>Input: grounded, hold forward + m2.</style> <style=cSub>Slide forwards at high speed, dealing <style=cIsDamage>{100f}%</style> damage." +
                 $" Continue holding the move down after stopping to perform a rising kick, launching lighter enemies and dealing <style=cIsDamage>{300f}%</style> damage.</style>");
-            LanguageAPI.Add("KEYWORD_BAYO_BREAK", $"<style=cKeywordName>Breakdance</style> <style=cIsUtility>Input: grounded, hold neutral + m2.</style> <style=cSub>Perform a breakdance, continuously dealing <style=cIsDamage>{125f}%</style> damage per hit.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_BREAK", $"<style=cKeywordName>Breakdance</style> <style=cIsUtility>Input: grounded, hold neutral + m2.</style> <style=cSub>Perform a breakdance, continuously dealing <style=cIsDamage>{150f}%</style> damage per hit.</style>");
             LanguageAPI.Add("KEYWORD_BAYO_RISE", $"<style=cKeywordName>Full Moon Shoot</style> <style=cIsUtility>Input: grounded, hold back + m2.</style> <style=cSub>Perform a backflip that launches lighter enemies, dealing <style=cIsDamage>{395f}%</style> damage." +
                 $" Continue holding the move down to keep spinning, continuously dealing <style=cIsDamage>{125f}%</style> damage.</style>");
             #endregion

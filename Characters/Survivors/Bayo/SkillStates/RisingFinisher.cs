@@ -1,9 +1,5 @@
-﻿using BayoMod.Survivors.Bayo.SkillStates;
-using RoR2;
+﻿using RoR2;
 using UnityEngine;
-using EntityStates.Loader;
-using UnityEngine.UIElements;
-using System.ComponentModel;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 
 namespace BayoMod.Survivors.Bayo.SkillStates

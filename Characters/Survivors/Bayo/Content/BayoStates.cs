@@ -4,6 +4,8 @@ using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Weave;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
+using BayoMod.Survivors.Bayo.SkillStates.PunishStates;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -85,7 +87,33 @@ namespace BayoMod.Survivors.Bayo
 
             Modules.Content.AddEntityState(typeof(Emote2));
 
+            Modules.Content.AddEntityState(typeof(e2temp));
+
             Modules.Content.AddEntityState(typeof(Strut));
+
+            Modules.Content.AddEntityState(typeof(LetsDance));
+
+            Modules.Content.AddEntityState(typeof(PunishStun));
+
+            Modules.Content.AddEntityState(typeof(PunishEntry));
+
+            Modules.Content.AddEntityState(typeof(StepStart));
+
+            Modules.Content.AddEntityState(typeof(Step));
+
+            Modules.Content.AddEntityState(typeof(StepEnd));
+
+            Modules.Content.AddEntityState(typeof(SmackStart));
+
+            Modules.Content.AddEntityState(typeof(Smack));
+
+            Modules.Content.AddEntityState(typeof(SmackEnd));
+
+            Modules.Content.AddEntityState(typeof(GrabStart));
+
+            Modules.Content.AddEntityState(typeof(Grab));
+
+            Modules.Content.AddEntityState(typeof(Throw));
             #endregion
         }
     }

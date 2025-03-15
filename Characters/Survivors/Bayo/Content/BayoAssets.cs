@@ -32,6 +32,8 @@ namespace BayoMod.Survivors.Bayo
 
         public static GameObject tempWard;
 
+        public static GameObject evilObject;
+
         public static PostProcessProfile profile;
 
         public static void Init(AssetBundle assetBundle)
@@ -43,7 +45,7 @@ namespace BayoMod.Survivors.Bayo
 
             CreateProjectiles();
 
-            CreateTracker();
+            CreateTrackers();
 
         }
 
@@ -97,11 +99,14 @@ namespace BayoMod.Survivors.Bayo
         {
             CreateWeaveProjectiles();
             CreateWard();
+            CreateEvilObject();
             Content.AddProjectilePrefab(fistProjectilePrefab);
             Content.AddProjectilePrefab(footProjectilePrefab);
             PrefabAPI.RegisterNetworkPrefab(fistProjectilePrefab);
             PrefabAPI.RegisterNetworkPrefab(footProjectilePrefab);
             ContentAddition.AddNetworkedObject(wardPrefab);
+            ContentAddition.AddNetworkedObject(evilObject);
+            PrefabAPI.RegisterNetworkPrefab(evilObject);
         }
 
         private static void CreateWeaveProjectiles()
@@ -143,7 +148,7 @@ namespace BayoMod.Survivors.Bayo
         }
         #endregion projectiles
 
-        private static void CreateTracker()
+        private static void CreateTrackers()
         {
             trackerPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/HuntressTrackingIndicator"), "BayoTrackerPrefab", false);
             trackerPrefab.transform.Find("Core Pip").gameObject.GetComponent<SpriteRenderer>().color = Color.magenta;
@@ -160,6 +165,25 @@ namespace BayoMod.Survivors.Bayo
                     i.color = Color.red;
                 }
             }
+
+            /*
+            punishTracker = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/HuntressTrackingIndicator"), "PunishTrackerPrefab", false);
+            punishTracker.transform.Find("Core Pip").gameObject.GetComponent<SpriteRenderer>().color = Color.cyan;
+            punishTracker.transform.Find("Core Pip").localScale = new Vector3(0.15f, 0.15f, 0.15f);
+
+            punishTracker.transform.Find("Core, Dark").gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
+            punishTracker.transform.Find("Core, Dark").localScale = new Vector3(0.1f, 0.1f, 0.1f);
+
+            foreach (SpriteRenderer i in punishTracker.transform.Find("Holder").gameObject.GetComponentsInChildren<SpriteRenderer>())
+            {
+                if (i)
+                {
+                    i.gameObject.transform.localScale = new Vector3(0.2f, 0.2f, 1f);
+                    i.color = Color.yellow;
+                }
+            }
+            */
+
         }
 
         private static void CreateWard()
@@ -199,6 +223,53 @@ namespace BayoMod.Survivors.Bayo
             UnityEngine.Object.Destroy(wardPrefab.transform.Find("AreaIndicator/ChargeIn").gameObject);
             UnityEngine.Object.Destroy(wardPrefab.transform.Find("AreaIndicator/Core").gameObject);
             UnityEngine.Object.Destroy(wardPrefab.transform.Find("AreaIndicator/SoftGlow").gameObject);
+
+        }
+
+        //this is so stupid im sorry
+        private static void CreateEvilObject()
+        {
+            evilObject = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/SurvivorPod/SurvivorPodBatteryPanel.prefab").WaitForCompletion().InstantiateClone("AwesomeBayoObject", true);
+            UnityEngine.Object.Destroy(evilObject.GetComponent<EntityStateMachine>());
+            UnityEngine.Object.Destroy(evilObject.GetComponent<NetworkStateMachine>());
+            UnityEngine.Object.Destroy(evilObject.GetComponent<NetworkParent>());
+
+            var inter = evilObject.transform.Find("Interactibility").gameObject;
+            inter.transform.localPosition = new Vector3(0, 1.54f, 0);
+            Vector3 newSize = new Vector3(2, 2, 3);
+            inter.GetComponent<BoxCollider>().set_size_Injected(ref newSize);
+
+            var mesh = evilObject.transform.Find("EscapePodMesh.002").gameObject.GetComponent<MeshRenderer>();
+
+            Rigidbody rb = evilObject.AddComponent<Rigidbody>();
+            rb.mass = 1;
+            rb.angularDrag = 0;
+            rb.isKinematic = true;
+            rb.interpolation = RigidbodyInterpolation.None;
+
+            NetworkedBodyAttachment nba = evilObject.AddComponent<NetworkedBodyAttachment>();
+            nba.shouldParentToAttachedBody = true;
+            //nba.forceHostAuthority = true;
+
+            GenericInteraction gi = evilObject.GetComponent<GenericInteraction>();
+            gi.interactability = Interactability.ConditionsNotMet;
+            gi.contextToken = BayoSurvivor.BAYO_PREFIX + "PUNISH_PROMPT";
+            gi.shouldShowOnScanner = false;
+            gi.shouldIgnoreSpherecastForInteractibility = false;
+            gi.onActivation.RemoveAllListeners();
+
+            NetworkIdentity nw = evilObject.GetComponent<NetworkIdentity>();
+            nw.localPlayerAuthority = true;
+
+            //uncomment this stuff for debugging
+            Light l = evilObject.AddComponent<Light>();
+            l.color = Color.red;
+            l.intensity = 20f;
+            l.range = 10f;
+            //and then comment this stuff
+            //UnityEngine.Object.Destroy(evilObject.GetComponent<Highlight>());
+            //mesh.enabled = false;
+            //gi.shouldProximityHighlight = false;
 
         }
 
