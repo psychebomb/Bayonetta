@@ -252,7 +252,7 @@ namespace BayoMod.Survivors.Bayo
             //nba.forceHostAuthority = true;
 
             GenericInteraction gi = evilObject.GetComponent<GenericInteraction>();
-            gi.interactability = Interactability.ConditionsNotMet;
+            gi.interactability = Interactability.Disabled;
             gi.contextToken = BayoSurvivor.BAYO_PREFIX + "PUNISH_PROMPT";
             gi.shouldShowOnScanner = false;
             gi.shouldIgnoreSpherecastForInteractibility = false;
@@ -262,14 +262,18 @@ namespace BayoMod.Survivors.Bayo
             nw.localPlayerAuthority = true;
 
             //uncomment this stuff for debugging
+            /*
             Light l = evilObject.AddComponent<Light>();
             l.color = Color.red;
             l.intensity = 20f;
             l.range = 10f;
+            */
             //and then comment this stuff
-            //UnityEngine.Object.Destroy(evilObject.GetComponent<Highlight>());
-            //mesh.enabled = false;
-            //gi.shouldProximityHighlight = false;
+            ///*
+            UnityEngine.Object.Destroy(evilObject.GetComponent<Highlight>());
+            mesh.enabled = false;
+            gi.shouldProximityHighlight = false;
+            //*/
 
         }
 

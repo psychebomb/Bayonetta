@@ -80,11 +80,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 attack.ResetIgnoredHealthComponents();
                 //attack.Fire();
                 hasFired = false;
+                results.Clear();
                 if (characterMotor && !characterMotor.isGrounded && hopVelocity > 0f)
                 {
                     SmallHop(characterMotor, hopVelocity);
                 }
-                launchList.Clear();
 
                 if (!flip)
                 {
@@ -149,18 +149,18 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
         private void LastHit()
         {
-            int num = launchList.Count;
+            int num = results.Count;
             TeamIndex team = GetTeam();
 
             for (int i = 0; i < num; ++i)
             {
-                HealthComponent item = launchList[i];
+                HealthComponent item = results[i];
                 if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || (item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body"))) && item && item.transform)
                 {
                     CharacterBody body = item.body;
                     if (body.characterMotor && !body.characterMotor.isGrounded)
                     {
-                        juggleHop = 10f / this.attackSpeedStat;
+                        juggleHop = 9f / this.attackSpeedStat;
                         if (base.characterBody.HasBuff(BayoBuffs.wtBuff)) juggleHop /= 3f;
                         SmallHop(body.characterMotor, juggleHop);
                         body.characterMotor.velocity.x = 0f;

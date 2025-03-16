@@ -1043,6 +1043,9 @@ namespace BayoMod.Survivors.Bayo
                 }
                 if(cd < 0) cd = 0;
 
+                NetworkedBodyAttachment temp = self.GetComponentInParent<NetworkedBodyAttachment>();
+                if (temp) wtWard = temp.gameObject;
+
                 if (((flagg && !self.HasBuff(RoR2Content.Buffs.NoCooldowns)) ||(!self.HasBuff(BayoBuffs.wtBuff) && flagg2)) && wtWard)
                 {
                     Object.Destroy(wtWard);
@@ -1056,20 +1059,20 @@ namespace BayoMod.Survivors.Bayo
                         self.AddTimedBuff(BayoBuffs.wtCoolDown, k);
                     }
                 }
-                if(buffDef == BayoBuffs.dodgeBuff)
+            }
+            if (buffDef == BayoBuffs.dodgeBuff)
+            {
+                ModelLocator component = self.gameObject.GetComponent<ModelLocator>();
+                if (component)
                 {
-                    ModelLocator component = self.gameObject.GetComponent<ModelLocator>();
-                    if (component)
+                    ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
+                    if ((bool)component2)
                     {
-                        ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
-                        if ((bool)component2)
-                        {
-                            int childIndex = component2.FindChildIndex("MainHurtbox");
-                            Transform trans = component2.FindChild(childIndex);
-                            Vector3 origScale = trans.localScale;
-                            Vector3 newScale = new Vector3((float)origScale.x / 6, (float)origScale.y / 3f, (float)origScale.z / 6);
-                            trans.set_localScale_Injected(ref newScale);
-                        }
+                        int childIndex = component2.FindChildIndex("MainHurtbox");
+                        Transform trans = component2.FindChild(childIndex);
+                        Vector3 origScale = trans.localScale;
+                        Vector3 newScale = new Vector3((float)origScale.x / 6, (float)origScale.y / 3f, (float)origScale.z / 6);
+                        trans.set_localScale_Injected(ref newScale);
                     }
                 }
             }
@@ -1091,21 +1094,20 @@ namespace BayoMod.Survivors.Bayo
                     wtWard.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(self.gameObject);
                     sound = AkSoundEngine.PostEvent(1517750988, self.gameObject);
                 }
-
-                if (buffDef == BayoBuffs.dodgeBuff)
+            }
+            if (buffDef == BayoBuffs.dodgeBuff)
+            {
+                ModelLocator component = self.gameObject.GetComponent<ModelLocator>();
+                if (component)
                 {
-                    ModelLocator component = self.gameObject.GetComponent<ModelLocator>();
-                    if (component)
+                    ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
+                    if ((bool)component2)
                     {
-                        ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
-                        if ((bool)component2)
-                        {
-                            int childIndex = component2.FindChildIndex("MainHurtbox");
-                            Transform trans = component2.FindChild(childIndex);
-                            Vector3 origScale = trans.localScale;
-                            Vector3 newScale = new Vector3((float)origScale.x * 6, (float)origScale.y * 3f, (float)origScale.z * 6);
-                            trans.set_localScale_Injected(ref newScale);
-                        }
+                        int childIndex = component2.FindChildIndex("MainHurtbox");
+                        Transform trans = component2.FindChild(childIndex);
+                        Vector3 origScale = trans.localScale;
+                        Vector3 newScale = new Vector3((float)origScale.x * 6, (float)origScale.y * 3f, (float)origScale.z * 6);
+                        trans.set_localScale_Injected(ref newScale);
                     }
                 }
             }
@@ -1137,17 +1139,20 @@ namespace BayoMod.Survivors.Bayo
 
             bool flag = (ulong)(damageInfo.damageType & DamageType.BypassArmor) != 0;
 
-            if (NetworkServer.active && self.body.HasBuff(BayoBuffs.dodgeBuff) && damageInfo.damage > 0f)
+            if (self.body.HasBuff(BayoBuffs.dodgeBuff) && damageInfo.damage > 0f)
             {
                 if(!flag)
                 {
-                    if (self.body.HasBuff(BayoBuffs.dodgeBuff)) self.body.RemoveBuff(BayoBuffs.dodgeBuff);
-                    self.body.AddTimedBuff(BayoBuffs.evadeSuccess, 0.1f);
+                    if (NetworkServer.active)
+                    {
+                        self.body.RemoveBuff(BayoBuffs.dodgeBuff);
+                        self.body.AddTimedBuff(BayoBuffs.evadeSuccess, 0.1f);
+                    }
                     damageInfo.rejected = true;
                 }
             }
 
-            if (NetworkServer.active && self.body.HasBuff(BayoBuffs.wtBuff) && damageInfo.damage > 0f && Modules.Config.wtInvul.Value)
+            if (self.body.HasBuff(BayoBuffs.wtBuff) && damageInfo.damage > 0f && Modules.Config.wtInvul.Value)
             {
                 if (!flag)
                 {

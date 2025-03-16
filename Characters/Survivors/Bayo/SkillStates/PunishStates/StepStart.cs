@@ -127,8 +127,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
             {
                 enemyBody.AddTimedBuff(BayoBuffs.punishable, stunTime);
                 this.characterBody.AddTimedBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility, stunTime);
+                enemyBody.healthComponent.GetComponent<SetStateOnHurt>()?.SetStun(stunTime);
             }
-            enemyBody.healthComponent.GetComponent<SetStateOnHurt>()?.SetStun(stunTime);
 
             PlayAnimation("Body", animName);
 
@@ -180,7 +180,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
         {
             outer.SetNextState(new Step
             {
-                forwardDir = characterDirection.forward,
                 cameraDir = rotateAngle,
                 cameraParamsOverrideHandle = cameraParamsOverrideHandle,
                 lookY = lookY,
@@ -190,7 +189,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
         public override void OnSerialize(NetworkWriter writer)
         {
             base.OnSerialize(writer);
-            writer.Write(characterDirection.forward);
             writer.Write(rotateAngle);
         }
 
@@ -198,7 +196,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
         {
             base.OnDeserialize(reader);
             rotateAngle = reader.ReadVector3();
-            characterDirection.forward = reader.ReadVector3();
         }
         protected override void EnterAttack()
         {

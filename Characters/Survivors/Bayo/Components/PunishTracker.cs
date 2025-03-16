@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using BayoMod.Survivors.Bayo;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
+using UnityEngine.Networking;
 
 namespace BayoMod.Modules.Components
 {
@@ -23,6 +24,7 @@ namespace BayoMod.Modules.Components
         private GameObject evil;
         public bool punishing = false;
         private bool highRemoved = false;
+        private GenericInteraction inter;
 
         protected virtual void Awake()
         {
@@ -36,11 +38,13 @@ namespace BayoMod.Modules.Components
             this.inputBank = base.GetComponent<InputBankTest>();
             this.teamComponent = base.GetComponent<TeamComponent>();
 
+            /*
             if (this.characterBody && this.characterBody.gameObject)
             {
                 //evil = Object.Instantiate(BayoAssets.evilObject);
                 evil.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(this.characterBody.gameObject);
             }
+            */
 
         }
 
@@ -50,12 +54,13 @@ namespace BayoMod.Modules.Components
         }
         private void OnEnable()
         {
-            if (!evil && this.characterBody && this.characterBody.gameObject)
+            if (this.characterBody && this.characterBody.gameObject && NetworkServer.active)
             {
-                //evil = Object.Instantiate(BayoAssets.evilObject);
+                evil = Object.Instantiate(BayoAssets.evilObject);
                 evil.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(this.characterBody.gameObject);
+                inter = evil.GetComponent<GenericInteraction>();
             }
-            if (evil) evil.SetActive(true);
+            //if (evil) evil.SetActive(true);
         }
         private void OnDisable()
         {
@@ -67,7 +72,7 @@ namespace BayoMod.Modules.Components
                     Destroy(curTarget.gameObject.GetComponents<Highlight>()[i]);
                 }
             }
-            if (evil) evil.SetActive(false);
+            if (evil) Destroy(evil.gameObject);
         }
 
         private void OnDestroy()
@@ -80,7 +85,7 @@ namespace BayoMod.Modules.Components
                     Destroy(curTarget.gameObject.GetComponents<Highlight>()[i]);
                 }
             }
-            if (evil) evil.SetActive(false);
+            if (evil) Destroy(evil.gameObject);
         }
 
         private void FixedUpdate()
@@ -110,7 +115,10 @@ namespace BayoMod.Modules.Components
                 }
                 else
                 {
-                    if(evil) evil.GetComponent<GenericInteraction>().interactability = Interactability.Disabled;
+                    if (evil && inter && NetworkServer.active)
+                    {
+                        inter.SetInteractabilityDisabled();
+                    }
                 }
             }
             if (punishing)
@@ -124,8 +132,8 @@ namespace BayoMod.Modules.Components
                     {
                         Destroy(curTarget.gameObject.GetComponents<Highlight>()[i]);
                     }
+                    if (evil && inter && NetworkServer.active) inter.SetInteractabilityDisabled();
                 }
-                if (evil) evil.GetComponent<GenericInteraction>().interactability = Interactability.Disabled;
             }
         }
 
@@ -151,7 +159,7 @@ namespace BayoMod.Modules.Components
                             hl.isOn = true;
                         }
                     }
-                    if(!punishing && evil) if (evil) evil.GetComponent<GenericInteraction>().interactability = Interactability.Available;
+                    if(!punishing && evil && inter && NetworkServer.active) inter.SetInteractabilityAvailable();
                 }
             }
         }

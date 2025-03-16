@@ -78,14 +78,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
                 return;
             }
 
-            if (isAuthority && stopwatch >= idleDuration)
+            if (stopwatch >= idleDuration)
             {
                 if (!hasExit)
                 {
                     hasExit = true;
                     PlayAnimation("Body", "StanceOut", "Emote.playbackRate", cancelDuration);
                 }
-                if (outmove)
+                if (isAuthority && outmove)
                 {
                     if (!flag1)
                     {

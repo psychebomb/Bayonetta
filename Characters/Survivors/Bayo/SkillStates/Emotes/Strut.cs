@@ -19,7 +19,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 
         protected bool jumped;
         protected bool flag1;
-        private uint sound;
+        private uint sound = 0;
 
         protected Animator animator;
 
@@ -58,11 +58,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 {
                     sound = AkSoundEngine.PostEvent(2930662992, this.gameObject);
                 }
-                convar = RoR2.Console.instance.FindConVar("volume_music");
-                if (convar != null)
+                if (isAuthority)
                 {
-                    oldMusic = convar.GetString();
-                    convar.SetString("0");
+                    convar = RoR2.Console.instance.FindConVar("volume_music");
+                    if (convar != null)
+                    {
+                        oldMusic = convar.GetString();
+                        convar.SetString("0");
+                    }
                 }
             }
 
@@ -165,9 +168,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 
             if (music)
             {
-                //AkSoundEngine.SetRTPCValue("Volume_MSX", currentMaster * actualMSX);
-                convar.SetString(oldMusic);
-                AkSoundEngine.StopPlayingID(sound);
+                if(convar != null)
+                {
+                    convar.SetString(oldMusic);
+                }
+                if(sound != 0)
+                {
+                    AkSoundEngine.StopPlayingID(sound);
+                }
             }
 
             if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid && zoom)

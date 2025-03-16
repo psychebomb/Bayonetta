@@ -104,8 +104,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
             {
                 enemyBody.AddTimedBuff(BayoBuffs.punishable, stunTime);
                 this.characterBody.AddTimedBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility, stunTime);
+                enemyBody.healthComponent.GetComponent<SetStateOnHurt>()?.SetStun(stunTime);
             }
-            enemyBody.healthComponent.GetComponent<SetStateOnHurt>()?.SetStun(stunTime);
 
             if (characterDirection)
             {

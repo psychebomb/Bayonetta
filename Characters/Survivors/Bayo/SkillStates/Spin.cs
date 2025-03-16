@@ -4,24 +4,24 @@ using UnityEngine;
 using EntityStates.Loader;
 using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Survivors.Bayo;
+using System.Collections.Generic;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
     public class Spin : RisingFinisher
     {
-
         public override void OnEnter()
         {
             dur = 1.6f;
             damage = 2f;
             fireFreq = 0.24f;
-            clear = false;
             attackEnd = 0.625f;
             muzName = "muzrf";
             gDam = 0.25f;
             frTime = 0.1f;
             damageType = DamageType.Stun1s;
             Util.PlaySound("spin", this.gameObject);
+            clear = false;
             base.OnEnter();
         }
 
@@ -78,48 +78,49 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 PlayAnimation("Body", "SpinExit", playbackRateParam, duration - earlyExitPercentTime);
             }
         }
-        protected override void ApplyForce(HealthComponent item)
+        protected override void ApplyForce()
         {
             CharacterBody body = item.body;
-            if (!launchList.Contains(item))
-            {
-                launchList.Add(item);
-                float num = 1f;
-                Vector3 forceVec;
-                bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.5f;
+            float num = 1f;
+            Vector3 forceVec;
+            bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.5f;
 
-                if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
-                {
-                    body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
-                }
-                if (body.characterMotor)
-                {
-                     if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)
-                    {
-                        num = body.characterMotor.mass;
-                    }
-                    else
-                    {
-                        num = 100;
-                    }
-                }
-                else if (item.GetComponent<Rigidbody>())
-                {
-                    if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.rigidbody.mass < 300)
-                    {
-                        num = body.rigidbody.mass /2;
-                    }
-                    else
-                    {
-                        num = 50;
-                    }
-                }
-                num = num * 16f;
-                forceVec = GetAimRay().direction;
-                forceVec.y = 1.5f;
-                forceVec *= num;
-                item.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
+            if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
+            {
+                body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
             }
+            if (body.characterMotor)
+            {
+                if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)
+                {
+                    num = body.characterMotor.mass;
+                }
+                else
+                {
+                    num = 100;
+                }
+            }
+            else if (item.GetComponent<Rigidbody>())
+            {
+                if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.rigidbody.mass < 300)
+                {
+                    num = body.rigidbody.mass / 2;
+                }
+                else
+                {
+                    num = 50;
+                }
+            }
+            num = num * 16f;
+            forceVec = GetAimRay().direction;
+            forceVec.y = 1.5f;
+            forceVec *= num;
+            item.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
+        }
+
+        public override void OnExit()
+        {
+            base.OnExit();
         }
     }
 }

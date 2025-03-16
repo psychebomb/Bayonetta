@@ -33,6 +33,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             forwardDir = GetAimRay().direction;
             forwardDir.y = 0f;
             hitboxGroupName = "HeelGroup";
+            hitboxName = "HeelHitbox";
 
             characterDirection.forward = forwardDir;
 

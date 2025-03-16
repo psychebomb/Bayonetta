@@ -1,4 +1,4 @@
-# Bayonetta Survivor Mod
+# Let's Dance, Boys!
 Adds Bayonetta from the Bayonetta series, a versatile melee-ranged hybrid character able to weave in and out of danger in order to dish out high damage.
 
 Multiplayer Compatible! (from what I've tested)
@@ -78,6 +78,11 @@ While in Witch Time, Gain 350 armor. Enemies and projectiles near Bayonetta are 
 Lock onto enemies and use primary or secondary buttons to summon a wicked weave at their location, dealing 1200% damage.
 
 ## Other Interactions
+Bayonetta now has new punish attacks!!!!!
+- Hitting an enemy with a move that sends downwards (death drop or  heel stomp) will now put enemies in a special stun state.
+- If bayonetta is grounded and near an enemy in this state, she will be prompted with the interact button to punish the enemy.
+- Mashing the primary skill button (M1) during a punish attack will speed up the attack.
+- Two different punish attacks: one for grounded enemies, one for airborne/flying enemies.
 Bayonetta has special interactions with items that reduce cooldowns:
 - Bandolier: If Witch Time is active, gain an additional 4 seconds when picking up an ammo pack. If Bayonetta has the Witch Time cooldown debuff, remove the debuff upon picking up an ammo pack.
 - Brainstalks: The buff from brainstalks activates its own Witch Time effect independent of regular Witch Time. This instance of Witch Time has no cooldown.
@@ -87,30 +92,9 @@ Bayonetta has special interactions with items that reduce cooldowns:
 - Purity: Removes 2 seconds of Witch Time's cooldown.
 
 ## Known Issues
-- Some animations/sounds not playing properly in multiplayer.
-- Emotes that lower in-game music will lower the music for all players, not just the client.
-
-## Changelog
-- 0.2.0
-    - New Emote! You may need to update your config file
-    - Added a config option to enable/disable zoom in during emotes
-    - Increased Witch Time's activation hitbox
-        - Increased wt cooldown's duration to 10 seconds to compensate for easier wt activation
-    - Updated tracker to more accurately lock in on targets based on aim direction
-    - Fixed issue where M1 didn't function properly at high attack speed
-- 0.1.2
-    - Base stats changed to be more in line with other melee characters:
-        - Base Health: 110 -> 160
-        - Base Health Regen: 1/s -> 2.5/s
-        - Base Armor: 0 -> 20
-    - Small tweaks to M1:
-        - Grounded version now moves her a little more distance forward
-        - Bayonetta now has air control during the final hit of aerial M1
-    - Fixed Luminous Shot not activating
-- 0.1.1
-    - Hopefully fixed file structure causing mod not to work :')   
-- 0.1.0
-    - Initial Thunderstore Release :))))))
+- Some animations/sounds don't play properly in multiplayer.
+- Enemies killed in witch time will sometimes leave floating corpses
+- Zoom-in during successful dodge sometimes doesn't play for non-host players
 
 ## Todo
 - Effects

@@ -123,7 +123,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
                     if (vector != Vector3.zero && base.isAuthority && base.characterMotor)
                     {
-                        vector *= 2f;
+                        if(!hasEnded) vector *= 2f;
                         base.characterMotor.rootMotion += vector;
                     }
                 }

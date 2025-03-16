@@ -1,0 +1,32 @@
+## Changelog
+- 0.5.0
+    - Added new punish attacks
+    - Added a new, very long emote
+    - Enemies should now be properly launched in multiplayer
+        - Non-hosts may still experience some delay between when an attack hits and launches
+    - Tweaked launching logic for flying enemies
+    - ABK now uses a new animation when angled downwards
+    - Breakdance
+        - Increased damage: 125% -> 150%
+        - Now gives Bayonetta a small armor buff during its duration
+    - Added config option for whether emotes with music will play for the whole server or just the client
+- 0.2.0
+    - New Emote! You may need to update your config file
+    - Added a config option to enable/disable zoom in during emotes
+    - Increased Witch Time's activation hitbox
+        - Increased wt cooldown's duration to 10 seconds to compensate for easier wt activation
+    - Updated tracker to more accurately lock in on targets based on aim direction
+    - Fixed issue where M1 didn't function properly at high attack speed
+- 0.1.2
+    - Base stats changed to be more in line with other melee characters:
+        - Base Health: 110 -> 160
+        - Base Health Regen: 1/s -> 2.5/s
+        - Base Armor: 0 -> 20
+    - Small tweaks to M1:
+        - Grounded version now moves her a little more distance forward
+        - Bayonetta now has air control during the final hit of aerial M1
+    - Fixed Luminous Shot not activating
+- 0.1.1
+    - Hopefully fixed file structure causing mod not to work :')   
+- 0.1.0
+    - Initial Thunderstore Release :))))))
