@@ -49,7 +49,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
 
             enemyBody = base.GetComponent<PunishTracker>().GetTrackingTarget().healthComponent.body;
 
-            characterDirection.forward = forwardDir;
+            forwardDir = characterDirection.forward;
             inputBank.moveVector = Vector3.zero;
             characterMotor.moveDirection = forwardDir;
             characterDirection.moveVector = forwardDir;

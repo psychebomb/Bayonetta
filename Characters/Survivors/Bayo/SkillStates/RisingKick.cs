@@ -5,6 +5,7 @@ using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Survivors.Bayo;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using System;
+using UnityEngine.Networking;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -137,55 +138,51 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 
             }
         }
-        protected override void ApplyForce(HealthComponent item)
+        protected override void ApplyForce()
         {
             CharacterBody body = item.body;
             float baseSpeed = 7f;
             float speedMult = 1f;
 
-            if (!launchList.Contains(item))
+            float num = 1f;
+            Vector3 forceVec;
+            bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.5f;
+
+            if (body.characterMotor)
             {
-                launchList.Add(item);
-                float num = 1f;
-                Vector3 forceVec;
-                bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.5f;
-
-                if (body.characterMotor)
+                if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)
                 {
-                    if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)
-                    {
-                        num = body.characterMotor.mass;
-                    }
-                    else
-                    {
-                        num = 100;
-                    }
-                    body.characterMotor.velocity.x = 0f;
-                    body.characterMotor.velocity.z = 0f;
-                    body.characterMotor.Motor.ForceUnground();
+                    num = body.characterMotor.mass;
                 }
-                else if (item.GetComponent<Rigidbody>())
+                else
                 {
-                    if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.rigidbody.mass < 300)
-                    {
-                        num = body.rigidbody.mass /2;
-                    }
-                    else
-                    {
-                        num = 50;
-                    }
-
+                    num = 100;
                 }
-                if (this.characterBody.isSprinting) { baseSpeed *= this.characterBody.sprintingSpeedMultiplier; }
-                if (this.moveSpeedStat - baseSpeed > 0)
-                {
-                    speedMult = ((this.moveSpeedStat - baseSpeed) / baseSpeed) * 0.5f;
-                    speedMult += 1f;
-                }
-                num = num * (22f * speedMult);
-                forceVec = Vector3.up * num;
-                item.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
+                body.characterMotor.velocity.x = 0f;
+                body.characterMotor.velocity.z = 0f;
+                body.characterMotor.Motor.ForceUnground();
             }
+            else if (item.GetComponent<Rigidbody>())
+            {
+                if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.rigidbody.mass < 300)
+                {
+                    num = body.rigidbody.mass / 2;
+                }
+                else
+                {
+                    num = 50;
+                }
+
+            }
+            if (this.characterBody.isSprinting) { baseSpeed *= this.characterBody.sprintingSpeedMultiplier; }
+            if (this.moveSpeedStat - baseSpeed > 0)
+            {
+                speedMult = ((this.moveSpeedStat - baseSpeed) / baseSpeed) * 0.5f;
+                speedMult += 1f;
+            }
+            num = num * (22f * speedMult);
+            forceVec = Vector3.up * num;
+            item.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
         }
         protected override void RemoveHitstop()
         {

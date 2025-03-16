@@ -209,9 +209,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
         protected void FireProjectile()
         {
+            dir = GetAimRay().direction;
             if (base.isAuthority)
             {
-                dir = GetAimRay().direction;
                 Vector3 pos = this.gameObject.transform.position;
                 pos.y -= 1f;
                 dir.y = 0f;

@@ -21,6 +21,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
         public CharacterBody enemyBody;
         public Vector3 forwardDir;
         private bool hasVoiced = false;
+        private float capOffDur = 0.015f;
 
         public override void OnEnter()
         {
@@ -42,15 +43,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
 
             if (enemyBody)
             {
-                if (enemyBody.GetComponent<CapsuleCollider>())
-                {
-                    enemyBody.GetComponent<CapsuleCollider>().enabled = true;
-                }
-                else if (enemyBody.GetComponent<SphereCollider>())
-                {
-                    enemyBody.GetComponent<SphereCollider>().enabled = true;
-                }
-
                 float num = 0f;
                 if (enemyBody.characterMotor)
                 {
@@ -62,7 +54,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
                 }
                 num *= 100f;
                 Vector3 forceVec = forwardDir * num;
-                if(enemyBody.healthComponent) enemyBody.healthComponent.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
+                if(enemyBody.healthComponent && NetworkServer.active) enemyBody.healthComponent.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
             }
 
             base.OnEnter();
@@ -104,6 +96,18 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
                     {
                         base.characterMotor.rootMotion += vector;
                     }
+                }
+            }
+
+            if (enemyBody && stopwatch >= capOffDur)
+            {
+                if (enemyBody.GetComponent<CapsuleCollider>())
+                {
+                    enemyBody.GetComponent<CapsuleCollider>().enabled = true;
+                }
+                else if (enemyBody.GetComponent<SphereCollider>())
+                {
+                    enemyBody.GetComponent<SphereCollider>().enabled = true;
                 }
             }
 

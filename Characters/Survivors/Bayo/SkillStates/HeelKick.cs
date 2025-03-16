@@ -24,6 +24,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             attackEndPercentTime = 0.75f;
 
             hitboxGroupName = "CoverGroup";
+            hitboxName = "Envelop";
             damageCoefficient = 3f;
             procCoefficient = 1f;
             damageType = DamageType.Stun1s;
@@ -119,50 +120,46 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             base.FixedUpdate();
 
         }
-        protected override void ApplyForce(HealthComponent item)
+        protected override void ApplyForce()
         {
             CharacterBody body = item.body;
-            if (!launchList.Contains(item))
+            float num = 1f;
+            Vector3 forceVec;
+            bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.5f;
+
+            if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
             {
-                launchList.Add(item);
-                float num = 1f;
-                Vector3 forceVec;
-                bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.5f;
-
-                if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
-                {
-                    body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
-                }
-                if (body.characterMotor)
-                {
-                    if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)
-                    {
-                        num = body.characterMotor.mass;
-                    }
-                    else
-                    {
-                        num = 100;
-                    }
-                    body.characterMotor.velocity.x = 0f;
-                    body.characterMotor.velocity.z = 0f;
-                }
-                else if (item.GetComponent<Rigidbody>())
-                {
-                    if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.rigidbody.mass < 300)
-                    {
-                        num = body.rigidbody.mass /2;
-                    }
-                    else
-                    {
-                        num = 50;
-                    }
-
-                }
-
-                forceVec = upForce * num;
-                if (body.HasBuff(BayoBuffs.wtDebuff)) forceVec *= 0.8f;
-                item.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
+                body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
             }
+            if (body.characterMotor)
+            {
+                if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)
+                {
+                    num = body.characterMotor.mass;
+                }
+                else
+                {
+                    num = 100;
+                }
+                body.characterMotor.velocity.x = 0f;
+                body.characterMotor.velocity.z = 0f;
+            }
+            else if (item.GetComponent<Rigidbody>())
+            {
+                if (body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.rigidbody.mass < 300)
+                {
+                    num = body.rigidbody.mass / 2;
+                }
+                else
+                {
+                    num = 50;
+                }
+
+            }
+
+            forceVec = upForce * num;
+            if (body.HasBuff(BayoBuffs.wtDebuff)) forceVec *= 0.8f;
+            item.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
         }
     }
 }

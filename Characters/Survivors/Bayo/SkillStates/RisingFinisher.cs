@@ -11,7 +11,6 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         protected bool hasEnded;
         protected float damage = 1.25f;
         protected float dur = 1.25f;
-        protected bool clear = true;
         protected float attackStart = 0.1f;
         protected float attackEnd = 0.8f;
         protected float earlyEnd = 1f;
@@ -24,6 +23,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         protected bool cancel = false;
         protected bool jumped = false;
+        protected bool clear = true;
         public override void OnEnter()
         {
             duration = dur;
@@ -44,6 +44,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             launch = true;
             juggleHop = 2f;
             hitboxGroupName = "CoverGroup";
+            hitboxName = "Envelop";
             PlayAnim();
 
             component = gameObject.GetComponent<ModelLocator>();
@@ -85,7 +86,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 attack.ResetIgnoredHealthComponents();
                 //attack.Fire();
                 hasFired = false;
-                if(clear) launchList.Clear();
+                if (clear) results.Clear();
             }
             base.FireAttack();
         }

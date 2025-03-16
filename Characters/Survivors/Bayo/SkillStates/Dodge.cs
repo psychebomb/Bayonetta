@@ -7,6 +7,7 @@ using System;
 using R2API;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
 using System.ComponentModel;
+using BayoMod.Modules.Components;
 
 namespace BayoMod.Survivors.Bayo.SkillStates
 {
@@ -32,9 +33,9 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         private float speedMult;
 
         protected float evadeWatch;
-        protected bool inEvade = false;
-        protected bool evadeDone = false;
-        protected bool slowed = false;
+        private bool inEvade = false;
+        private bool evadeDone = false;
+        private bool slowed = false;
         protected float evadeTime = 0.4f;
         private HitStopCachedState hitStopCachedState;
         private CameraTargetParams.CameraParamsOverrideHandle cameraParamsOverrideHandle;
@@ -45,13 +46,12 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         private float dodgeTime;
         private float armorTime;
         private bool buffDone = false;
-        private Vector3 origScale;
-        private bool debug = false;
 
         public override void OnEnter()
         {
             base.OnEnter();
             animator = GetModelAnimator();
+            CreateCamera();
 
             if (isAuthority && inputBank && characterDirection)
             {
@@ -169,23 +169,24 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             if (!inEvade)
             {
                 stopwatch += Time.fixedDeltaTime;
-                if(NetworkServer.active) HandleBuffs();
+                HandleBuffs();
             }
             else
             {
-                if (!debug)
-                {
-                    Chat.AddMessage("in evade");
-                    debug = true;
-                }
                 evadeWatch -= Time.fixedDeltaTime;
                 if (!slowed)
                 {
-                    Chat.AddMessage("should slow here");
                     slowed = true;
                     hitStopCachedState = CreateHitStopCachedState(this.characterMotor, this.animator, "Roll.playbackRate");
                     mSpeed *= (1f / 3f);
-                    CreateCamera();
+                    if (base.cameraTargetParams)
+                    {
+                        cameraParamsOverrideHandle = base.cameraTargetParams.AddParamsOverride(new CameraTargetParams.CameraParamsOverrideRequest
+                        {
+                            cameraParamsData = cameraParams.data,
+                            priority = 1f
+                        }, 0.35f);
+                    }
                 }
                 if (this.animator) this.animator.SetFloat("Roll.playbackRate", 0.33333f);
 
@@ -337,13 +338,11 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         {
             if (characterBody.HasBuff(BayoBuffs.evadeSuccess))
             {
-                characterBody.RemoveBuff(BayoBuffs.evadeSuccess);
                 Util.PlaySound("ds", this.gameObject);
-                evadeWatch = evadeTime;
-                characterBody.AddTimedBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility, (earlyExit - stopwatch + evadeTime));
                 inEvade = true;
+                evadeWatch = evadeTime;
                 float goodTime = 0.1f;
-                if(moveSpeedStat - baseSpeed > 0)
+                if (this.moveSpeedStat - baseSpeed > 0)
                 {
                     goodTime *= speedMult;
                     goodTime = Math.Min(goodTime, earlyExit + 0.13333333f);
@@ -351,7 +350,16 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
                 //Chat.AddMessage("goodTime: " + goodTime.ToString());
 
-                if (stopwatch < goodTime) rlyGoodTiming = true;
+                if (stopwatch <= goodTime)
+                {
+                    rlyGoodTiming = true;
+                }
+
+                if (NetworkServer.active)
+                {
+                    characterBody.RemoveBuff(BayoBuffs.evadeSuccess);
+                    characterBody.AddTimedBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility, (earlyExit - stopwatch + evadeTime));
+                }
             }
         }
 
@@ -362,16 +370,6 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             dodgeCam.data.wallCushion = 0.1f;
             dodgeCam.data.idealLocalCameraPos = new Vector3(0f, -1f, -5f);
             cameraParams = dodgeCam;
-            if (base.cameraTargetParams)
-            {
-                cameraParamsOverrideHandle = base.cameraTargetParams.AddParamsOverride(new CameraTargetParams.CameraParamsOverrideRequest
-                {
-                    cameraParamsData = cameraParams.data,
-                    priority = 1f
-                }, 0.35f);
-            }
         }
-
-
     }
 }

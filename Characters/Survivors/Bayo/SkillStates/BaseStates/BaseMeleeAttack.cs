@@ -16,6 +16,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
     public abstract class BaseMeleeAttack : BaseSkillState
     {
         protected string hitboxGroupName = "PunchGroup";
+        protected string hitboxName = "PunchHitbox";
 
         protected DamageTypeCombo damageType = DamageType.Generic;
         protected float damageCoefficient = 3.5f;
@@ -69,12 +70,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private bool opFired = false;
         protected float juggleHop = 0f;
         protected bool hasJuggled = false;
-        protected readonly List<HurtBox> results = new List<HurtBox>();
-        protected readonly List<HurtBox> results2 = new List<HurtBox>();
-        protected readonly List<HealthComponent> launchList = new List<HealthComponent>();
+        protected List<HealthComponent> results = new List<HealthComponent>();
         protected string voiceString;
         protected bool voice = false;
         protected bool durOverride = false;
+
+        protected HealthComponent item;
 
         public override void OnEnter()
         {
@@ -106,8 +107,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 RemoveHitstop();
             }
             results.Clear();
-            results2.Clear();
-            launchList.Clear();
             base.OnExit();
         }
 
@@ -157,32 +156,59 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         {
             if (isAuthority)
             {
-                if (attack.Fire(results))
+                if (attack.Fire())
                 {
                     OnHitEnemyAuthority();
-                    opFired = true;
-                    for (int i = 0; i < this.results.Count; i++)
-                    {
-                        if(!results2.Contains(this.results[i])) results2.Add(this.results[i]);
-                    }
-                    Chat.AddMessage("number:" + this.results.Count.ToString());
-                }
-                if (launch && opFired)
-                {
-                    Chat.AddMessage("number2:" + this.results2.Count.ToString());
-                    TeamIndex team = GetTeam();
 
-                    for (int i = 0; i < this.results2.Count; i++)
+                    /*
+                    if (launch)
                     {
-                        HealthComponent item = this.results2[i].healthComponent;
-                        Chat.AddMessage("number in list:" + (i+1).ToString());
-                        if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body")) && item && item.transform)
+                        TeamIndex team = GetTeam();
+
+                        for (int i = 0; i < this.results.Count; i++)
                         {
-                            Chat.AddMessage("attempting force");
-                            ApplyForce(item);
+                            item = this.results[i].healthComponent;
+                            if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body")) && item && item.transform)
+                            {
+                                ApplyForce();
+                            }
                         }
                     }
+                    */
                 }
+            }
+            if (NetworkServer.active && launch)
+            {
+                Transform t = base.FindModelChild(this.hitboxName);
+                Vector3 position = t.position;
+                Vector3 vector = t.localScale * 0.5f;
+                Quaternion rot = t.rotation;
+                Collider[] hits = Physics.OverlapBox(position, vector, rot, LayerIndex.entityPrecise.mask);
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    HurtBox hurtBox = hits[i].GetComponent<HurtBox>();
+                    if (hurtBox)
+                    {
+                        HealthComponent healthComponent = hurtBox.healthComponent;
+                        if (healthComponent)
+                        {
+                            TeamIndex team = GetTeam();
+
+                            if (!this.results.Contains(healthComponent))
+                            {
+                                results.Add(healthComponent);
+                                item = healthComponent;
+                                if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body")) && item && item.transform)
+                                {
+                                    ApplyForce();
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+
             }
         }
 
@@ -267,27 +293,22 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             return InterruptPriority.Skill;
         }
 
-        protected virtual void ApplyForce(HealthComponent item)
+        protected virtual void ApplyForce()
         {
             CharacterBody body = item.body;
-            if (!launchList.Contains(item))
+            if (body.characterMotor && !body.characterMotor.isGrounded)
             {
-                launchList.Add(item);
-
-                if (body.characterMotor && !body.characterMotor.isGrounded)
+                if (characterBody.HasBuff(BayoBuffs.wtBuff)) juggleHop /= 3f;
+                body.characterMotor.velocity.x = 0f;
+                body.characterMotor.velocity.z = 0f;
+                item.GetComponent<SetStateOnHurt>()?.SetStun(1f);
+                if (body.HasBuff(BayoBuffs.wtDebuff))
                 {
-                    if (characterBody.HasBuff(BayoBuffs.wtBuff)) juggleHop /= 3f;
-                    body.characterMotor.velocity.x = 0f;
-                    body.characterMotor.velocity.z = 0f;
-                    item.GetComponent<SetStateOnHurt>()?.SetStun(1f);
-                    if (body.HasBuff(BayoBuffs.wtDebuff))
-                    {
-                        body.characterMotor.velocity.y = 0f;
-                    }
-                    else
-                    {
-                        SmallHop(body.characterMotor, juggleHop);
-                    }
+                    body.characterMotor.velocity.y = 0f;
+                }
+                else
+                {
+                    SmallHop(body.characterMotor, juggleHop);
                 }
             }
         }

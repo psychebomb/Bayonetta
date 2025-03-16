@@ -8,7 +8,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
 {
     public class LetsDance : BaseEmote
     {
-        private uint sound;
+        private uint sound = 0;
         private bool music;
         BaseConVar convar;
         private string oldMusic;
@@ -31,11 +31,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
                 {
                     sound = AkSoundEngine.PostEvent(1924791374, this.gameObject);
                 }
-                convar = RoR2.Console.instance.FindConVar("volume_music");
-                if (convar != null)
+                if (isAuthority)
                 {
-                    oldMusic = convar.GetString();
-                    convar.SetString("0");
+                    convar = RoR2.Console.instance.FindConVar("volume_music");
+                    if (convar != null)
+                    {
+                        oldMusic = convar.GetString();
+                        convar.SetString("0");
+                    }
                 }
             }
 
@@ -60,9 +63,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
         {
             if (music)
             {
-                //AkSoundEngine.SetRTPCValue("Volume_MSX", currentMaster * actualMSX);
-                convar.SetString(oldMusic);
-                AkSoundEngine.StopPlayingID(sound);
+                if (convar != null)
+                {
+                    convar.SetString(oldMusic);
+                }
+                if (sound != 0)
+                {
+                    AkSoundEngine.StopPlayingID(sound);
+                }
             }
 
             Destroy(bwc);

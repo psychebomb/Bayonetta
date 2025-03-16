@@ -54,7 +54,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
 
             PlayAnim();
 
-            characterDirection.forward = forwardDir;
+            forwardDir = characterDirection.forward;
+
             inputBank.moveVector = Vector3.zero;
             characterMotor.moveDirection = forwardDir;
             characterDirection.moveVector = forwardDir;
@@ -82,6 +83,19 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
                 fireAge = 0f;
                 attack.ResetIgnoredHealthComponents();
                 hasFired = false;
+            }
+
+            if (inputBank.skill1.justPressed && counter > 0)
+            {
+                counter--;
+                float idealFire = fireFreq / 6;
+                float multi = (fireFreq - idealFire) / 8f;
+                fireFreq -= multi;
+                float animSpeed = 1 * this.attackSpeedStat;
+                float idealSpeed = animSpeed * 3f;
+                multi = (idealSpeed - animSpeed) / 8f;
+                curSpeed += multi;
+                if (animator) animator.SetFloat("Slash.playbackRate", curSpeed);
             }
             base.FireAttack();
         }
@@ -117,19 +131,6 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
                 return;
             }
 
-            if (inputBank.skill1.justPressed && counter > 0)
-            {
-                counter--;
-                float idealFire = fireFreq / 6;
-                float multi = (fireFreq - idealFire) / 8f;
-                fireFreq -= multi;
-                float animSpeed = 1 * this.attackSpeedStat;
-                float idealSpeed = animSpeed * 3f;
-                multi = (idealSpeed - animSpeed) / 8f;
-                curSpeed += multi;
-                if (animator) animator.SetFloat("Slash.playbackRate", curSpeed);
-            }
-
             if (isAuthority && stopwatch >= duration)
             {
                 SetNext();
@@ -140,7 +141,6 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
         {
             outer.SetNextState(new StepEnd
             {
-                forwardDir = forwardDir,
                 cameraDir = cameraDir,
                 cameraParamsOverrideHandle = cameraParamsOverrideHandle,
             });
@@ -149,7 +149,6 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
         public override void OnSerialize(NetworkWriter writer)
         {
             base.OnSerialize(writer);
-            writer.Write(forwardDir);
             writer.Write(cameraDir);
         }
 
@@ -157,7 +156,6 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
         {
             base.OnDeserialize(reader);
             cameraDir = reader.ReadVector3();
-            forwardDir = reader.ReadVector3();
         }
 
         /*

@@ -23,10 +23,10 @@ namespace BayoMod.Survivors.Bayo
 
             string desc = "Bayonetta is a versatile melee-ranged hybrid, able to weave in and out of danger in order to dish out high damage.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine
              + "< ! > If bayonetta dodges while in using Bullet Arts, she'll continue the combo sequence where she left off as long as the button for Bullet Arts is held." + Environment.NewLine + Environment.NewLine
-             + "< ! > Umbran Techniques is an extremely versatile move, letting Bayonetta close gaps or launch enemies in a variety of different directions. Look for the right opportunity to use each version." + Environment.NewLine + Environment.NewLine
              + "< ! > The added armor and slow effect from witch time gives Bayonetta a much needed layer of protection from up-close threats. Use witch time as an opportunity to close the gap and use Bayonetta's high-damaging short range options." + Environment.NewLine + Environment.NewLine
              + "< ! > Many of Bayonetta's moves can be cancelled early with a jump. All of Bayonetta's moves are cancellable with Dodge." + Environment.NewLine + Environment.NewLine
-             + "< ! > Similar to the effects of witch time, heavier enemies below half health will also receive more knockback from Bayonetta's moves." + Environment.NewLine + Environment.NewLine;
+             + "< ! > Similar to the effects of witch time, heavier enemies below half health will also receive more knockback from Bayonetta's moves." + Environment.NewLine + Environment.NewLine
+             + "< ! > Repeatedly pressing the primary skill button during a punish attack will speed up the attack." + Environment.NewLine + Environment.NewLine;
 
             string outro = "..and so she left, still in search for answers to her mysterious destiny.";
             string outroFailure = "..and so she vanished, but as long as there is light, THE SHADOW REMAINS CAST!";

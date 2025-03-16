@@ -46,6 +46,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 new Keyframe(0.2f, 7f),
                 new Keyframe(0.5f, 7f),
                 });
+                launch = false;
                 animName = "AbkDown";
             }
             else
@@ -117,66 +118,91 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             base.OnExit();
         }
 
-        protected override void ApplyForce(HealthComponent item)
+        protected override void FireAttack()
+        {
+            base.FireAttack();
+
+            if (launch)
+            {
+                TeamIndex team = GetTeam();
+
+                for (int i = 0; i < this.results.Count; i++)
+                {
+                    item = this.results[i];
+                    if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body")) && item && item.transform)
+                    {
+                        ApplyForce2();
+                    }
+                }
+            }
+        }
+
+        protected override void ApplyForce()
         {
             CharacterBody body = item.body;
             bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.5f;
-
-            if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
+            if (body)
             {
-                body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
-            }
-            if (body.characterMotor &&((body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)))
-            {
-                if (!launchList.Contains(item))
+                if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
                 {
-                    launchList.Add(item);
+                    body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
+                }
+                if (body.characterMotor && ((body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)))
+                {
+                    //Chat.AddMessage(body.name);
                     float dist = Vector3.Distance(base.characterBody.transform.position, body.transform.position);
                     if (dist > 2.5f)
                     {
                         body.characterMotor.rootMotion += speedVec.normalized * -1 * (dist - 2.5f);
                     }
                 }
-                else
+                else if (body.rigidbody && ((body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.rigidbody.mass < 300)))
                 {
-                    Vector3 realSpeed = speedVec * 0.9f;
-                    body.characterMotor.velocity = realSpeed;
-                }
-            }
-            else if(body.rigidbody && ((body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.rigidbody.mass < 300)))
-            {
-                if (!launchList.Contains(item))
-                {
-                    launchList.Add(item);
                     float dist = Vector3.Distance(base.characterBody.transform.position, body.transform.position);
                     if (dist > 2.5f)
                     {
                         body.rigidbody.position += speedVec.normalized * -1 * (dist - 2.5f);
                     }
                 }
-                else
+            }
+        }
+
+        private void ApplyForce2()
+        {
+            CharacterBody body = item.body;
+            bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.5f;
+            if (body)
+            {
+                if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
+                {
+                    body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
+                }
+                if (body.characterMotor && ((body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)))
+                {
+                    Vector3 realSpeed = speedVec * 0.9f;
+                    body.characterMotor.velocity = realSpeed;
+                }
+                else if (body.rigidbody && ((body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.rigidbody.mass < 300)))
                 {
                     Vector3 realSpeed = speedVec * 0.9f;
                     body.rigidbody.velocity = realSpeed;
                     if (item.GetComponent<RigidbodyMotor>())
                     {
                         item.GetComponent<RigidbodyMotor>().canTakeImpactDamage = false;
-                        
+
                     }
-                    //body.rigidbody.detectCollisions = false;
-                    
                 }
             }
         }
 
         private void LastHit()
         {
-            int num = launchList.Count;
+            int num = results.Count;
             TeamIndex team = GetTeam();
 
             for (int i = 0; i < num; ++i)
             {
-                HealthComponent item = launchList[i];
+                HealthComponent item = results[i];
                 if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || (item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body"))) && item && item.transform)
                 {
                     CharacterBody body = item.body;
