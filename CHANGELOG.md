@@ -1,5 +1,5 @@
 ## Changelog
-- 0.5.0
+- 0.3.0
     - Added new punish attacks
     - Added a new, very long emote
     - Enemies should now be properly launched in multiplayer
@@ -8,7 +8,7 @@
     - ABK now uses a new animation when angled downwards
     - Breakdance
         - Increased damage: 125% -> 150%
-        - Now gives Bayonetta a small armor buff during its duration
+        - Now gives Bayonetta a small armor buff during its full duration
     - Added config option for whether emotes with music will play for the whole server or just the client
 - 0.2.0
     - New Emote! You may need to update your config file

@@ -19,7 +19,7 @@ namespace BayoMod
     {
         public const string MODUID = "com.psyche.BayoMod";
         public const string MODNAME = "Bayonetta Survivor";
-        public const string MODVERSION = "0.5.0";
+        public const string MODVERSION = "0.3.0";
         public const string DEVELOPER_PREFIX = "PSYCHE";
 
         public static BayoPlugin instance;

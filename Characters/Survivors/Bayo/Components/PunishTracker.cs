@@ -118,6 +118,7 @@ namespace BayoMod.Modules.Components
                     if (evil && inter && NetworkServer.active)
                     {
                         inter.SetInteractabilityDisabled();
+                        evil.SetActive(false);
                     }
                 }
             }
@@ -132,7 +133,11 @@ namespace BayoMod.Modules.Components
                     {
                         Destroy(curTarget.gameObject.GetComponents<Highlight>()[i]);
                     }
-                    if (evil && inter && NetworkServer.active) inter.SetInteractabilityDisabled();
+                    if (evil && inter && NetworkServer.active)
+                    {
+                        inter.SetInteractabilityDisabled();
+                        evil.SetActive(false);
+                    }
                 }
             }
         }
@@ -159,7 +164,11 @@ namespace BayoMod.Modules.Components
                             hl.isOn = true;
                         }
                     }
-                    if(!punishing && evil && inter && NetworkServer.active) inter.SetInteractabilityAvailable();
+                    if (!punishing && evil && inter && NetworkServer.active)
+                    {
+                        evil.SetActive(true);
+                        inter.SetInteractabilityAvailable();
+                    }
                 }
             }
         }
