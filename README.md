@@ -1,16 +1,16 @@
 # Let's Dance, Boys!
 Adds Bayonetta from the Bayonetta series, a versatile melee-ranged hybrid character able to weave in and out of danger in order to dish out high damage.
 
-It's highly recommended that you install viliger's <a href="https://thunderstore.io/package/viliger/RevertStunBuff/">RevertStunBuff</a> mod with this mod, as this mod's intended balance relies on the pre-SOTS stun effect. 
-
 Multiplayer Compatible! (from what I've tested)
 Feel free to message me (ppsychee) on the RoR2 Modding Discord for any issues that arise, as well as for any general feedback!!
+
+It's highly recommended that you install viliger's <a href="https://thunderstore.io/package/viliger/RevertStunBuff/">RevertStunBuff</a> mod with this mod, as this mod's intended balance relies on the pre-SOTS stun effect. 
 
 ## Video
 
 A Special thanks goes to <a href="https://thunderstore.io/package/LONK/">LONK</a> for creating the trailer video for this mod!!
 
-[![BAYONETTA ROR2 MOD TRAILER](https://img.youtube.com/watch?v=2o8AFYMIa6M.jpg)](https://www.youtube.com/watch?v=2o8AFYMIa6M "BAYONETTA ROR2 MOD TRAILER")
+[![BAYONETTA ROR2 MOD TRAILER](https://img.youtube.com/vi/2o8AFYMIa6M/0.jpg)](https://www.youtube.com/watch?v=2o8AFYMIa6M "BAYONETTA ROR2 MOD TRAILER")
 
 ## Screenshots
 <img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/select.jpg?raw=true"/>
