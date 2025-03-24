@@ -16,9 +16,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
         public override void OnEnter()
         {
             animString = "Letsdance";
-            animDuration = 216.16f;
+            animDuration = 3f;
             half = true;
-            zoomDur = 6f;
+            zoomDur = 0.1f;
             music = Modules.Config.musicOn2.Value;
             bool client = Modules.Config.musicClient.Value;
             if (music)

@@ -14,8 +14,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
     public class Dodge : BaseSkillState
     {
         public static float duration = 1.5f;
-        public static float initialSpeedCoefficient = 2.5f;
-        public static float finalSpeedCoefficient = 2f;
+        public static float initialSpeedCoefficient = 1.25f;
+        public static float finalSpeedCoefficient = 1.15f;
         protected bool cancel;
 
         public static string dodgeSoundString = "dodge";
@@ -55,7 +55,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
             if (isAuthority && inputBank && characterDirection)
             {
-                forwardDirection = (inputBank.moveVector == Vector3.zero ? characterDirection.forward : inputBank.moveVector).normalized;
+                //forwardDirection = (inputBank.moveVector == Vector3.zero ? characterDirection.forward : inputBank.moveVector).normalized;
+                forwardDirection = characterDirection.forward * -1;
             }
             if (isAuthority && inputBank.skill1.down)
             {
@@ -65,7 +66,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             Vector3 rhs = characterDirection ? characterDirection.forward : forwardDirection;
             Vector3 rhs2 = Vector3.Cross(Vector3.up, rhs);
 
-            mSpeed = moveSpeedStat;
+            mSpeed = 6.5f;
             if (inputBank.skill1.down)
             {
                 mSpeed = 6.5f;
@@ -80,7 +81,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             if (characterMotor && characterDirection)
             {
                 Vector3 jump = forwardDirection * rollSpeed;
-                jump.y = Math.Min(Math.Max(characterMotor.velocity.y, -10f), 20f);
+                jump.y = Math.Min(Math.Max(characterMotor.velocity.y, -10f), 0f);
                 characterMotor.velocity = jump;
             }
 
@@ -224,8 +225,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 DetermineCancel();
                 if (inputBank.skill1.down)
                 {
-                    SetStep();
-                    return;
+                    //SetStep();
+                    //return;
                 }
                 if (jumped)
                 {
@@ -247,7 +248,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         public override void OnExit()
         {
-            int wtDur = 6;
+            int wtDur = 2;
             int hardlights = this.characterBody.inventory.GetItemCount(RoR2Content.Items.UtilitySkillMagazine);
             wtDur += (hardlights * 3);
 
@@ -264,7 +265,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 }
                 else
                 {
-                    for (int k = 1; k <= (wtDur - 2); k++)
+                    for (int k = 1; k <= (wtDur); k++)
                     {
                         characterBody.AddTimedBuff(BayoBuffs.wtBuff, k);
                     }

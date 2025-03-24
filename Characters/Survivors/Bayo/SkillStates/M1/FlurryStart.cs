@@ -39,10 +39,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         }
         protected bool CanDodge()
         {
-            if (inputBank.skill3.down && skillLocator.utility && (!skillLocator.utility.mustKeyPress || !inputBank.skill3.hasPressBeenClaimed) && skillLocator.utility.ExecuteIfReady())
-            {
-                return true;
-            }
+            //if (inputBank.skill3.down && skillLocator.utility && (!skillLocator.utility.mustKeyPress || !inputBank.skill3.hasPressBeenClaimed) && skillLocator.utility.ExecuteIfReady())
+            //{
+            //    return true;
+            //}
             return false;
         }
         public override void FixedUpdate()

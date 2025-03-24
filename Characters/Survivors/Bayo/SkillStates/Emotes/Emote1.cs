@@ -9,7 +9,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
         public override void OnEnter()
         {
             animString = "Taunt";
-            animDuration = 6.56f;
+            animDuration = 2f;
             base.OnEnter();
 
         }
@@ -17,7 +17,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-            if (fixedAge > 0.4f && !voiced)
+            if (fixedAge > 0.05f && !voiced)
             {
                 sound = AkSoundEngine.PostEvent(821863073, this.gameObject);
                 voiced = true;

@@ -1,4 +1,15 @@
 ## Changelog
+- 0.4.0
+    - Made some balance changes in order to to make Bayonetta more in line with her Smash Bros. appeareance:
+        - Base Health decreased: 160 -> 81
+        - Gun damage across the board now only deals 10% per shot
+        - Removed wicked weave finisher from Bullet Arts
+        - Removed dodge cancelling
+        - Dodge now only moves Bayonetta backwards at a slow speed
+        - Witch time duration decreased to 2 seconds
+        - Tetsuzanko/Heel Stomp now only summons weaves right in front of Bayonetta
+        - Some emotes have been sped up in order to make them more usable
+        - Enemies can now SDI out of Bayonetta's attacks
 - 0.3.0
     - Added new punish attacks
     - Added a new, very long emote

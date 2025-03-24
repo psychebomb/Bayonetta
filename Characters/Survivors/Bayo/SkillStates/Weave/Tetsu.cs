@@ -182,9 +182,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
             Ray aimRay = GetAimRay();
             Vector3 dir = aimRay.direction;
             dir.y = 0.1f;
-            Vector3 pos = this.target.transform.position;
-            pos = pos - (dir.normalized * 1f);
-            pos.y -= 3f;
+            Vector3 pos = this.gameObject.transform.position;
+            pos.y -= 1f;
             ProjectileManager.instance.FireProjectile(projectilePrefab, pos, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * damageCoefficient, force, Util.CheckRoll(critStat, base.characterBody.master));
         }
         public override void OnExit()

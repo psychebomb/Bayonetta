@@ -158,8 +158,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 {
                     num = 100;
                 }
-                body.characterMotor.velocity.x = 0f;
-                body.characterMotor.velocity.z = 0f;
+                body.characterMotor.velocity.x = randX;
+                body.characterMotor.velocity.z = randZ;
                 body.characterMotor.Motor.ForceUnground();
             }
             else if (item.GetComponent<Rigidbody>())

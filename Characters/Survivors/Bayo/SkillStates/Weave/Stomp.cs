@@ -39,13 +39,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         {
             Vector3 dir = GetAimRay().direction;
             dir.y = 0;
-            Vector3 pos = this.target.transform.position;
-            pos.y = pos.y - 2.5f;
-            //if (this.target.healthComponent.body.characterMotor && this.target.healthComponent.body.HasBuff(BayoBuffs.wtDebuff))
-           // {
-              //  force /= 100f;
-           //     force *= this.target.healthComponent.body.characterMotor.mass;
-          //  }
+            Vector3 pos = characterBody.transform.position + (dir.normalized * 2f);
+            pos.y = pos.y - 1.5f;
             ProjectileManager.instance.FireProjectile(projectilePrefab, pos, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * damageCoefficient, force, Util.CheckRoll(critStat, base.characterBody.master));
         }
     }

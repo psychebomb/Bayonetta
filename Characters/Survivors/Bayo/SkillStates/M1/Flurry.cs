@@ -35,7 +35,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             fireAge = 0f;
             shootRay = GetAimRay();
             gunName = "muzrh";
-            gunDamage = 0.5f;
+            gunDamage = 0.1f;
             launch = false;
             fireTime = 0.15f;
 
@@ -105,9 +105,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             if (CanDodge())
             {
-                outer.SetNextState(new Dodge { currentSwing = 4 });
-                inputBank.skill3.hasPressBeenClaimed = true;
-                return;
+                //outer.SetNextState(new Dodge { currentSwing = 4 });
+                //inputBank.skill3.hasPressBeenClaimed = true;
+                //return;
             }
 
             characterDirection.forward = GetAimRay().direction;

@@ -21,6 +21,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 if (direction < -0.5f)
                 {
                     outer.SetNextState(new RisingKick());
+                    //outer.SetNextState(new HeelSlide());
 
                 }
                 else if (direction > 0.5f)
@@ -30,6 +31,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 else
                 {
                     outer.SetNextState(new BreakStart());
+                    //outer.SetNextState(new HeelSlide());
                 }
             }
             else

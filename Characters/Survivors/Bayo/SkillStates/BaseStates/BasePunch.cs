@@ -37,7 +37,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             hasEnded = false;
             shootRay = GetAimRay();
             gunName = gunStr;
-            gunDamage = 0.5f;
+            gunDamage = 0.1f;
             launch = false;
             fireTime = 0.166f;
 
@@ -105,10 +105,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             }
             if (CanDodge())
             {
-                cancel = true;
-                outer.SetNextState(new Dodge { currentSwing = swingIndex });
-                inputBank.skill3.hasPressBeenClaimed = true;
-                return;
+                //cancel = true;
+                //outer.SetNextState(new Dodge { currentSwing = swingIndex });
+                //inputBank.skill3.hasPressBeenClaimed = true;
+                //return;
             }
             if (characterMotor.isGrounded)
             {

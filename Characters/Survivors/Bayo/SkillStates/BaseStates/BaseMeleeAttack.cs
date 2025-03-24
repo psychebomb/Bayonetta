@@ -77,6 +77,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 
         protected HealthComponent item;
 
+        protected float randX = 0;
+        protected float randZ = 0;
+
         public override void OnEnter()
         {
             base.OnEnter();
@@ -98,6 +101,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             attack.isCrit = RollCrit();
             attack.impactSound = impactSound;
             fireTime /= attackSpeedStat;
+
+            randX = Random.Range(-3.5f, 3.5f);
+            randZ = Random.Range(-3.5f, 3.5f);
         }
 
         public override void OnExit()
@@ -117,10 +123,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 
         protected bool CanDodge()
         {
-            if (inputBank.skill3.down && skillLocator.utility && (!skillLocator.utility.mustKeyPress || !inputBank.skill3.hasPressBeenClaimed) && skillLocator.utility.ExecuteIfReady())
-            {
-                return true;
-            }
+            //if (inputBank.skill3.down && skillLocator.utility && (!skillLocator.utility.mustKeyPress || !inputBank.skill3.hasPressBeenClaimed) && skillLocator.utility.ExecuteIfReady())
+            //{
+            //    return true;
+            //}
             return false;
         }
 
@@ -299,8 +305,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             if (body.characterMotor && !body.characterMotor.isGrounded)
             {
                 if (characterBody.HasBuff(BayoBuffs.wtBuff)) juggleHop /= 3f;
-                body.characterMotor.velocity.x = 0f;
-                body.characterMotor.velocity.z = 0f;
+                body.characterMotor.velocity.x = randX;
+                body.characterMotor.velocity.z = randZ;
                 item.GetComponent<SetStateOnHurt>()?.SetStun(1f);
                 if (body.HasBuff(BayoBuffs.wtDebuff))
                 {

@@ -16,6 +16,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         protected AnimationCurve kickSpeed;
         protected Vector3 speedVec;
         protected Ray saveRay;
+
+        private Vector3 sdiVec;
+        private Vector3 sdiSpeed;
         public override void OnEnter()
         {
             duration = 0.65f;
@@ -33,10 +36,15 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             voice = true;
             voiceString = "stompabk";
             swingSoundString = "abk";
+            sdiVec = Random.insideUnitSphere;
+            sdiVec *= 0.1f;
+            sdiVec += forwardDir;
+            sdiVec = sdiVec.normalized;
             //bonusForce = 0.8f * forwardDir * Uppercut.upwardForceStrength;
 
             characterDirection.forward = forwardDir;
             characterBody.bodyFlags |= CharacterBody.BodyFlags.IgnoreFallDamage;
+            
 
             if (forwardDir.y < -0.5)
             {
@@ -86,6 +94,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             {
                 float num = kickSpeed.Evaluate(stopwatch / duration);
                 speedVec = forwardDir * num * moveSpeedStat;
+                sdiSpeed = sdiVec * num * moveSpeedStat;
                 characterMotor.velocity = speedVec;
 
             }
@@ -173,18 +182,18 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             bool healthCheck = body.healthComponent.combinedHealth <= body.maxHealth * 0.5f;
             if (body)
             {
+                Vector3 realSpeed = sdiVec * 0.9f;
+
                 if (body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>())
                 {
                     body.GetComponent<KinematicCharacterController.KinematicCharacterMotor>().ForceUnground();
                 }
                 if (body.characterMotor && ((body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.characterMotor.mass < 300)))
                 {
-                    Vector3 realSpeed = speedVec * 0.9f;
                     body.characterMotor.velocity = realSpeed;
                 }
                 else if (body.rigidbody && ((body.HasBuff(BayoBuffs.wtDebuff) || healthCheck || body.rigidbody.mass < 300)))
                 {
-                    Vector3 realSpeed = speedVec * 0.9f;
                     body.rigidbody.velocity = realSpeed;
                     if (item.GetComponent<RigidbodyMotor>())
                     {

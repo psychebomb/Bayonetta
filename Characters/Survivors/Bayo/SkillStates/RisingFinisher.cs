@@ -15,7 +15,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         protected float attackEnd = 0.8f;
         protected float earlyEnd = 1f;
         protected string muzName = "muzlf";
-        protected float gDam = 0.15f;
+        protected float gDam = 0.1f;
         protected float frTime = 0.1f;
         protected ModelLocator component;
         protected ChildLocator component2;

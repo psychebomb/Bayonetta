@@ -30,7 +30,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             exitToStance = false;
             shootRay = GetAimRay();
             gunName = "muzrf";
-            gunDamage = 1f;
+            gunDamage = 0.1f;
             fireTime = 0.15f;
 
             base.OnEnter();

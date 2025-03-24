@@ -46,6 +46,9 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         protected readonly List<HealthComponent> results = new List<HealthComponent>();
         private bool launch = true;
+
+        private float randX;
+        private float randZ;
         public override void OnEnter()
         {
             base.OnEnter();
@@ -61,6 +64,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             previousAirControl = characterMotor.airControl;
             characterMotor.airControl = airControl;
             characterDirection.forward = GetAimRay().direction;
+            randX = Random.Range(-4f, 4f);
+            randZ = Random.Range(-4f, 4f);
             PlayAnimation("Body", "FallKick");
             //Util.PlaySound(kickSoundString, gameObject);
 
@@ -161,10 +166,10 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         protected bool CanDodge()
         {
-            if (inputBank.skill3.down && skillLocator.utility && (!skillLocator.utility.mustKeyPress || !inputBank.skill3.hasPressBeenClaimed) && skillLocator.utility.ExecuteIfReady())
-            {
-                return true;
-            }
+            //if (inputBank.skill3.down && skillLocator.utility && (!skillLocator.utility.mustKeyPress || !inputBank.skill3.hasPressBeenClaimed) && skillLocator.utility.ExecuteIfReady())
+            //{
+             //   return true;
+            //}
             return false;
         }
 
@@ -250,8 +255,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 if (!body.characterMotor.isGrounded)
                 {
                     num = body.characterMotor.mass;
-                    body.characterMotor.velocity.x = 0f;
-                    body.characterMotor.velocity.z = 0f;
+                    body.characterMotor.velocity.x = randX;
+                    body.characterMotor.velocity.z = randZ;
                     body.AddTimedBuff(BayoBuffs.punishable, 2f);
                     item.GetComponent<SetStateOnHurt>()?.SetStun(2f);
                 }

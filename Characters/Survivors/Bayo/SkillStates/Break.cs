@@ -42,7 +42,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             CreateCameras();
 
             muzName = "muzrf";
-            gDam = 0.5f;
+            gDam = 0.1f;
             frTime = 0.15f;
             damage = 1.5f;
 

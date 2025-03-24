@@ -17,7 +17,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             fireFreq = 0.24f;
             attackEnd = 0.625f;
             muzName = "muzrf";
-            gDam = 0.25f;
+            gDam = 0.1f;
             frTime = 0.1f;
             damageType = DamageType.Stun1s;
             Util.PlaySound("spin", this.gameObject);

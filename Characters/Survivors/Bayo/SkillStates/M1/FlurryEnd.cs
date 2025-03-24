@@ -121,10 +121,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
             if (CanDodge())
             {
-                cancel = true;
-                outer.SetNextState(new Dodge { currentSwing = -1 });
-                inputBank.skill3.hasPressBeenClaimed = true;
-                return;
+                //cancel = true;
+                //outer.SetNextState(new Dodge { currentSwing = -1 });
+                //inputBank.skill3.hasPressBeenClaimed = true;
+                //return;
             }
 
             if (characterMotor.isGrounded)
@@ -168,7 +168,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 {
                     firedProjectile = true;
                     FireProjectile();
-                    DoFireEffects();
+                    //DoFireEffects();
                 }
 
                 characterDirection.forward = dir;
@@ -217,7 +217,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 dir.y = 0f;
                 pos = pos + (dir.normalized * 2.5f);
                 dir.y = 0.1f;
-                ProjectileManager.instance.FireProjectile(projectilePrefab, pos, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * weaveDamage, weaveForce, Util.CheckRoll(critStat, base.characterBody.master), DamageColorIndex.Default, null, -1,DamageTypeCombo.GenericPrimary);
+                //ProjectileManager.instance.FireProjectile(projectilePrefab, pos, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * weaveDamage, weaveForce, Util.CheckRoll(critStat, base.characterBody.master), DamageColorIndex.Default, null, -1,DamageTypeCombo.GenericPrimary);
             }
         }
 
