@@ -10,7 +10,7 @@ Feel free to message me (ppsychee) on the RoR2 Modding Discord for any issues th
 
 A Special thanks goes to <a href="https://thunderstore.io/package/LONK/">LONK</a> for creating the trailer video for this mod!!
 
-[![BAYONETTA ROR2 MOD TRAILER](https://www.youtube.com/watch?v=2o8AFYMIa6M.jpg)](https://www.youtube.com/watch?v=2o8AFYMIa6M "BAYONETTA ROR2 MOD TRAILER")
+[![BAYONETTA ROR2 MOD TRAILER](https://img.youtube.com/watch?v=2o8AFYMIa6M.jpg)](https://www.youtube.com/watch?v=2o8AFYMIa6M "BAYONETTA ROR2 MOD TRAILER")
 
 ## Screenshots
 <img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/select.jpg?raw=true"/>
