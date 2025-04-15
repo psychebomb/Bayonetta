@@ -2,11 +2,12 @@
 using RoR2;
 using RoR2.ConVar;
 using UnityEngine;
+using static RoR2.BodyAnimatorSmoothingParameters;
 
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 {
-    public class Strut : BaseSkillState
+    public class StrutNew : BaseSkillState
     {
         public float animDuration = 1.92f;
         public float cancelDuration;
@@ -19,6 +20,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private uint sound = 0;
 
         protected Animator animator;
+        private CharacterAnimatorWalkParamCalculator animatorWalkParamCalculator;
 
         private CharacterCameraParams cameraParams;
         private CameraTargetParams.CameraParamsOverrideHandle cameraParamsOverrideHandle;
@@ -28,6 +30,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         //private float actualMSX = float.Parse(AudioManager.cvVolumeParentMsx.GetString(), CultureInfo.InvariantCulture);
         private string oldMusic;
         BaseConVar convar;
+
 
         public override void OnEnter()
         {
@@ -119,6 +122,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             }
             */
 
+            if (jumped)
+            {
+                inputBank.jump.PushState(false);
+            }
+
             if (cancel)
             {
                 outer.SetNextStateToMain();
@@ -139,23 +147,35 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             }
             else if (flag1 && isAuthority)
             {
-                /*
+
                 if(inputBank.moveVector == Vector3.zero)
                 {
                     inputBank.moveVector = characterDirection.forward;
                 }
-                */
+
                 characterMotor.moveDirection = inputBank.moveVector;
-                //characterDirection.moveVector = characterMotor.moveDirection;
+                characterDirection.moveVector = characterMotor.moveDirection;
 
             }
 
-            if(isAuthority && stopwatch>= animDuration && !flag1)
+            if (stopwatch >= animDuration && !flag1)
             {
                 flag1 = true;
-
+                animator.SetFloat(AnimationParameters.walkSpeed, base.characterBody.moveSpeed);
+                PlayCrossfade("Body", "Walk", 0.5f);
             }
 
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            if(flag1)
+            {
+                //Vector2 forward = new Vector2(0, 1);
+                //base.characterBody.master.playerCharacterMasterController.bodyInputs.SetRawMoveStates(forward);
+                //walkSpeed
+            }
         }
 
         public override void OnExit()
@@ -165,11 +185,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 
             if (music)
             {
-                if(convar != null)
+                if (convar != null)
                 {
                     convar.SetString(oldMusic);
                 }
-                if(sound != 0)
+                if (sound != 0)
                 {
                     AkSoundEngine.StopPlayingID(sound);
                 }
@@ -179,7 +199,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             {
                 cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle, 0.5f);
             }
-            
+
             PlayAnimation("FullBody, Override", "BufferEmpty");
 
         }

@@ -13,20 +13,25 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         public override void OnEnter()
         {
             dur = 1.6f;
-            damage = 2f;
+            damage = 1.5f;
+            blastDamage = 0.6f;
+            blastRadius = 30f;
             fireFreq = 0.24f;
             attackEnd = 0.625f;
             muzName = "muzrf";
-            gDam = 0.25f;
             frTime = 0.1f;
             damageType = DamageType.Stun1s;
             Util.PlaySound("spin", this.gameObject);
             clear = false;
+            hgn = "CoverGroup2";
+            hbn = "Envelop2";
+            //effect = BayoAssets.spin;
             base.OnEnter();
         }
 
         public override void FixedUpdate()
         {
+
             base.FixedUpdate();
             if(stopwatch >= fireFreq)
             {

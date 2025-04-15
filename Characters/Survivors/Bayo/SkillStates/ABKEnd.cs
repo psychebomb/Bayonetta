@@ -2,6 +2,7 @@
 using UnityEngine;
 using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
+using BayoMod.Characters.Survivors.Bayo.Components;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -9,6 +10,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
     {
         public Vector3 forwardDirr;
         protected AnimationCurve hoverSpeed;
+        private Transform boneTrans;
+        private ABKRotator abkr;
         public override void OnEnter()
         {
             duration = 0.75f;
@@ -26,6 +29,15 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 new Keyframe(0.25f, 0f),
             });
 
+            ModelLocator component = this.gameObject.GetComponent<ModelLocator>();
+            ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
+            if ((bool)component2)
+            {
+                int childIndex = component2.FindChildIndex("BoneR");
+                boneTrans = component2.FindChild(childIndex);
+            }
+
+            abkr = GetComponent<ABKRotator>();
             characterMotor.Motor.ForceUnground();
             exitToStance = false;
             shootRay = GetAimRay();
@@ -66,6 +78,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         public override void OnExit()
         {
             PlayAnimation("Body", "AbkExit");
+            abkr.lookDir = Vector3.zero;
+            abkr.rotate = false;
+
             characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
             base.OnExit();
         }

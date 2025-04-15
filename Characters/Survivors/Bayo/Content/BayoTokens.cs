@@ -50,8 +50,8 @@ namespace BayoMod.Survivors.Bayo
 
             #region Primary
             Language.Add(prefix + "PRIMARY_COMBO_NAME", "Bullet Arts");
-            Language.Add(prefix + "PRIMARY_COMBO_DESCRIPTION", $"Perform a 5 hit punch sequence, dealing <style=cIsDamage>{150f}%</style> damage for the first four hits." +
-                $" The last hit is a flurry attack that deals <style=cIsDamage>{135f}%</style> damage each hit and summons a wicked weave when released, dealing <style=cIsDamage>{1400f}%</style> damage." +
+            Language.Add(prefix + "PRIMARY_COMBO_DESCRIPTION", $"Perform a 5 hit punch sequence, dealing <style=cIsDamage>{200f}%</style> damage for the first four hits." +
+                $" The last hit is a flurry attack that deals <style=cIsDamage>{165f}%</style> damage each hit and summons a wicked weave when released, dealing <style=cIsDamage>{1400f}%</style> damage." +
                 $" Bayonetta will also continuously fire her guns during the sequence, each shot dealing <style=cIsDamage>{50f}%</style> damage.");
             #endregion
 
@@ -60,13 +60,13 @@ namespace BayoMod.Survivors.Bayo
             Language.Add(prefix + "SECONDARY_ABK_DESCRIPTION",  $"Perform a variety of different moves depending on movement inputs and whether or not Bayonetta is grounded");
 
             LanguageAPI.Add("KEYWORD_BAYO_ABK", $"<style=cKeywordName>After Burner Kick</style> <style=cIsUtility>Input: aerial, hold forward + m2.</style> <style=cSub>Launch into the air with a blazing kick, knocking back lighter enemies and dealing <style=cIsDamage>{375f}%</style> damage.</style>");
-            LanguageAPI.Add("KEYWORD_BAYO_SPIN", $"<style=cKeywordName>Heel Tornado</style> <style=cIsUtility>Input: aerial, hold neutral + m2.</style> <style=cSub>Perform a spinning kick, continuously dealing <style=cIsDamage>{200f}%</style> damage. Knocks away lighter enemies.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_SPIN", $"<style=cKeywordName>Heel Tornado</style> <style=cIsUtility>Input: aerial, hold neutral + m2.</style> <style=cSub>Perform a spinning kick, continuously dealing <style=cIsDamage>{150f}%</style> damage. Knocks away lighter enemies.</style>");
             LanguageAPI.Add("KEYWORD_BAYO_DOWN", $"<style=cKeywordName>Death Drop</style> <style=cIsUtility>Input: aerial, hold back + m2.</style> <style=cSub>Quickly descend with a downwards kick, continuously dealing <style=cIsDamage>{250f}%</style> damage and spiking enemies.</style>");
             LanguageAPI.Add("KEYWORD_BAYO_HEEL", $"<style=cKeywordName>Heel Slide</style> <style=cIsUtility>Input: grounded, hold forward + m2.</style> <style=cSub>Slide forwards at high speed, dealing <style=cIsDamage>{100f}%</style> damage." +
                 $" Continue holding the move down after stopping to perform a rising kick, launching lighter enemies and dealing <style=cIsDamage>{300f}%</style> damage.</style>");
-            LanguageAPI.Add("KEYWORD_BAYO_BREAK", $"<style=cKeywordName>Breakdance</style> <style=cIsUtility>Input: grounded, hold neutral + m2.</style> <style=cSub>Perform a breakdance, continuously dealing <style=cIsDamage>{150f}%</style> damage per hit.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_BREAK", $"<style=cKeywordName>Breakdance</style> <style=cIsUtility>Input: grounded, hold neutral + m2.</style> <style=cSub>Perform a breakdance, continuously dealing <style=cIsDamage>{120f}%</style> damage per hit.</style>");
             LanguageAPI.Add("KEYWORD_BAYO_RISE", $"<style=cKeywordName>Full Moon Shoot</style> <style=cIsUtility>Input: grounded, hold back + m2.</style> <style=cSub>Perform a backflip that launches lighter enemies, dealing <style=cIsDamage>{395f}%</style> damage." +
-                $" Continue holding the move down to keep spinning, continuously dealing <style=cIsDamage>{125f}%</style> damage.</style>");
+                $" Continue holding the move down to keep spinning, continuously dealing <style=cIsDamage>{100f}%</style> damage.</style>");
             #endregion
 
             #region Utility
@@ -88,7 +88,7 @@ namespace BayoMod.Survivors.Bayo
 
             #region Achievements
             Language.Add(Tokens.GetAchievementNameToken(BayoMasteryAchievement.identifier), "Bayonetta: Mastery");
-            Language.Add(Tokens.GetAchievementDescriptionToken(BayoMasteryAchievement.identifier), "As Bayonetta, beat the game or obliterate on Monsoon.");
+            Language.Add(Tokens.GetAchievementDescriptionToken(BayoMasteryAchievement.identifier), "She doesn't have a mastery skin yet sorry");
             #endregion
         }
     }

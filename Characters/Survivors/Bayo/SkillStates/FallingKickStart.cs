@@ -13,6 +13,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         private RootMotionAccumulator rootMotionAccumulator;
 
+        //private GameObject swingEffectPrefab = BayoAssets.fallk;
+
 
         public override void OnEnter()
         {
@@ -25,6 +27,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             characterMotor.disableAirControlUntilCollision = false;
             characterMotor.velocity.y = 0f;
             characterDirection.forward = GetAimRay().direction;
+            //EffectManager.SimpleMuzzleFlash(swingEffectPrefab, gameObject, "SwingCenter", true);
         }
 
         public override void FixedUpdate()

@@ -1,4 +1,5 @@
 ﻿using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
+using BayoMod.Survivors.Bayo;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 {
@@ -14,6 +15,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 animEnd = "P4E";
                 earlyExitPercentTime = 0.4f;
                 endDuration = 0.52f;
+                playSwing = 0.34f;
+                //swingEffectPrefab = BayoAssets.p4s;
             }
             else
             {
@@ -21,6 +24,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 animEnd = "P4AE";
                 earlyExitPercentTime = 0.22f;
                 endDuration = 0.56f;
+                playSwing = 0.22f;
+                //swingEffectPrefab = BayoAssets.p4as;
             }
             holdTime = 0.5f - earlyExitPercentTime;
             gunStr = "muzrh";

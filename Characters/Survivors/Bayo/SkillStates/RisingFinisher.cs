@@ -1,6 +1,7 @@
 ﻿using RoR2;
 using UnityEngine;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
+using EntityStates.Toolbot;
 
 namespace BayoMod.Survivors.Bayo.SkillStates
 {
@@ -9,21 +10,27 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         protected float fireAge;
         protected float fireFreq = 0.15f;
         protected bool hasEnded;
-        protected float damage = 1.25f;
+        protected float damage = 1f;
         protected float dur = 1.25f;
         protected float attackStart = 0.1f;
         protected float attackEnd = 0.8f;
         protected float earlyEnd = 1f;
         protected string muzName = "muzlf";
-        protected float gDam = 0.15f;
+        protected float gDam = 0f;
         protected float frTime = 0.1f;
         protected ModelLocator component;
         protected ChildLocator component2;
         protected Ray gunRay;
+        protected string hgn = "CoverGroup";
+        protected string hbn = "Envelop";
+        protected float blastDamage = .3f;
+        protected float blastRadius = 10f;
+        private float blastStopwatch;
 
         protected bool cancel = false;
         protected bool jumped = false;
         protected bool clear = true;
+        protected GameObject effect = BayoAssets.backs;
         public override void OnEnter()
         {
             duration = dur;
@@ -43,9 +50,10 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             StartAimMode(0.5f + duration, false);
             launch = true;
             juggleHop = 2f;
-            hitboxGroupName = "CoverGroup";
-            hitboxName = "Envelop";
+            hitboxGroupName = hgn;
+            hitboxName = hbn;
             PlayAnim();
+            //loopEffectPrefab = effect;
 
             component = gameObject.GetComponent<ModelLocator>();
             component2 = component.modelTransform.GetComponent<ChildLocator>();
@@ -167,6 +175,14 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 return;
             }
 
+            blastStopwatch += Time.fixedDeltaTime;
+
+            if (blastStopwatch >= fireTime && isAuthority)
+            {
+                blastStopwatch -= fireTime;
+                DetonateAuthority();
+            }
+
             FinisherSpecific();
 
             shootRay = gunRay;
@@ -176,5 +192,26 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             base.FixedUpdate();
 
         }
+        protected BlastAttack.Result DetonateAuthority()
+        {
+            BlastAttack blastAttack = new BlastAttack();
+            blastAttack.attacker = base.gameObject;
+            blastAttack.baseDamage = damageStat * blastDamage;
+            blastAttack.baseForce = BaseNailgunState.force;
+            blastAttack.bonusForce = Vector3.zero;
+            blastAttack.crit = RollCrit();
+            blastAttack.damageType = DamageType.Stun1s;
+            blastAttack.falloffModel = BlastAttack.FalloffModel.Linear;
+            blastAttack.procCoefficient = 0.5f;
+            blastAttack.radius = blastRadius;
+            blastAttack.position = base.characterBody.footPosition;
+            blastAttack.attackerFiltering = AttackerFiltering.NeverHitSelf;
+            blastAttack.impactEffect = EffectCatalog.FindEffectIndexFromPrefab(gunEffectPrefab);
+            blastAttack.teamIndex = base.teamComponent.teamIndex;
+            blastAttack.damageType = DamageTypeCombo.GenericSpecial;
+            blastAttack.damageColorIndex = DamageColorIndex.Void;
+            return blastAttack.Fire();
+        }
+
     }
 }

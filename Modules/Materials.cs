@@ -36,7 +36,7 @@ namespace BayoMod.Modules
         public static Material ConvertDefaultShaderToHopoo(this Material tempMat)
         {
             if (cachedMaterials.Contains(tempMat)) {
-                Log.Debug($"{tempMat.name} has already been converted. returning cached");
+                //Log.Debug($"{tempMat.name} has already been converted. returning cached");
                 return tempMat;
             }
 

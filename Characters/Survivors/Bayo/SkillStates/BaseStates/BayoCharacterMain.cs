@@ -4,6 +4,7 @@ using UnityEngine;
 using BayoMod.Modules.Components;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
+using BayoMod.Survivors.Bayo;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 {
@@ -13,6 +14,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private BayoTracker tracker;
         private PunishTracker pTracker;
         private bool fallRemoved = false;
+        private GameObject wingPrefab;
+        private GameObject wingInstance;
+        private GameObject jumpPrefab = BayoAssets.djump;
         public override void OnEnter()
         {
             pTracker = GetComponent<PunishTracker>();
@@ -21,9 +25,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         }
         public override void FixedUpdate()
         {
-
-            base.FixedUpdate();
-
             if (tracker) Destroy(tracker);
 
             if (Util.HasEffectiveAuthority(gameObject) && characterMotor.isGrounded)
@@ -40,7 +41,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 }
                 if (Input.GetKeyDown(Modules.Config.emote3Keybind.Value))
                 {
-                    EntityStateMachine.FindByCustomName(this.gameObject, "Weapon").SetNextState(new Strut());
+                    //EntityStateMachine.FindByCustomName(this.gameObject, "Weapon").SetNextState(new StrutNew());
+                    outer.SetNextState(new StrutNew());
                     return;
                 }
                 if (Input.GetKeyDown(Modules.Config.emote4Keybind.Value))
@@ -72,6 +74,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             {
                 pTracker.enabled = false;
             }
+
+            base.FixedUpdate();
         }
 
         public override void Update()
@@ -80,8 +84,48 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             useRootMotion = characterBody && characterBody.rootMotionInMainState;
         }
 
+        /*
+        public override void ProcessJump()
+        {
+            if (!hasCharacterMotor)
+            {
+                return;
+            }
+            if (!jumpInputReceived || !base.characterBody || base.characterMotor.jumpCount >= base.characterBody.maxJumpCount)
+            {
+                return;
+            }
+            if (base.characterMotor.jumpCount == 0 || base.characterBody.baseJumpCount == 1)
+            {
+                //future single jump effects go here idk im lazy
+            }
+            else
+            {
+                if(wingInstance) UnityEngine.Object.Destroy(wingInstance);
+                wingPrefab = BayoAssets.bwings;
+                UnityEngine.Object.Destroy(wingPrefab.GetComponent<WingComponent>());
+                wingPrefab.AddComponent<WingComponent>();
+                ChildLocator childLocator = GetModelChildLocator();
+                if (childLocator)
+                {
+                    Transform transform = childLocator.FindChild("WingCenter") ?? base.characterBody.coreTransform;
+                    if (transform)
+                    {
+                        wingInstance = Object.Instantiate(wingPrefab, transform.position, transform.rotation);
+                        wingInstance.transform.parent = transform;
+                    }
+                }
+                //EffectManager.SimpleMuzzleFlash(wingPrefab, gameObject, "WingCenter", true);
+                EffectManager.SimpleMuzzleFlash(jumpPrefab, gameObject, "SwingCenter", true);
+            }
+            base.ProcessJump();
+            
+        }
+
+        */
         public override void OnExit()
         {
+            //if (wingInstance) UnityEngine.Object.Destroy(wingInstance);
             //if(pTracker) Destroy(pTracker);
             base.OnExit();
         }

@@ -9,9 +9,10 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         public override void OnEnter()
         {
             swing = "land";
+            sEffect = BayoAssets.slam;
             base.OnEnter();
             duration = 0.85f;
-            upForce = 5 * Vector3.up;
+            upForce = 8 * Vector3.up;
             attackStartPercentTime = 0f;
             earlyExit = 0.2f;
             hitboxGroupName = "FallHitbox";

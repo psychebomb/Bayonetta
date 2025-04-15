@@ -21,6 +21,7 @@ using EntityStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
 using System.Globalization;
 using EntityStates.BrotherMonster;
+using BayoMod.Characters.Survivors.Bayo.Components;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -54,7 +55,6 @@ namespace BayoMod.Survivors.Bayo
 
             jumpCount = 2,
         };
-
         public override CustomRendererInfo[] customRendererInfos => new CustomRendererInfo[]
         {
                 new CustomRendererInfo
@@ -372,6 +372,7 @@ namespace BayoMod.Survivors.Bayo
         {
             AddHitboxes();
             bodyPrefab.AddComponent<PunishTracker>();
+            bodyPrefab.AddComponent<ABKRotator>();
             displayPrefab.transform.Find("DistantSound").gameObject.GetComponent<RTPCController>().akSoundString = "select";
         }
 
@@ -381,6 +382,7 @@ namespace BayoMod.Survivors.Bayo
             Prefabs.SetupHitBoxGroup(characterModelObject, "PunchGroup", "PunchHitbox");
             Prefabs.SetupHitBoxGroup(characterModelObject, "FallGroup", "FallHitbox");
             Prefabs.SetupHitBoxGroup(characterModelObject, "CoverGroup", "Envelop");
+            Prefabs.SetupHitBoxGroup(characterModelObject, "CoverGroup2", "Envelop2");
             Prefabs.SetupHitBoxGroup(characterModelObject, "HeelGroup", "HeelHitbox");
         }
 
@@ -1020,10 +1022,9 @@ namespace BayoMod.Survivors.Bayo
 
         private void CdHook(On.RoR2.CharacterBody.orig_OnBuffFinalStackLost orig, CharacterBody self, BuffDef buffDef)
         {
-            if (NetworkServer.active)
+            if (NetworkServer.active && self.gameObject && self.gameObject.name.Contains("BayoBody"))
             {
                 bool flagg = (buffDef == BayoBuffs.wtBuff);
-                bool flagg2 = (buffDef == RoR2Content.Buffs.NoCooldowns && self.gameObject && self.gameObject.name.Contains("BayoBody"));
                 int alien = self.inventory.GetItemCount(RoR2Content.Items.AlienHead);
                 int light = self.inventory.GetItemCount(DLC1Content.Items.HalfAttackSpeedHalfCooldowns);
                 int pure = self.inventory.GetItemCount(RoR2Content.Items.LunarBadLuck);
@@ -1043,16 +1044,16 @@ namespace BayoMod.Survivors.Bayo
                 }
                 if(cd < 0) cd = 0;
 
-                NetworkedBodyAttachment temp = self.GetComponentInParent<NetworkedBodyAttachment>();
-                if (temp) wtWard = temp.gameObject;
+                SlowDownProjectiles temp = self.GetComponentInParent<SlowDownProjectiles>();
+                if (temp) wtWard = temp.gameObject;     //this night be a huge problem, suprised it already hasn't been a problem with the punish obj
 
-                if (((flagg && !self.HasBuff(RoR2Content.Buffs.NoCooldowns)) ||(!self.HasBuff(BayoBuffs.wtBuff) && flagg2)) && wtWard)
+                if (flagg && wtWard)
                 {
                     Object.Destroy(wtWard);
                     Util.PlaySound("wtexit", self.gameObject);
                     AkSoundEngine.StopPlayingID(sound);
                 }
-                if (flagg && !self.HasBuff(BayoBuffs.wtCoolDown))
+                if (!self.HasBuff(RoR2Content.Buffs.NoCooldowns) && flagg && !self.HasBuff(BayoBuffs.wtCoolDown))
                 {
                     for (int k = 1; k <= cd; k++)
                     {
@@ -1062,17 +1063,20 @@ namespace BayoMod.Survivors.Bayo
             }
             if (buffDef == BayoBuffs.dodgeBuff)
             {
-                ModelLocator component = self.gameObject.GetComponent<ModelLocator>();
-                if (component)
+                if(self && self.gameObject)
                 {
-                    ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
-                    if ((bool)component2)
+                    ModelLocator component = self.gameObject.GetComponent<ModelLocator>();
+                    if (component)
                     {
-                        int childIndex = component2.FindChildIndex("MainHurtbox");
-                        Transform trans = component2.FindChild(childIndex);
-                        Vector3 origScale = trans.localScale;
-                        Vector3 newScale = new Vector3((float)origScale.x / 6, (float)origScale.y / 3f, (float)origScale.z / 6);
-                        trans.set_localScale_Injected(ref newScale);
+                        ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
+                        if ((bool)component2)
+                        {
+                            int childIndex = component2.FindChildIndex("MainHurtbox");
+                            Transform trans = component2.FindChild(childIndex);
+                            Vector3 origScale = trans.localScale;
+                            Vector3 newScale = new Vector3((float)origScale.x / 6, (float)origScale.y / 3f, (float)origScale.z / 6);
+                            trans.set_localScale_Injected(ref newScale);
+                        }
                     }
                 }
             }
@@ -1082,10 +1086,9 @@ namespace BayoMod.Survivors.Bayo
 
         private void WTHook(On.RoR2.CharacterBody.orig_OnBuffFirstStackGained orig, CharacterBody self, BuffDef buffDef)
         {
-            if (NetworkServer.active)
+            if (NetworkServer.active && self.gameObject && self.gameObject.name.Contains("BayoBody"))
             {
-                bool shouldActivate = (buffDef == BayoBuffs.wtBuff ||
-                    (buffDef == RoR2Content.Buffs.NoCooldowns && self.gameObject.name.Contains("BayoBody")));
+                bool shouldActivate = (buffDef == BayoBuffs.wtBuff);
                 if (shouldActivate && !wtWard)
                 {
                     wtWard = Object.Instantiate(BayoAssets.wardPrefab);
@@ -1094,20 +1097,31 @@ namespace BayoMod.Survivors.Bayo
                     wtWard.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(self.gameObject);
                     sound = AkSoundEngine.PostEvent(1517750988, self.gameObject);
                 }
+
+                if (buffDef == RoR2Content.Buffs.NoCooldowns)
+                {
+                    if (self.HasBuff(BayoBuffs.wtCoolDown))
+                    {
+                        self.ClearTimedBuffs(BayoBuffs.wtCoolDown.buffIndex);
+                    }
+                }
             }
             if (buffDef == BayoBuffs.dodgeBuff)
             {
-                ModelLocator component = self.gameObject.GetComponent<ModelLocator>();
-                if (component)
+                if(self && self.gameObject)
                 {
-                    ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
-                    if ((bool)component2)
+                    ModelLocator component = self.gameObject.GetComponent<ModelLocator>();
+                    if (component)
                     {
-                        int childIndex = component2.FindChildIndex("MainHurtbox");
-                        Transform trans = component2.FindChild(childIndex);
-                        Vector3 origScale = trans.localScale;
-                        Vector3 newScale = new Vector3((float)origScale.x * 6, (float)origScale.y * 3f, (float)origScale.z * 6);
-                        trans.set_localScale_Injected(ref newScale);
+                        ChildLocator component2 = component.modelTransform.GetComponent<ChildLocator>();
+                        if ((bool)component2)
+                        {
+                            int childIndex = component2.FindChildIndex("MainHurtbox");
+                            Transform trans = component2.FindChild(childIndex);
+                            Vector3 origScale = trans.localScale;
+                            Vector3 newScale = new Vector3((float)origScale.x * 6, (float)origScale.y * 3f, (float)origScale.z * 6);
+                            trans.set_localScale_Injected(ref newScale);
+                        }
                     }
                 }
             }
@@ -1150,6 +1164,11 @@ namespace BayoMod.Survivors.Bayo
                     }
                     damageInfo.rejected = true;
                 }
+            }
+            else if (self.body.name.Contains("BayoBody") && damageInfo.damage > 0f)
+            {
+                GameObject dam = BayoAssets.damage;
+                EffectManager.SimpleMuzzleFlash(dam, self.gameObject, "DamageCenter", true);
             }
 
             if (self.body.HasBuff(BayoBuffs.wtBuff) && damageInfo.damage > 0f && Modules.Config.wtInvul.Value)

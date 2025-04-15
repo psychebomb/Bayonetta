@@ -7,6 +7,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 using UnityEngine.Rendering.PostProcessing;
 using BayoMod.Modules.Components;
+using R2API.Utils;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -19,6 +20,8 @@ namespace BayoMod.Survivors.Bayo
         public static GameObject footProjectilePrefab;
 
         public static GameObject bulletMuz;
+
+        private static GameObject tempMuz;
 
         public static GameObject wtOverlay;
 
@@ -35,6 +38,31 @@ namespace BayoMod.Survivors.Bayo
         public static GameObject evilObject;
 
         public static PostProcessProfile profile;
+
+        #region swing effects
+
+        public static GameObject p1s;
+        public static GameObject p1as;
+        public static GameObject p2s;
+        public static GameObject p2as;
+        public static GameObject p3s;
+        public static GameObject p3as;
+        public static GameObject p4s;
+        public static GameObject p4as;
+        public static GameObject pflur;
+        public static GameObject damage;
+
+        public static GameObject heelk;
+        public static GameObject backk;
+        public static GameObject backs;
+        public static GameObject spin;
+        public static GameObject slam;
+        public static GameObject fallk;
+        public static GameObject abk;
+
+        public static GameObject bwings;
+        public static GameObject djump;
+        #endregion
 
         public static void Init(AssetBundle assetBundle)
         {
@@ -55,9 +83,110 @@ namespace BayoMod.Survivors.Bayo
         #region effects
         private static void CreateEffects()
         {
+            CreateSwings();
+            damage = _assetBundle.LoadEffect("damage", true);
             CreateOverlay();
+            CreateMuz();
         }
 
+        private static void CreateSwings()
+        {
+            p1s = _assetBundle.LoadEffect("m1p1", true);
+            p1as = _assetBundle.LoadEffect("m1p1a", true);
+            p2s = _assetBundle.LoadEffect("m1p2", true);
+            p2as = _assetBundle.LoadEffect("m1p2a", true);
+            p3s = _assetBundle.LoadEffect("m1p3", true);
+            p3as = _assetBundle.LoadEffect("m1p3a", true);
+            p4s = _assetBundle.LoadEffect("m1p4", true);
+            p4as = _assetBundle.LoadEffect("m1p4a", true);
+            pflur = _assetBundle.LoadAsset<GameObject>("m1flur");
+
+            heelk = _assetBundle.LoadEffect("heelkick", true);
+            fallk = _assetBundle.LoadEffect("fallkick", true);
+            spin = _assetBundle.LoadAsset<GameObject>("spin");
+            backk = _assetBundle.LoadAsset<GameObject>("backkick");
+            backs = _assetBundle.LoadAsset<GameObject>("backspin");
+            abk = _assetBundle.LoadAsset<GameObject>("abk");
+            slam = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/HermitCrab/HermitCrabBombExplosion.prefab").WaitForCompletion().InstantiateClone("BayoSlam", false);
+
+            bwings = _assetBundle.LoadAsset<GameObject>("wings");
+            djump = _assetBundle.LoadEffect("djump", true);
+
+            p2s.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
+            p2as.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
+            MoveOffset mo = p3s.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
+            mo.slideDur = 0.15f;
+            p3as.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
+            mo = p4s.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
+            mo.slideDur = 0.15f;
+            //UnityEngine.Object.Destroy(slam.GetComponent<ShakeEmitter>());
+            UnityEngine.Object.Destroy(slam.transform.Find("Water, Billboard").gameObject);
+            UnityEngine.Object.Destroy(slam.transform.Find("Flash").gameObject);
+            slam.GetComponent<EffectComponent>().soundName = "";
+            Vector3 tempVec = new Vector3(3f, 3f, 3f);
+            slam.transform.Find("Water, Radial").gameObject.transform.set_localScale_Injected(ref tempVec);
+            slam.transform.Find("Point Light").gameObject.GetComponent<Light>().range = 3f;
+            ShakeEmitter se = slam.gameObject.GetComponent<ShakeEmitter>();
+            se.radius = 50f;
+            se.duration = 0.2f;
+            se.wave.amplitude = 3f;
+            se.wave.frequency = 60f;
+            slam.transform.Find("Water, Directional").gameObject.transform.set_localScale_Injected(ref tempVec);
+            tempVec = new Vector3(2f, 2f, 2f);
+            slam.transform.Find("Debris, 3D").gameObject.transform.set_localScale_Injected(ref tempVec);
+            Color temp = slam.transform.Find("Water, Directional").gameObject.GetComponent<ParticleSystem>().main.startColor.color;
+            temp = new Color(0.231372f, 0.2f, 231372f, temp.a);
+            bwings.AddComponent<WingComponent>();
+
+            //312B25
+            ContentAddition.AddEffect(slam);
+
+            for (int i= 1; i < 7; ++i)
+            {
+                mo = pflur.transform.Find("swing" + i.ToString()).gameObject.AddComponent<MoveOffset>();
+                mo.slideDur = 0.15f;
+            }
+
+            for (int i = 1; i < 3; ++i)
+            {
+                mo = heelk.transform.Find("swing" + i.ToString()).gameObject.AddComponent<MoveOffset>();
+                mo.startOffset = 0.3f;
+                mo.idealOffset = -0.5f;
+                mo.slideDur = 0.2f;
+            }
+
+            for (int i = 1; i < 3; ++i)
+            {
+                mo = spin.transform.Find("swing" + i.ToString()).gameObject.AddComponent<MoveOffset>();
+                mo.startOffset = 0.3f;
+                mo.idealOffset = -0.8f;
+                mo.slideDur = 0.125f;
+            }
+
+            for (int i = 1; i < 3; ++i)
+            {
+                mo = backk.transform.Find("swing" + i.ToString()).gameObject.AddComponent<MoveOffset>();
+                mo.startOffset = 0.3f;
+                mo.idealOffset = -1f;
+                mo.slideDur = 0.35f;
+            }
+
+            for (int i = 1; i < 3; ++i)
+            {
+                mo = backs.transform.Find("swing" + i.ToString()).gameObject.AddComponent<MoveOffset>();
+                mo.startOffset = 0.3f;
+                mo.idealOffset = -.8f;
+                mo.slideDur = 0.2f;
+            }
+
+            for (int i = 1; i < 3; ++i)
+            {
+                mo = fallk.transform.Find("swing" + i.ToString()).gameObject.AddComponent<MoveOffset>();
+                mo.startOffset = 0.3f;
+                mo.idealOffset = -.8f;
+                mo.slideDur = 0.3f;
+            }
+        }
         private static void CreateOverlay()
         {
             if (Modules.Config.overlayOn.Value)
@@ -92,6 +221,26 @@ namespace BayoMod.Survivors.Bayo
             //wtOverlay.transform.Find("CameraEffect/PP").gameObject.GetComponent<PostProcessVolume>();
         }
 
+        private static void CreateMuz()
+        {
+            bulletMuz = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/VFX/Muzzleflash1.prefab").WaitForCompletion().InstantiateClone("BayoMuz", true);
+            tempMuz = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Bandit2/MuzzleflashBandit2.prefab").WaitForCompletion().InstantiateClone("BayoTempMuz", true);
+
+            ParticleSystem ps = bulletMuz.transform.Find("Starburst").gameObject.GetComponent<ParticleSystem>();
+            ParticleSystem ps2 = tempMuz.transform.Find("TriangleSparks").gameObject.GetComponent<ParticleSystem>();
+            ps.colorOverLifetime.color.gradient.SetKeys(ps2.colorOverLifetime.color.gradient.colorKeys, ps2.colorOverLifetime.color.gradient.alphaKeys);
+            ps = bulletMuz.transform.Find("HitFlash").gameObject.GetComponent<ParticleSystem>();
+            ps.colorOverLifetime.color.gradient.SetKeys(ps2.colorOverLifetime.color.gradient.colorKeys, ps2.colorOverLifetime.color.gradient.alphaKeys);
+
+            Light light = bulletMuz.transform.Find("Point light").gameObject.GetComponent<Light>();
+            Light light2 = tempMuz.transform.Find("Point light").gameObject.GetComponent<Light>();
+
+            light.color = light2.color;
+
+            ContentAddition.AddEffect(bulletMuz);
+
+        }
+
         #endregion effects
 
         #region projectiles
@@ -106,7 +255,7 @@ namespace BayoMod.Survivors.Bayo
             PrefabAPI.RegisterNetworkPrefab(footProjectilePrefab);
             ContentAddition.AddNetworkedObject(wardPrefab);
             ContentAddition.AddNetworkedObject(evilObject);
-            PrefabAPI.RegisterNetworkPrefab(evilObject);
+
         }
 
         private static void CreateWeaveProjectiles()
@@ -123,8 +272,8 @@ namespace BayoMod.Survivors.Bayo
                 shakeEmitter.scaleShakeRadiusWithLocalScale = false;
                 shakeEmitter.wave = new Wave
                 {
-                    amplitude = 0.5f,
-                    frequency = 10f,
+                    amplitude = 2f,
+                    frequency = 7f,
                     cycleOffset = 0f
                 };
             }
@@ -140,8 +289,8 @@ namespace BayoMod.Survivors.Bayo
                 shakeEmitter.scaleShakeRadiusWithLocalScale = false;
                 shakeEmitter.wave = new Wave
                 {
-                    amplitude = 0.5f,
-                    frequency = 10f,
+                    amplitude = 2f,
+                    frequency = 7f,
                     cycleOffset = 0f
                 };
             }

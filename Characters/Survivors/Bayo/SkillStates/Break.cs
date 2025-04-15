@@ -42,9 +42,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             CreateCameras();
 
             muzName = "muzrf";
-            gDam = 0.5f;
             frTime = 0.15f;
-            damage = 1.5f;
+            damage = 1.2f;
+            blastDamage = 0.5f;
+            blastRadius = 30;
+            hgn = "CoverGroup2";
+            hbn = "Envelop2";
+            effect = null;
 
             base.OnEnter();
 
@@ -95,6 +99,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                     rootMotionAccumulator.accumulatedRootMotion = Vector3.zero;
                 }
             }
+
             if (hasEnded)
             {
                 if (Camera)
