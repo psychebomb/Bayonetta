@@ -1,4 +1,5 @@
 ﻿using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
+using BayoMod.Survivors.Bayo;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 {
@@ -7,17 +8,20 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         public override void OnEnter()
         {
             earlyExitPercentTime = 0.24f;
+            playSwing = 0.18f;
             if (characterMotor.isGrounded)
             {
                 animStart = "P1";
                 animEnd = "P1E";
                 endDuration = 0.72f;
+                //swingEffectPrefab = BayoAssets.p1s;
             }
             else
             {
                 animStart = "P1A";
                 animEnd = "P1AE";
                 endDuration = 0.68f;
+                //swingEffectPrefab = BayoAssets.p1as;
             }
             gunStr = "muzrh";
             holdTime = 0.5f - earlyExitPercentTime;

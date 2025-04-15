@@ -21,12 +21,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected string gunStr;
         public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
         protected float hopVelocity = 2.5f;
+        protected Vector3 forwardDir;
         public override void OnEnter()
         {
-            damageCoefficient = 1.5f;
-            attackStartPercentTime = 0.2f;
+            damageCoefficient = 2f;
             attackEndPercentTime = 0.6f;
-            damageCoefficient = 3f;
+            //damageCoefficient = 3f;  wtf is wrong with me
             procCoefficient = 1f;
             damageType = DamageTypeCombo.GenericPrimary;
             pushForce = 100f;
@@ -41,7 +41,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             launch = false;
             fireTime = 0.166f;
 
-            characterDirection.forward = GetAimRay().direction;
+            forwardDir = GetAimRay().direction;
+            characterDirection.forward = forwardDir;
             rootMotionAccumulator = GetModelRootMotionAccumulator();
 
             base.OnEnter();
@@ -49,8 +50,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             holdTime /= this.attackSpeedStat;
             earlyExitPercentTime /= this.attackSpeedStat;
             endDuration /= this.attackSpeedStat;
+            playSwing /= this.attackSpeedStat;
             exitTime = holdTime + earlyExitPercentTime;
             duration = exitTime + endDuration;
+            attackStartPercentTime = earlyExitPercentTime /duration;
             PlayAnimation("Body", animStart, playbackRateParam, earlyExitPercentTime * 2);
 
             if (characterMotor && !characterMotor.isGrounded && hopVelocity > 0f)
@@ -63,6 +66,17 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 exitToStance = false;
             }
 
+        }
+
+        protected override void EnterAttack()
+        {
+            hasFired = true;
+            if (voice) { Util.PlaySound(voiceString, gameObject); }
+
+            if (isAuthority)
+            {
+                AddRecoil(-1f * attackRecoil, -2f * attackRecoil, -0.5f * attackRecoil, 0.5f * attackRecoil);
+            }
         }
 
         private void DetermineCancel()
@@ -123,7 +137,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
                     if (vector != Vector3.zero && base.isAuthority && base.characterMotor)
                     {
-                        if(!hasEnded) vector *= 2f;
+                        if (!hasEnded) vector *= 2f;
                         base.characterMotor.rootMotion += vector;
                     }
                 }
@@ -134,6 +148,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 characterMotor.moveDirection = inputBank.moveVector;
                 characterDirection.moveVector = characterMotor.moveDirection;
             }
+
+            characterDirection.forward = forwardDir;
 
             shootRay = GetAimRay();
 
@@ -183,6 +199,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     break;
 
             }
+        }
+
+        public override void OnExit()
+        {
+            if (swingEffectPrefab) swingEffectPrefab.GetComponentInChildren<ParticleSystem>().Stop();
+            base.OnExit();
         }
     }
 }

@@ -39,11 +39,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected string muzzleString = "SwingCenter";
         protected string playbackRateParam = "Slash.playbackRate";
         protected GameObject swingEffectPrefab;
+        protected GameObject loopEffectPrefab;
+        protected GameObject loopEffectInstance;
         protected GameObject hitEffectPrefab = FireEmbers.hitEffectPrefab;
         protected NetworkSoundEventIndex impactSound = NetworkSoundEventIndex.Invalid;
 
         public float duration;
-        public float playSwing;
+        public float playSwing = 0f;
         protected bool hasSwung = false;
         protected bool hasFired;
         private float hitPauseTimer;
@@ -62,7 +64,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected float gunDamage;
         protected float gunForce = BaseNailgunState.force;
         private GameObject tracerEffectPrefab = FirePistol2.tracerEffectPrefab;
-        private GameObject gunEffectPrefab = FireTurret.hitEffectPrefab;
+        protected GameObject gunEffectPrefab = FireTurret.hitEffectPrefab;
         protected float spreadBloomValue = 0f;
         protected float fireTime = 9999f;
         protected float bulletStopWatch = 0f;
@@ -106,13 +108,35 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             {
                 RemoveHitstop();
             }
+            if(loopEffectInstance) Destroy(loopEffectInstance);
             results.Clear();
             base.OnExit();
         }
 
         protected virtual void PlaySwingEffect()
         {
-            EffectManager.SimpleMuzzleFlash(swingEffectPrefab, gameObject, muzzleString, false);
+            if (swingEffectPrefab)
+            {
+                EffectManager.SimpleMuzzleFlash(swingEffectPrefab, gameObject, muzzleString, true);
+            }
+            else if (loopEffectPrefab)
+            {
+                ChildLocator childLocator = GetModelChildLocator();
+                if (childLocator)
+                {
+                    Transform transform = childLocator.FindChild(muzzleString) ?? base.characterBody.coreTransform;
+                    if (transform)
+                    {
+                        loopEffectInstance = Object.Instantiate(loopEffectPrefab, transform.position, transform.rotation);
+                        //EffectManager.SpawnEffect(loopEffectPrefab, new EffectData
+                        //{
+                        //    origin = transform.position,
+                        //    rotation = transform.rotation
+                        //}, true);
+                        loopEffectInstance.transform.parent = transform;
+                    }
+                }
+            }
         }
 
         protected bool CanDodge()
@@ -216,9 +240,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         {
             hasFired = true;
             characterDirection.forward = GetAimRay().direction;
-            PlaySwingEffect();
             if (voice) { Util.PlaySound(voiceString, gameObject); }
-
+            
             if (isAuthority)
             {
                 AddRecoil(-1f * attackRecoil, -2f * attackRecoil, -0.5f * attackRecoil, 0.5f * attackRecoil);
@@ -250,11 +273,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 
             bool fireStarted = stopwatch >= duration * attackStartPercentTime;
             bool fireEnded = stopwatch >= duration * attackEndPercentTime;
-            playSwing = duration * attackStartPercentTime * .75f;
+            if(playSwing == 0) playSwing = duration * attackStartPercentTime * .75f;
 
             if (!hasSwung && stopwatch >= playSwing)
             {
                 hasSwung = true;
+                if (isAuthority) PlaySwingEffect();
                 Util.PlaySound(swingSoundString, gameObject);
             }
             //to guarantee attack comes out if at high attack speed the stopwatch skips past the firing duration between frames
@@ -316,7 +340,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private void FireBullet()
         {
             Ray aimRay = shootRay;
-            EffectManager.SimpleMuzzleFlash(FirePistol2.muzzleEffectPrefab, gameObject, gunName, false);
+            EffectManager.SimpleMuzzleFlash(BayoAssets.bulletMuz, gameObject, gunName, false);
             AddRecoil(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
             if (isAuthority)
             {

@@ -1,4 +1,19 @@
 ## Changelog
+- 0.3.1
+    - Tweaked bullet logic for heel tornado, breakdance, and the finisher move to full moon shoot: the bullets will now deal damage to all targets within a certain distance of bayonetta
+    - Increased the hitbox size for heel tornado, breakdance, and death drop
+    - ABK's aniamation is now angled based on the direction aimed when activating the skill
+    - The 'Strut' emote now automatically moves bayonetta forward
+    - Starting to add new vfx, including a rose effect for when bayo takes damage and a ground break effect for death drop
+    - Changed item interaction with brainstalks, the braintalks buff will now only just remove all instance of WT cooldown when activated
+    - Changed damage values:
+        - Bullet arts punches: 300% -> 200%
+            - Did you know that the first four punches of bullet arts were dealing twice the amount of damage that was listed in the skill def? Because I didn't
+        - Bullet arts flurry attack: 135% -> 165%
+        - Breakdance: 150% -> 120%
+        - Heel Tornado: 200% -> 150%
+        - Full Moon Shoot finisher: 125% -> 100%
+            - These m2 nerfs look like a lot but now that the bullets deal non trivial, consistent damage, the overall m2 damage output should be better
 - 0.3.0
     - Added new punish attacks
     - Added a new, very long emote

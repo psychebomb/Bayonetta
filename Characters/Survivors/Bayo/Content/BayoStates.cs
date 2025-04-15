@@ -91,6 +91,8 @@ namespace BayoMod.Survivors.Bayo
 
             Modules.Content.AddEntityState(typeof(Strut));
 
+            Modules.Content.AddEntityState(typeof(StrutNew));
+
             Modules.Content.AddEntityState(typeof(LetsDance));
 
             Modules.Content.AddEntityState(typeof(PunishStun));

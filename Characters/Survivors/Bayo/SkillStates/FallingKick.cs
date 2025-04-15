@@ -15,7 +15,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         public static float airControl = GroundSlam.airControl;
         public static float minimumDuration = GroundSlam.minimumDuration;
         public static string enterSoundString = GroundSlam.enterSoundString;
-        public static float initialVerticalVelocity = GroundSlam.initialVerticalVelocity;
+        public static float initialVerticalVelocity = GroundSlam.initialVerticalVelocity * 1.2f;
         public static float verticalAcceleration = GroundSlam.verticalAcceleration *0.8f;
         private float previousAirControl;
 

@@ -24,8 +24,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             attackEndPercentTime = 1f;
             earlyExitPercentTime = 0.3f;
 
-            damageCoefficient = 1.35f;
-            procCoefficient = 0.75f;
+            damageCoefficient = 1.65f;
+            procCoefficient = 0.6f;
             damageType = DamageTypeCombo.GenericPrimary;
             pushForce = 300f;
             hitStopDuration = 0.012f;
@@ -46,6 +46,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             Util.PlaySound("flurry", this.gameObject);
             Util.PlaySound("falling", this.gameObject);
+            //loopEffectPrefab = BayoAssets.pflur;
 
             base.OnEnter();
 
@@ -158,7 +159,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || (item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body"))) && item && item.transform)
                 {
                     CharacterBody body = item.body;
-                    if (body.characterMotor && !body.characterMotor.isGrounded)
+                    if (body && body.characterMotor && !body.characterMotor.isGrounded)
                     {
                         juggleHop = 9f / this.attackSpeedStat;
                         if (base.characterBody.HasBuff(BayoBuffs.wtBuff)) juggleHop /= 3f;

@@ -48,6 +48,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             forwardDir = Vector3.up;
             rollSpeed = 0f;
             characterDirection.forward = GetAimRay().direction;
+            //loopEffectPrefab = BayoAssets.backk;
 
             if (characterMotor && characterDirection)
             {
@@ -59,6 +60,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             PlayAnimation("Body", "BackKickStart", "Roll.playbackRate", attackStartPercentTime);
             characterMotor.Motor.ForceUnground();
             exitToStance = false;
+
+            playSwing = 0.5f;
 
             base.OnEnter();
         }

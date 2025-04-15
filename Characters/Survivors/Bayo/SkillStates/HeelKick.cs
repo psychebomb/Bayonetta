@@ -14,6 +14,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         private bool jumped;
         protected float earlyExit = 0.3f;
         protected string swing = "heelkick";
+        protected GameObject sEffect; // = BayoAssets.heelk;
         protected Vector3 upForce = 16f * Vector3.up;
 
         public override void OnEnter()
@@ -35,6 +36,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             exitToStance = true;
             launch = true;
             swingSoundString = swing;
+            swingEffectPrefab = sEffect;
 
             rootMotionAccumulator = GetModelRootMotionAccumulator();
             PlayAnimation("Body", "HeelKick", "Slash.playbackRate", duration);

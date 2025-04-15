@@ -23,7 +23,7 @@ A Special thanks goes to <a href="https://thunderstore.io/package/LONK/">LONK</a
 ### Primary: Bullet Arts
 <img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/texM1.png?raw=true"/>
 
-Perform a 5 hit punch sequence, dealing 150% damage for the first four hits. The last hit is a flurry attack that deals 135% damage each hit and summons a wicked weave when released, dealing 1400% damage. Bayonetta will also continuously fire her guns during the sequence, each shot dealing 50% damage.
+Perform a 5 hit punch sequence, dealing 2000% damage for the first four hits. The last hit is a flurry attack that deals 165% damage each hit and summons a wicked weave when released, dealing 1400% damage. Bayonetta will also continuously fire her guns during the sequence, each shot dealing 50% damage.
 If dodge is used during this sequence, Bayonetta will pick up the sequence where she left off as long as M1 is still held. Additionally, using this move against airborne enemies will juggle them, stunning them and knocking them upwards.
 
 #### Secondary: Umbran Techniques
@@ -47,7 +47,7 @@ Perform a variety of different moves depending on movement inputs and whether or
   <tr>
     <td>Aerial + Neutral</td>
     <td>Heel Tornado</td>
-    <td>Perform a spinning kick, continuously dealing 200% damage. Knocks away lighter enemies. Jump cancellable.</td>
+    <td>Perform a spinning kick, continuously dealing 150% damage. Knocks away lighter enemies. Jump cancellable.</td>
   </tr>
   <tr>
     <td>Aerial + Backward</td>
@@ -62,12 +62,12 @@ Perform a variety of different moves depending on movement inputs and whether or
   <tr>
     <td>Grounded + Neutral</td>
     <td>Breakdance</td>
-    <td>Perform a breakdance, continuously dealing 125% damage per hit to all enemies around you. Juggles airborne opponents similar to M1. Jump cancellable.</td>
+    <td>Perform a breakdance, continuously dealing 120% damage per hit to all enemies around you. Juggles airborne opponents similar to M1. Jump cancellable.</td>
   </tr>
   <tr>
     <td>Grounded + Backward</td>
     <td>Full Moon Shoot</td>
-    <td>Perform a backflip that launches lighter enemies, dealing 395% damage. Continue holding the move down to keep spinning, continuously dealing 125% damage.</td>
+    <td>Perform a backflip that launches lighter enemies, dealing 395% damage. Continue holding the move down to keep spinning, continuously dealing 100% damage.</td>
   </tr>
 </tbody>
 </table>
@@ -91,9 +91,10 @@ Bayonetta now has new punish attacks!!!!!
 - If bayonetta is grounded and near an enemy in this state, she will be prompted with the interact button to punish the enemy.
 - Mashing the primary skill button (M1) during a punish attack will speed up the attack.
 - Two different punish attacks: one for grounded enemies, one for airborne/flying enemies.
+
 Bayonetta has special interactions with items that reduce cooldowns:
 - Bandolier: If Witch Time is active, gain an additional 4 seconds when picking up an ammo pack. If Bayonetta has the Witch Time cooldown debuff, remove the debuff upon picking up an ammo pack.
-- Brainstalks: The buff from brainstalks activates its own Witch Time effect independent of regular Witch Time. This instance of Witch Time has no cooldown.
+- Brainstalks: Removes all isntances of the Witch Time debuff whenever the no cooldowns buff is active.
 - Hardlight Afterburner: Adds 3 seconds to Witch Time's duration.
 - Alien Head: Reduces Witch Time's cooldown by 25%
 - Light Flux Pauldron: Reduces Witch Time's cooldown by 50%
@@ -102,7 +103,7 @@ Bayonetta has special interactions with items that reduce cooldowns:
 ## Known Issues
 - Some animations/sounds don't play properly in multiplayer.
 - Enemies killed in witch time will sometimes leave floating corpses
-- Zoom-in during successful dodge sometimes doesn't play for non-host players
+- Buffs are handled a little akwardly for non-host multiplayer users, causing some issues with punish attack invul and some witch time effects
 
 ## Todo
 - Effects

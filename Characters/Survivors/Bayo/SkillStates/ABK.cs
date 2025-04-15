@@ -4,6 +4,8 @@ using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Survivors.Bayo;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using UnityEngine.Assertions.Must;
+using UnityEngine.UIElements;
+using BayoMod.Characters.Survivors.Bayo.Components;
 
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
@@ -16,6 +18,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         protected AnimationCurve kickSpeed;
         protected Vector3 speedVec;
         protected Ray saveRay;
+        private ABKRotator abkr;
+        private float rotTime = 0.18f;
+        private bool rotated = false;
         public override void OnEnter()
         {
             duration = 0.65f;
@@ -32,7 +37,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             saveRay = GetAimRay();
             voice = true;
             voiceString = "stompabk";
-            swingSoundString = "abk";
+            Util.PlaySound("abk", gameObject);
+            //loopEffectPrefab = BayoAssets.abk;
+            muzzleString = "ABKC";
+            playSwing = 0.15f;
             //bonusForce = 0.8f * forwardDir * Uppercut.upwardForceStrength;
 
             characterDirection.forward = forwardDir;
@@ -62,6 +70,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 animName = "Abk";
             }
 
+            abkr = GetComponent<ABKRotator>();
             PlayAnimation("Body", animName, playbackRateParam, duration);
             characterMotor.Motor.ForceUnground();
             exitToStance = false;
@@ -90,6 +99,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 
             }
 
+            if(stopwatch >= rotTime && !rotated)
+            {
+                abkr.rotate = true;
+                abkr.lookDir = forwardDir;
+                rotated = true;
+            }
+
             if (stopwatch >= duration && isAuthority)
             {
                 if (base.inputBank.skill2.down)
@@ -112,7 +128,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         }
         public override void OnExit()
         {
-            if (!hasExtended) { PlayAnimation("Body", "AbkExit"); }
+            if (!hasExtended)
+            {
+                PlayAnimation("Body", "AbkExit");
+                abkr.lookDir = Vector3.zero;
+                abkr.rotate = false;
+            }
             if (forwardDir.y > -0.5) characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
             LastHit();
             base.OnExit();
