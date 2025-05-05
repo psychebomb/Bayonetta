@@ -25,7 +25,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
 
         private GameObject projectilePrefab = BayoAssets.fistProjectilePrefab;
-        private float weaveDamage = 14f;
+        private float weaveDamage = 15f;
         private float weaveForce = 3000f;
         private bool firedProjectile = false;
         private float recoilAmplitude = 0.1f;
