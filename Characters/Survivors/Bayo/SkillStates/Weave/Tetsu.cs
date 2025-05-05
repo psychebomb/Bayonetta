@@ -17,7 +17,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         public static float BaseDelayDuration = 0.15f;
         public string voiceString = "tetsu";
 
-        public static float DamageCoefficient = 12f;
+        public static float DamageCoefficient = 15f;
         public GameObject projpref = BayoAssets.fistProjectilePrefab;
 
         private bool ended = false;

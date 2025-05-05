@@ -51,7 +51,7 @@ namespace BayoMod.Survivors.Bayo
             #region Primary
             Language.Add(prefix + "PRIMARY_COMBO_NAME", "Bullet Arts");
             Language.Add(prefix + "PRIMARY_COMBO_DESCRIPTION", $"Perform a 5 hit punch sequence, dealing <style=cIsDamage>{200f}%</style> damage for the first four hits." +
-                $" The last hit is a flurry attack that deals <style=cIsDamage>{165f}%</style> damage each hit and summons a wicked weave when released, dealing <style=cIsDamage>{1400f}%</style> damage." +
+                $" The last hit is a flurry attack that deals <style=cIsDamage>{165f}%</style> damage each hit and summons a wicked weave when released, dealing <style=cIsDamage>{1500f}%</style> damage." +
                 $" Bayonetta will also continuously fire her guns during the sequence, each shot dealing <style=cIsDamage>{50f}%</style> damage.");
             #endregion
 
@@ -61,7 +61,7 @@ namespace BayoMod.Survivors.Bayo
 
             LanguageAPI.Add("KEYWORD_BAYO_ABK", $"<style=cKeywordName>After Burner Kick</style> <style=cIsUtility>Input: aerial, hold forward + m2.</style> <style=cSub>Launch into the air with a blazing kick, knocking back lighter enemies and dealing <style=cIsDamage>{375f}%</style> damage.</style>");
             LanguageAPI.Add("KEYWORD_BAYO_SPIN", $"<style=cKeywordName>Heel Tornado</style> <style=cIsUtility>Input: aerial, hold neutral + m2.</style> <style=cSub>Perform a spinning kick, continuously dealing <style=cIsDamage>{150f}%</style> damage. Knocks away lighter enemies.</style>");
-            LanguageAPI.Add("KEYWORD_BAYO_DOWN", $"<style=cKeywordName>Death Drop</style> <style=cIsUtility>Input: aerial, hold back + m2.</style> <style=cSub>Quickly descend with a downwards kick, continuously dealing <style=cIsDamage>{250f}%</style> damage and spiking enemies.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_DOWN", $"<style=cKeywordName>Death Drop</style> <style=cIsUtility>Input: aerial, hold back + m2.</style> <style=cSub>Quickly descend with a spiking kick, continuously dealing <style=cIsDamage>{250f}%</style> damage and <style=cIsUtility>knocking down</style> enemies.</style>");
             LanguageAPI.Add("KEYWORD_BAYO_HEEL", $"<style=cKeywordName>Heel Slide</style> <style=cIsUtility>Input: grounded, hold forward + m2.</style> <style=cSub>Slide forwards at high speed, dealing <style=cIsDamage>{100f}%</style> damage." +
                 $" Continue holding the move down after stopping to perform a rising kick, launching lighter enemies and dealing <style=cIsDamage>{300f}%</style> damage.</style>");
             LanguageAPI.Add("KEYWORD_BAYO_BREAK", $"<style=cKeywordName>Breakdance</style> <style=cIsUtility>Input: grounded, hold neutral + m2.</style> <style=cSub>Perform a breakdance, continuously dealing <style=cIsDamage>{120f}%</style> damage per hit.</style>");
@@ -77,13 +77,17 @@ namespace BayoMod.Survivors.Bayo
 
             #region Special
             Language.Add(prefix + "SPECIAL_WEAVEIN_NAME", "Tetsuzanko/Heel Stomp");
-            Language.Add(prefix + "SPECIAL_WEAVEIN_DESCRIPTION", $"Lock onto enemies and use primary or secondary buttons to summon a wicked weave at their location, dealing <style=cIsDamage>{1200f}%</style> damage.");
+            Language.Add(prefix + "SPECIAL_WEAVEIN_DESCRIPTION", $"Lock onto enemies and use primary or secondary buttons to summon a wicked weave at their location.");
             Language.Add(prefix + "SPECIAL_TETSU_NAME", "Tetsuzanko");
             Language.Add(prefix + "SPECIAL_TETSU_DESCRIPTION", $"juninhiyandiayooo");
             Language.Add(prefix + "SPECIAL_WEEAVEOUT_NAME", "Cancel");
             Language.Add(prefix + "SPECIAL_WEAVEOUT_DESCRIPTION", $"Cancel");
             Language.Add(prefix + "SPECIAL_STOMP_NAME", "Heel Stomp");
             Language.Add(prefix + "SPECIAL_STOMP_DESCRIPTION", $"TEYIAHHH");
+
+            LanguageAPI.Add("KEYWORD_BAYO_TETS", $"<style=cKeywordName>Tetsuzanko</style> <style=cIsUtility>Input: Primary (M1)</style> <style=cSub>Summon a demon fist that knocks enemies away, dealing <style=cIsDamage>{1500f}%</style> damage.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_HSTOMP", $"<style=cKeywordName>Heel Stomp</style> <style=cIsUtility>Input: Secondary (M2)</style> <style=cSub>Summon a demon foot that <style=cIsUtility>knocks down</style> enemies, sending them downwards and dealing <style=cIsDamage>{1500f}%</style> damage.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_KD", $"<style=cKeywordName>Knocked Down</style> <style=cSub>Enemies who are knocked down are stunned for a extended duration. If Bayonetta is grounded and close enough to a knocked down enemy, she can use the Interact button to perform a punish attack</style>");
             #endregion
 
             #region Achievements
