@@ -53,7 +53,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             hitboxGroupName = hgn;
             hitboxName = hbn;
             PlayAnim();
-            //loopEffectPrefab = effect;
+            loopEffectPrefab = effect;
 
             component = gameObject.GetComponent<ModelLocator>();
             component2 = component.modelTransform.GetComponent<ChildLocator>();

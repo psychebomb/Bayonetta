@@ -50,6 +50,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     outer.SetNextState(new LetsDance());
                     return;
                 }
+                if (Input.GetKeyDown(Modules.Config.emote5Keybind.Value))
+                {
+                    outer.SetNextState(new Kiss());
+                    return;
+                }
                 if (pTracker)
                 {
                     if (pTracker.GetTrackingTarget() && inputBank.interact.down)
@@ -83,8 +88,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             base.Update();
             useRootMotion = characterBody && characterBody.rootMotionInMainState;
         }
-
-        /*
         public override void ProcessJump()
         {
             if (!hasCharacterMotor)
@@ -121,8 +124,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             base.ProcessJump();
             
         }
-
-        */
         public override void OnExit()
         {
             //if (wingInstance) UnityEngine.Object.Destroy(wingInstance);

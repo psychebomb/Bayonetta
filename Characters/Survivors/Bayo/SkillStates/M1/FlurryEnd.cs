@@ -25,13 +25,15 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
 
         private GameObject projectilePrefab = BayoAssets.fistProjectilePrefab;
-        private float weaveDamage = 14f;
+        private float weaveDamage = 15f;
         private float weaveForce = 3000f;
         private bool firedProjectile = false;
         private float recoilAmplitude = 0.1f;
         private float bloom = 10;
         private bool hasEnded = false;
         private Vector3 dir;
+        private float fireProj;
+        private bool actuallyFired = false;
 
         public override void OnEnter()
         {
@@ -62,6 +64,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             duration = 1.92f / this.attackSpeedStat;
             earlyExit = 1f / this.attackSpeedStat;
+
+            fireProj = Mathf.Min(((duration * attackStartPercentTime) - 0.24f), 0);
 
             if (characterMotor.isGrounded)
             {
@@ -162,13 +166,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 characterMotor.velocity.y = 0;
             }
 
-            if (stopwatch >= duration*attackStartPercentTime)
+            if (stopwatch >= fireProj)
             {
                 if (!firedProjectile)
                 {
                     firedProjectile = true;
                     FireProjectile();
-                    DoFireEffects();
                 }
 
                 characterDirection.forward = dir;
@@ -177,6 +180,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             else
             {
                 characterDirection.forward = GetAimRay().direction;
+            }
+
+            if (stopwatch >= fireProj + 0.24f && !actuallyFired)
+            {
+                actuallyFired = true;
+                DoFireEffects();
             }
 
             if (isAuthority && (stopwatch >= earlyExit))
@@ -213,10 +222,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             if (base.isAuthority)
             {
                 Vector3 pos = this.gameObject.transform.position;
-                pos.y -= 1f;
+                pos.y -= 0.5f;
                 dir.y = 0f;
                 pos = pos + (dir.normalized * 2.5f);
-                dir.y = 0.1f;
                 ProjectileManager.instance.FireProjectile(projectilePrefab, pos, Util.QuaternionSafeLookRotation(dir), base.gameObject, damageStat * weaveDamage, weaveForce, Util.CheckRoll(critStat, base.characterBody.master), DamageColorIndex.Default, null, -1,DamageTypeCombo.GenericPrimary);
             }
         }

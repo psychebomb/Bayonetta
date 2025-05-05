@@ -38,7 +38,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             voice = true;
             voiceString = "stompabk";
             Util.PlaySound("abk", gameObject);
-            //loopEffectPrefab = BayoAssets.abk;
+            loopEffectPrefab = BayoAssets.abk;
             muzzleString = "ABKC";
             playSwing = 0.15f;
             //bonusForce = 0.8f * forwardDir * Uppercut.upwardForceStrength;

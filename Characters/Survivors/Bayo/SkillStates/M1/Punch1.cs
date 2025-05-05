@@ -14,14 +14,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 animStart = "P1";
                 animEnd = "P1E";
                 endDuration = 0.72f;
-                //swingEffectPrefab = BayoAssets.p1s;
+                loopEffectPrefab = BayoAssets.p1s;
             }
             else
             {
                 animStart = "P1A";
                 animEnd = "P1AE";
                 endDuration = 0.68f;
-                //swingEffectPrefab = BayoAssets.p1as;
+                swingEffectPrefab = BayoAssets.p1as;
             }
             gunStr = "muzrh";
             holdTime = 0.5f - earlyExitPercentTime;

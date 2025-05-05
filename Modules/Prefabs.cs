@@ -310,7 +310,7 @@ namespace BayoMod.Modules
             characterModel.body = bodyPrefab.GetComponent<CharacterBody>();
 
             characterModel.autoPopulateLightInfos = true;
-            characterModel.invisibilityCount = 0;
+            //characterModel._invisibilityCount = 0;
 
 
             if (!preattached)

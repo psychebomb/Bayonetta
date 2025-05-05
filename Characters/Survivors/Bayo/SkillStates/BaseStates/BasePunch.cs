@@ -40,6 +40,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             gunDamage = 0.5f;
             launch = false;
             fireTime = 0.166f;
+            destroyvfx = true;
 
             forwardDir = GetAimRay().direction;
             characterDirection.forward = forwardDir;

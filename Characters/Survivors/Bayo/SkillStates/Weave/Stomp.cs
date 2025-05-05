@@ -14,7 +14,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         {
             baseDuration = 1.68f;
             startDuration = 0.5f;
-            BaseDelayDuration = 0.4f;
+            BaseDelayDuration = 0.16f;
             fForce = 1f;
             voiceString = "stompabk";
             projpref = BayoAssets.footProjectilePrefab;

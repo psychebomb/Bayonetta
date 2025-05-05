@@ -1,4 +1,5 @@
-﻿using EntityStates;
+﻿using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
+using EntityStates;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -14,27 +15,34 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected bool cancel;
         protected float stopwatch;
         protected float zoomDur = 1f;
+        protected float zoomOutDur = 0.5f;
  
         protected bool jumped;
         protected bool flag1;
         protected bool half = false;
-        private bool zoom;
+        protected bool zoom;
 
         protected float x = 0;
         protected float y = -1.5f;
         protected float z = -7f;
 
-        private CharacterCameraParams cameraParams;
-        private CameraTargetParams.CameraParamsOverrideHandle cameraParamsOverrideHandle;
+        protected CharacterCameraParams cameraParams;
+        protected CameraTargetParams.CameraParamsOverrideHandle cameraParamsOverrideHandle;
+
+        protected string playbackString = "Emote.playbackRate";
+        protected string bodyName = "FullBody, Override";
+        protected bool stance = false;
+        protected bool canCancel = true;
 
         public override void OnEnter()
         {
             rootmotion = GetModelRootMotionAccumulator();
             flag1 = false;
             characterBody.hideCrosshair = true;
-            PlayAnimation("FullBody, Override", animString, "Emote.playbackRate", animDuration);
+            PlayAnimation(bodyName, animString, playbackString, animDuration);
             base.OnEnter();
 
+            this.characterBody.isSprinting = false;
             cameraParams = ScriptableObject.CreateInstance<CharacterCameraParams>();
             cameraParams.name = "BreakFirst";
             cameraParams.data.wallCushion = 0.1f;
@@ -78,7 +86,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             stopwatch += Time.fixedDeltaTime;
             cancel = false;
             jumped = false;
-            DetermineCancel();
+            if(canCancel) DetermineCancel();
             base.FixedUpdate();
 
             if (jumped)
@@ -104,7 +112,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 
             if (isAuthority && stopwatch >= animDuration)
             {
-                outer.SetNextStateToMain();
+                if (stance)
+                {
+                    outer.SetNextState(new Stance());
+                }
+                else
+                {
+                    outer.SetNextStateToMain();
+                }
                 return;
             }
         }
@@ -117,7 +132,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 
             if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid && zoom)
             {
-                cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle, 0.5f);
+                cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle, zoomOutDur);
             }
             PlayAnimation("FullBody, Override", "BufferEmpty");
 

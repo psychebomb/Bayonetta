@@ -14,10 +14,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         public static float BaseDuration = 1.12f;
 
         public static float startDuration = 0.36f;
-        public static float BaseDelayDuration = 0.15f;
+        public static float BaseDelayDuration = 0f;
+        protected float fireDelay = 0.24f;
+        private bool actuallyFired = false;
         public string voiceString = "tetsu";
 
-        public static float DamageCoefficient = 12f;
+        public static float DamageCoefficient = 15f;
         public GameObject projpref = BayoAssets.fistProjectilePrefab;
 
         private bool ended = false;
@@ -38,7 +40,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
             //base.effectPrefab = Modules.Assets.SomeMuzzleEffect;
             //targetmuzzle = "muzzleThrow"
 
-            attackSoundString = "weave";
+            attackSoundString = "";
 
             baseDuration = BaseDuration;
             baseDelayBeforeFiringProjectile = BaseDelayDuration;
@@ -157,6 +159,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
                 characterMotor.moveDirection = Vector3.zero;
             }
 
+            if(stopwatch >= fireDelay && !actuallyFired)
+            {
+                actuallyFired = true;
+                Util.PlaySound(voiceString, this.gameObject);
+                if (this.target) Util.PlaySound("weave", this.target.gameObject);
+
+            }
+
             if (rootMotionAccumulator)
             {
                 Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
@@ -172,7 +182,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         {
             if (base.isAuthority && this.targetIsValid)
             {
-                Util.PlaySound(voiceString, this.gameObject);
                 Fire();
             }
         }
@@ -181,7 +190,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         {
             Ray aimRay = GetAimRay();
             Vector3 dir = aimRay.direction;
-            dir.y = 0.1f;
+            dir.y = 0f;
             Vector3 pos = this.target.transform.position;
             pos = pos - (dir.normalized * 1f);
             pos.y -= 3f;

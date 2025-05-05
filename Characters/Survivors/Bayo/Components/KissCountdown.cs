@@ -1,0 +1,60 @@
+﻿using UnityEngine;
+using RoR2;
+using BayoMod.Characters.Survivors.Bayo.SkillStates;
+using BayoMod.Survivors.Bayo;
+using UnityEngine.TextCore.Text;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
+
+namespace BayoMod.Characters.Survivors.Bayo.Components
+{
+    public class KissCountdown : MonoBehaviour
+    {
+        public float waitTime = 2.5f;
+        private float stopwatch;
+        private CharacterMaster cm;
+        private bool done = false;
+        void Start()
+        {
+            stopwatch = 0f;
+            cm = GetComponent<CharacterMaster>();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if(cm != null)
+            {
+                if(cm.money <= 0)
+                {
+                    stopwatch += Time.deltaTime;
+                    if(stopwatch >= waitTime){
+
+                        GameObject bodyObject = cm.GetBodyObject();
+                        if(bodyObject != null)
+                        {
+                            HealthComponent healthComponent = bodyObject.GetComponent<HealthComponent>();
+                            EntityStateMachine[] stateMachines = bodyObject.GetComponents<EntityStateMachine>();
+                            //"No statemachines?"
+                            if (stateMachines[0])
+                            {
+                                foreach (EntityStateMachine stateMachine in stateMachines)
+                                {
+
+                                    if (healthComponent && stateMachine.customName == "Body")
+                                    {
+                                        if (healthComponent.health > 0) //yayyy
+                                        {
+                                            stateMachine.SetNextState(new Kiss());
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                        Destroy(this);
+                    }
+                }
+            }
+        }
+    }
+}

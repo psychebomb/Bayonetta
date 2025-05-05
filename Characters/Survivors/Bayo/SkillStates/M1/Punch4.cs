@@ -16,7 +16,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 earlyExitPercentTime = 0.4f;
                 endDuration = 0.52f;
                 playSwing = 0.34f;
-                //swingEffectPrefab = BayoAssets.p4s;
+                loopEffectPrefab = BayoAssets.p4s;
             }
             else
             {
@@ -25,7 +25,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 earlyExitPercentTime = 0.22f;
                 endDuration = 0.56f;
                 playSwing = 0.22f;
-                //swingEffectPrefab = BayoAssets.p4as;
+                swingEffectPrefab = BayoAssets.p4as;
             }
             holdTime = 0.5f - earlyExitPercentTime;
             gunStr = "muzrh";

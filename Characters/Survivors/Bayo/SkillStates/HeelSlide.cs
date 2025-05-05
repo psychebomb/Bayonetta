@@ -3,6 +3,7 @@ using UnityEngine;
 using EntityStates.Merc;
 using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
+using BayoMod.Survivors.Bayo;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -34,14 +35,15 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             forwardDir.y = 0f;
             hitboxGroupName = "HeelGroup";
             hitboxName = "HeelHitbox";
+            loopEffectPrefab = BayoAssets.heels;
 
             characterDirection.forward = forwardDir;
 
             kickSpeed = new AnimationCurve(new Keyframe[]
             {
-                new Keyframe(0f, 1f),
-                new Keyframe(0.4f, 2f),
-                new Keyframe(0.41f, 9f),
+                new Keyframe(0f, 1.5f),
+                new Keyframe(0.39f, 2f),
+                new Keyframe(0.4f, 9f),
                 new Keyframe(0.8f, 6.5f),
                 new Keyframe(0.1f, 3f),
                 new Keyframe(earlyExitPercentTime, 1f),
