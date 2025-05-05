@@ -53,6 +53,7 @@ namespace BayoMod.Survivors.Bayo
         public static GameObject damage;
 
         public static GameObject heelk;
+        public static GameObject heels;
         public static GameObject backk;
         public static GameObject backs;
         public static GameObject spin;
@@ -62,6 +63,7 @@ namespace BayoMod.Survivors.Bayo
 
         public static GameObject bwings;
         public static GameObject djump;
+        public static GameObject hearts;
         #endregion
 
         public static void Init(AssetBundle assetBundle)
@@ -91,18 +93,19 @@ namespace BayoMod.Survivors.Bayo
 
         private static void CreateSwings()
         {
-            p1s = _assetBundle.LoadEffect("m1p1", true);
+            p1s = _assetBundle.LoadAsset<GameObject>("m1p1");
             p1as = _assetBundle.LoadEffect("m1p1a", true);
-            p2s = _assetBundle.LoadEffect("m1p2", true);
+            p2s = _assetBundle.LoadAsset<GameObject>("m1p2");
             p2as = _assetBundle.LoadEffect("m1p2a", true);
-            p3s = _assetBundle.LoadEffect("m1p3", true);
+            p3s = _assetBundle.LoadAsset<GameObject>("m1p3");
             p3as = _assetBundle.LoadEffect("m1p3a", true);
-            p4s = _assetBundle.LoadEffect("m1p4", true);
+            p4s = _assetBundle.LoadAsset<GameObject>("m1p4");
             p4as = _assetBundle.LoadEffect("m1p4a", true);
             pflur = _assetBundle.LoadAsset<GameObject>("m1flur");
 
             heelk = _assetBundle.LoadEffect("heelkick", true);
             fallk = _assetBundle.LoadEffect("fallkick", true);
+            heels = _assetBundle.LoadAsset<GameObject>("heels");
             spin = _assetBundle.LoadAsset<GameObject>("spin");
             backk = _assetBundle.LoadAsset<GameObject>("backkick");
             backs = _assetBundle.LoadAsset<GameObject>("backspin");
@@ -111,6 +114,7 @@ namespace BayoMod.Survivors.Bayo
 
             bwings = _assetBundle.LoadAsset<GameObject>("wings");
             djump = _assetBundle.LoadEffect("djump", true);
+            hearts = _assetBundle.LoadEffect("kiss", true);
 
             p2s.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
             p2as.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
@@ -215,6 +219,7 @@ namespace BayoMod.Survivors.Bayo
             UnityEngine.Object.Destroy(wtOverlay2.transform.Find("VisualEffect/Small Sparks").gameObject);
             UnityEngine.Object.Destroy(wtOverlay2.transform.Find("VisualEffect/Smoke").gameObject);
             wtOverlay2.transform.Find("VisualEffect/Point Light").gameObject.GetComponent<Light>().color = Color.white;
+            wtOverlay2.transform.Find("VisualEffect/Point Light").gameObject.GetComponent<Light>().intensity = 8f;
             UnityEngine.Object.Destroy(wtOverlay2.transform.Find("CameraEffect/Shake").gameObject);
             //wtOverlay2.GetComponent<TemporaryVisualEffect>().visualTransform = null;
 
@@ -264,7 +269,9 @@ namespace BayoMod.Survivors.Bayo
             {
                 footProjectilePrefab = _assetBundle.LoadAsset<GameObject>("footproj");
                 footProjectilePrefab.GetComponent<ProjectileController>().ghostPrefab = _assetBundle.CreateProjectileGhostPrefab("weavefoot");
-                footProjectilePrefab.AddComponent<WickedWeave>();
+                WickedWeave ww =footProjectilePrefab.AddComponent<WickedWeave>();
+                ww.startTime = 0.24f;
+                ww.hitboxEnd = 1.04f;
                 ShakeEmitter shakeEmitter = footProjectilePrefab.AddComponent<ShakeEmitter>();
                 shakeEmitter.amplitudeTimeDecay = true;
                 shakeEmitter.duration = 0.36f;
@@ -295,7 +302,7 @@ namespace BayoMod.Survivors.Bayo
                 };
             }
         }
-        #endregion projectiles
+        #endregion 
 
         private static void CreateTrackers()
         {

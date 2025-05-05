@@ -48,7 +48,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             forwardDir = Vector3.up;
             rollSpeed = 0f;
             characterDirection.forward = GetAimRay().direction;
-            //loopEffectPrefab = BayoAssets.backk;
+            loopEffectPrefab = BayoAssets.backk;
 
             if (characterMotor && characterDirection)
             {

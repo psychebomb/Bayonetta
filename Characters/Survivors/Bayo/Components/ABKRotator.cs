@@ -39,7 +39,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components
                 {
                     rotatedVFX = true;
                     origRotation = vfxTrans.rotation;
-                    vfxTrans.rotation *= Quaternion.AngleAxis((lookDir.y * -70f), Vector3.right);
+                    vfxTrans.rotation *= Quaternion.AngleAxis((lookDir.y * -90f), Vector3.right);
                 }
             }
 

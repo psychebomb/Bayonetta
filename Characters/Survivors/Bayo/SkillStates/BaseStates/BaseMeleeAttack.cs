@@ -40,7 +40,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected string playbackRateParam = "Slash.playbackRate";
         protected GameObject swingEffectPrefab;
         protected GameObject loopEffectPrefab;
-        protected GameObject loopEffectInstance;
+        private GameObject loopEffectInstance;
         protected GameObject hitEffectPrefab = FireEmbers.hitEffectPrefab;
         protected NetworkSoundEventIndex impactSound = NetworkSoundEventIndex.Invalid;
 
@@ -76,6 +76,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected string voiceString;
         protected bool voice = false;
         protected bool durOverride = false;
+        protected bool destroyvfx = true;
 
         protected HealthComponent item;
 
@@ -108,7 +109,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             {
                 RemoveHitstop();
             }
-            if(loopEffectInstance) Destroy(loopEffectInstance);
+            if(loopEffectInstance && destroyvfx) Destroy(loopEffectInstance);
             results.Clear();
             base.OnExit();
         }

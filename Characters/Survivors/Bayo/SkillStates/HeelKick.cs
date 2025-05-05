@@ -14,7 +14,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         private bool jumped;
         protected float earlyExit = 0.3f;
         protected string swing = "heelkick";
-        protected GameObject sEffect; // = BayoAssets.heelk;
+        protected GameObject sEffect = BayoAssets.heelk;
         protected Vector3 upForce = 16f * Vector3.up;
 
         public override void OnEnter()

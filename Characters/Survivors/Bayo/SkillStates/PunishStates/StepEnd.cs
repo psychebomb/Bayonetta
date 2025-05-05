@@ -14,7 +14,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
     public class StepEnd : BaseSkillState
     {
         protected float duration = 1.88f;
-        protected float fireTime = 0.92f;
+        protected float fireTime = 0.68f;
         private bool hasFired = false;
         private RootMotionAccumulator rootMotionAccumulator;
         protected string animName = "StepEnd";

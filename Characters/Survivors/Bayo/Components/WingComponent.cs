@@ -23,7 +23,7 @@ public class WingComponent : MonoBehaviour
         transform.localScale = startSize;
         mat = transform.Find("wingmesh").gameObject.GetComponent<SkinnedMeshRenderer>().material;
         origColor = mat.color;
-        origColor.a = 1;
+        origColor.a = 0.9f;
         mat.SetColor("_Color", origColor);
         stopwatch = 0f;
     }
@@ -35,7 +35,7 @@ public class WingComponent : MonoBehaviour
         //transform.localScale = startSize;
         mat = transform.Find("wingmesh").gameObject.GetComponent<SkinnedMeshRenderer>().material;
         origColor = mat.color;
-        origColor.a = 1;
+        origColor.a = 0.9f;
         mat.SetColor("_Color", origColor);
         stopwatch = 0f;
     }

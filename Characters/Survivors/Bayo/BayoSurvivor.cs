@@ -3,6 +3,7 @@ using R2API;
 using BayoMod.Modules;
 using BayoMod.Modules.Characters;
 using BayoMod.Survivors.Bayo.Components;
+using R2API.Networking.Interfaces;
 using BayoMod.Survivors.Bayo.SkillStates;
 using RoR2;
 using RoR2.Skills;
@@ -16,12 +17,13 @@ using RoR2.Projectile;
 using static BayoMod.Modules.Skins;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using BayoMod.Modules.Components;
-using static R2API.SoundAPI;
+using System.Collections.ObjectModel;
 using EntityStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
 using System.Globalization;
 using EntityStates.BrotherMonster;
 using BayoMod.Characters.Survivors.Bayo.Components;
+using R2API.Networking;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -793,7 +795,23 @@ namespace BayoMod.Survivors.Bayo
             On.RoR2.CharacterMaster.RespawnExtraLifeVoid += ReviveHookd;
             On.RoR2.SetStateOnHurt.SetStunInternal += PunishHook1;
             On.RoR2.SetStateOnHurt.OverrideStunInternal += PunishHook2;
+            On.RoR2.SceneExitController.Begin += FreezeBayoHook;
         }
+
+        private void FreezeBayoHook(On.RoR2.SceneExitController.orig_Begin orig, SceneExitController self)
+        {
+            ReadOnlyCollection<CharacterMaster> readOnlyInstancesList = CharacterMaster.readOnlyInstancesList;
+            for (int i = 0; i < readOnlyInstancesList.Count; i++)
+            {
+                CharacterMaster component = readOnlyInstancesList[i].GetComponent<CharacterMaster>();
+                if (component && component.GetBodyObject() && component.GetBodyObject().name.Contains("BayoBody"))
+                {
+                    new SetFreezeOnBodyRequest(component.netId, 0.912f).Send(NetworkDestination.Clients);
+                }
+            }
+            orig(self);
+        }
+
         private void PunishHook2(On.RoR2.SetStateOnHurt.orig_OverrideStunInternal orig, SetStateOnHurt self, float duration)
         {
             if (self.targetStateMachine.GetComponentInParent<CharacterBody>().HasBuff(BayoBuffs.punishable))

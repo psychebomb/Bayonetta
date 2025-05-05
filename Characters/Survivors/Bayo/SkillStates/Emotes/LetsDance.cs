@@ -12,7 +12,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
         private bool music;
         BaseConVar convar;
         private string oldMusic;
-        BayoWeaponComponent bwc;
+        private BayoWeaponComponent bwc;
         public override void OnEnter()
         {
             animString = "Letsdance";
