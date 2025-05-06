@@ -1,8 +1,4 @@
 ## Changelog
-- 0.3.2
-    - Fixed incompatibility with new SOTS update
-    - Added more info to character select screen in regards to her special
-    - Increased all Wicked Weave damage to 1500%
 - 0.3.1
     - Tweaked bullet logic for heel tornado, breakdance, and the finisher move to full moon shoot: the bullets will now deal damage to all targets within a certain distance of bayonetta
     - Increased the hitbox size for heel tornado, breakdance, and death drop
