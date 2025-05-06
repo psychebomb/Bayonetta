@@ -595,6 +595,8 @@ namespace BayoMod.Survivors.Bayo
                 canceledFromSprinting = true,
                 cancelSprintingOnActivation = true,
                 forceSprintDuringState = false,
+
+                keywordTokens = new string[3] { "KEYWORD_BAYO_TETS", "KEYWORD_BAYO_HSTOMP", "KEYWORD_BAYO_KD" }
             });
 
             tetsuSkillDef = Modules.Skills.CreateSkillDef(new SkillDefInfo
