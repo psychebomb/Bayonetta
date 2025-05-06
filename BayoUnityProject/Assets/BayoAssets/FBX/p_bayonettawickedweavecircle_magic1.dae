@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset />
+  <library_images>
+    <image id="EFF_bayonetta_magicB">
+      <init_from>EFF_bayonetta_magicB.png</init_from>
+    </image>
+  </library_images>
+  <library_materials>
+    <material id="PtcBayonettaMgic_lambert4">
+      <instance_effect url="#Effect_PtcBayonettaMgic_lambert4" />
+    </material>
+  </library_materials>
+  <library_effects>
+    <effect id="Effect_PtcBayonettaMgic_lambert4">
+      <profile_COMMON>
+        <newparam sid="surface_PtcBayonettaMgic_lambert4-emission">
+          <surface type="2D">
+            <init_from>EFF_bayonetta_magicB</init_from>
+            <format>A8R8G8B8</format>
+          </surface>
+        </newparam>
+        <newparam sid="sampler_PtcBayonettaMgic_lambert4-emission">
+          <sampler2D>
+            <source>surface_PtcBayonettaMgic_lambert4-emission</source>
+            <wrap_s>WRAP</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <texture texture="sampler_PtcBayonettaMgic_lambert4-emission" texcoord="CHANNEL0" />
+            </emission>
+            <diffuse>
+              <color sid="diffuse">1 1 1 1</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0 0 0 1</color>
+            </specular>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_geometries>
+    <geometry id="magic1__PtcBayonettaMgic_lambert4-mesh" name="magic1__PtcBayonettaMgic_lambert4">
+      <mesh>
+        <source id="magic1__PtcBayonettaMgic_lambert4-position">
+          <float_array id="magic1__PtcBayonettaMgic_lambert4-position-array" count="390">14.43931 0 1.239777E-05 14.3689 0 -1.415069 11.18815 0 7.867813E-06 11.13358 0 -1.09645 14.16041 0 -2.816682 10.97206 0 -2.182466 10.70569 0 -3.247626 13.81667 0 -4.191367 10.3365 0 -4.281519 13.34018 0 -5.525676 12.7336 0 -6.806102 9.866505 0 -5.273635 12.00462 0 -8.021208 9.301656 0 -6.215179 8.647942 0 -7.097308 11.16096 0 -9.159733 7.911221 0 -7.911199 10.21014 0 -10.21013 9.159738 0 -11.16093 7.097339 0 -8.647972 8.021222 0 -12.00459 6.215153 0 -9.301615 5.273634 0 -9.866489 6.806106 0 -12.73361 4.281539 0 -10.33654 5.525701 0 -13.3402 4.191394 0 -13.81666 3.247655 0 -10.70568 2.81668 0 -14.1604 2.182474 0 -10.97201 1.096473 0 -11.13361 1.415077 0 -14.36887 7.867813E-06 0 -11.18815 1.239777E-05 0 -14.43931 -1.415071 0 -14.3689 -1.096454 0 -11.13357 -2.816685 0 -14.16041 -2.182467 0 -10.97206 -3.247642 0 -10.70569 -4.191369 0 -13.81667 -4.281519 0 -10.3365 -5.525678 0 -13.34018 -6.806106 0 -12.7336 -5.273636 0 -9.866503 -8.02121 0 -12.00462 -6.215183 0 -9.301658 -7.097312 0 -8.647942 -9.159735 0 -11.16096 -7.9112 0 -7.911218 -10.21013 0 -10.21014 -11.16093 0 -9.159736 -8.647972 0 -7.097339 -12.0046 0 -8.021221 -9.301619 0 -6.215155 -9.866491 0 -5.273633 -12.73361 0 -6.806105 -10.33654 0 -4.281538 -13.3402 0 -5.525699 -13.81666 0 -4.191391 -10.70568 0 -3.24765 -14.1604 0 -2.816677 -10.97201 0 -2.182467 -11.13361 0 -1.096471 -14.36887 0 -1.415074 -11.18815 0 -7.867813E-06 -14.43931 0 -9.059906E-06 -14.3689 0 1.415072 -11.13358 0 1.096455 -14.16041 0 2.816685 -10.97206 0 2.182466 -10.70569 0 3.247644 -13.81667 0 4.19137 -10.3365 0 4.281519 -13.34017 0 5.525679 -12.7336 0 6.806108 -9.866503 0 5.273636 -12.00462 0 8.021215 -9.301658 0 6.215183 -8.64794 0 7.097313 -11.16096 0 9.159735 -7.911207 0 7.911204 -10.21014 0 10.21013 -9.159734 0 11.16093 -7.097339 0 8.647972 -8.02122 0 12.0046 -6.215154 0 9.301617 -5.273631 0 9.866492 -6.806099 0 12.73361 -4.281537 0 10.33654 -5.525696 0 13.3402 -4.191391 0 13.81666 -3.247645 0 10.70568 -2.816674 0 14.16039 -2.182465 0 10.97201 -1.096469 0 11.13361 -1.41507 0 14.36888 0 0 11.18813 -6.67572E-06 0 14.43931 1.415078 0 14.3689 1.096456 0 11.13358 2.816689 0 14.1604 2.182466 0 10.97206 3.247645 0 10.70569 4.191371 0 13.81666 4.281519 0 10.3365 5.525679 0 13.34017 6.80611 0 12.7336 5.273636 0 9.866503 8.021215 0 12.00462 6.215183 0 9.301658 7.097313 0 8.64794 9.159737 0 11.16096 7.911204 0 7.911207 10.21013 0 10.21013 11.16093 0 9.159731 8.647973 0 7.097336 12.0046 0 8.02122 9.301619 0 6.215154 9.866492 0 5.273631 12.73362 0 6.806097 10.33654 0 4.281537 13.34021 0 5.525695 13.81666 0 4.191391 10.70568 0 3.247647 14.1604 0 2.816676 10.97201 0 2.182468 11.13361 0 1.096473 14.36887 0 1.415076 11.18815 0 7.867813E-06 14.43931 0 1.239777E-05</float_array>
+          <technique_common>
+            <accessor source="#magic1__PtcBayonettaMgic_lambert4-position-array" count="130" stride="3">
+              <param name="X" type="float" />
+              <param name="Y" type="float" />
+              <param name="Z" type="float" />
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="magic1__PtcBayonettaMgic_lambert4-normal">
+          <float_array id="magic1__PtcBayonettaMgic_lambert4-normal-array" count="390">0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0</float_array>
+          <technique_common>
+            <accessor source="#magic1__PtcBayonettaMgic_lambert4-normal-array" count="130" stride="3">
+              <param name="X" type="float" />
+              <param name="Y" type="float" />
+              <param name="Z" type="float" />
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="magic1__PtcBayonettaMgic_lambert4-texcoord">
+          <float_array id="magic1__PtcBayonettaMgic_lambert4-texcoord-array" count="260">1.5 0.0009765625 1.46875 0.0009765625 1.5 1.000331 1.46875 1.000331 1.4375 0.0009765625 1.4375 1.000331 1.40625 1.000331 1.40625 0.0009765625 1.375 1.000331 1.375 0.0009765625 1.34375 0.0009765625 1.34375 1.000331 1.3125 0.0009765625 1.3125 1.000331 1.28125 1.000331 1.28125 0.0009765625 1.25 1.000331 1.25 0.0009765625 1.21875 0.0009765625 1.21875 1.000331 1.1875 0.0009765625 1.1875 1.000331 1.15625 1.000331 1.15625 0.0009765625 1.125 1.000331 1.125 0.0009765625 1.09375 0.0009765625 1.09375 1.000331 1.0625 0.0009765625 1.0625 1.000331 1.03125 1.000331 1.03125 0.0009765625 1 1.000331 1 0.0009765625 0.96875 0.0009765625 0.96875 1.000331 0.9375 0.0009765625 0.9375 1.000331 0.90625 1.000331 0.90625 0.0009765625 0.875 1.000331 0.875 0.0009765625 0.84375 0.0009765625 0.84375 1.000331 0.8125 0.0009765625 0.8125 1.000331 0.78125 1.000331 0.78125 0.0009765625 0.75 1.000331 0.75 0.0009765625 0.71875 0.0009765625 0.71875 1.000331 0.6875 0.0009765625 0.6875 1.000331 0.65625 1.000331 0.65625 0.0009765625 0.625 1.000331 0.625 0.0009765625 0.59375 0.0009765625 0.59375 1.000331 0.5625 0.0009765625 0.5625 1.000331 0.53125 1.000331 0.53125 0.0009765625 0.5 1.000331 0.5 0.0009765625 0.4685059 0.0009765625 0.4685059 1.000331 0.4372559 0.0009765625 0.4372559 1.000331 0.4060059 1.000331 0.4060059 0.0009765625 0.3747559 1.000331 0.3747559 0.0009765625 0.3435059 0.0009765625 0.3435059 1.000331 0.3122559 0.0009765625 0.3122559 1.000331 0.2810059 1.000331 0.2810059 0.0009765625 0.2498779 1.000331 0.2498779 0.0009765625 0.2186279 0.0009765625 0.2186279 1.000331 0.1873779 0.0009765625 0.1873779 1.000331 0.1561279 1.000331 0.1561279 0.0009765625 0.1248779 1.000331 0.1248779 0.0009765625 0.09362793 0.0009765625 0.09362793 1.000331 0.06234741 0.0009765625 0.06234741 1.000331 0.03111267 1.000331 0.03111267 0.0009765625 -0.000140667 1.000331 -0.000140667 0.0009765625 -0.03137207 0.0009765625 -0.03137207 1.000331 -0.06262207 0.0009765625 -0.06262207 1.000331 -0.09387207 1.000331 -0.09387207 0.0009765625 -0.1251221 1.000331 -0.1251221 0.0009765625 -0.1563721 0.0009765625 -0.1563721 1.000331 -0.1876221 0.0009765625 -0.1876221 1.000331 -0.2188721 1.000331 -0.2188721 0.0009765625 -0.25 1.000331 -0.25 0.0009765625 -0.28125 0.0009765625 -0.28125 1.000331 -0.3125 0.0009765625 -0.3125 1.000331 -0.34375 1.000331 -0.34375 0.0009765625 -0.3752441 1.000331 -0.3752441 0.0009765625 -0.4064941 0.0009765625 -0.4064941 1.000331 -0.4377441 0.0009765625 -0.4377441 1.000331 -0.4689941 1.000331 -0.4689941 0.0009765625 -0.5 1.000331 -0.5 0.0009765625</float_array>
+          <technique_common>
+            <accessor source="#magic1__PtcBayonettaMgic_lambert4-texcoord-array" count="130" stride="2">
+              <param name="S" type="float" />
+              <param name="T" type="float" />
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="magic1__PtcBayonettaMgic_lambert4-vertex">
+          <input semantic="POSITION" source="#magic1__PtcBayonettaMgic_lambert4-position" />
+        </vertices>
+        <triangles material="PtcBayonettaMgic_lambert4" count="128">
+          <input semantic="VERTEX" source="#magic1__PtcBayonettaMgic_lambert4-vertex" offset="0" />
+          <input semantic="NORMAL" source="#magic1__PtcBayonettaMgic_lambert4-normal" offset="1" />
+          <input semantic="TEXCOORD" source="#magic1__PtcBayonettaMgic_lambert4-texcoord" offset="2" set="0" />
+          <p>0 0 0 1 1 1 2 2 2 1 1 1 3 3 3 2 2 2 3 3 3 1 1 1 4 4 4 5 5 5 3 3 3 4 4 4 6 6 6 5 5 5 4 4 4 7 7 7 6 6 6 4 4 4 6 6 6 7 7 7 8 8 8 7 7 7 9 9 9 8 8 8 9 9 9 10 10 10 8 8 8 10 10 10 11 11 11 8 8 8 11 11 11 10 10 10 12 12 12 13 13 13 11 11 11 12 12 12 14 14 14 13 13 13 12 12 12 15 15 15 14 14 14 12 12 12 14 14 14 15 15 15 16 16 16 15 15 15 17 17 17 16 16 16 17 17 17 18 18 18 16 16 16 18 18 18 19 19 19 16 16 16 19 19 19 18 18 18 20 20 20 21 21 21 19 19 19 20 20 20 22 22 22 21 21 21 20 20 20 23 23 23 22 22 22 20 20 20 22 22 22 23 23 23 24 24 24 23 23 23 25 25 25 24 24 24 25 25 25 26 26 26 24 24 24 26 26 26 27 27 27 24 24 24 27 27 27 26 26 26 28 28 28 29 29 29 27 27 27 28 28 28 30 30 30 29 29 29 28 28 28 31 31 31 30 30 30 28 28 28 30 30 30 31 31 31 32 32 32 31 31 31 33 33 33 32 32 32 33 33 33 34 34 34 32 32 32 34 34 34 35 35 35 32 32 32 35 35 35 34 34 34 36 36 36 37 37 37 35 35 35 36 36 36 38 38 38 37 37 37 36 36 36 39 39 39 38 38 38 36 36 36 38 38 38 39 39 39 40 40 40 39 39 39 41 41 41 40 40 40 41 41 41 42 42 42 40 40 40 42 42 42 43 43 43 40 40 40 43 43 43 42 42 42 44 44 44 45 45 45 43 43 43 44 44 44 46 46 46 45 45 45 44 44 44 47 47 47 46 46 46 44 44 44 46 46 46 47 47 47 48 48 48 47 47 47 49 49 49 48 48 48 49 49 49 50 50 50 48 48 48 50 50 50 51 51 51 48 48 48 51 51 51 50 50 50 52 52 52 53 53 53 51 51 51 52 52 52 54 54 54 53 53 53 52 52 52 55 55 55 54 54 54 52 52 52 54 54 54 55 55 55 56 56 56 55 55 55 57 57 57 56 56 56 57 57 57 58 58 58 56 56 56 58 58 58 59 59 59 56 56 56 59 59 59 58 58 58 60 60 60 61 61 61 59 59 59 60 60 60 62 62 62 61 61 61 60 60 60 63 63 63 62 62 62 60 60 60 62 62 62 63 63 63 64 64 64 63 63 63 65 65 65 64 64 64 65 65 65 66 66 66 64 64 64 66 66 66 67 67 67 64 64 64 67 67 67 66 66 66 68 68 68 69 69 69 67 67 67 68 68 68 70 70 70 69 69 69 68 68 68 71 71 71 70 70 70 68 68 68 70 70 70 71 71 71 72 72 72 71 71 71 73 73 73 72 72 72 73 73 73 74 74 74 72 72 72 74 74 74 75 75 75 72 72 72 75 75 75 74 74 74 76 76 76 77 77 77 75 75 75 76 76 76 78 78 78 77 77 77 76 76 76 79 79 79 78 78 78 76 76 76 78 78 78 79 79 79 80 80 80 79 79 79 81 81 81 80 80 80 81 81 81 82 82 82 80 80 80 82 82 82 83 83 83 80 80 80 83 83 83 82 82 82 84 84 84 85 85 85 83 83 83 84 84 84 86 86 86 85 85 85 84 84 84 87 87 87 86 86 86 84 84 84 86 86 86 87 87 87 88 88 88 87 87 87 89 89 89 88 88 88 89 89 89 90 90 90 88 88 88 90 90 90 91 91 91 88 88 88 91 91 91 90 90 90 92 92 92 93 93 93 91 91 91 92 92 92 94 94 94 93 93 93 92 92 92 95 95 95 94 94 94 92 92 92 94 94 94 95 95 95 96 96 96 95 95 95 97 97 97 96 96 96 97 97 97 98 98 98 96 96 96 98 98 98 99 99 99 96 96 96 99 99 99 98 98 98 100 100 100 101 101 101 99 99 99 100 100 100 102 102 102 101 101 101 100 100 100 103 103 103 102 102 102 100 100 100 102 102 102 103 103 103 104 104 104 103 103 103 105 105 105 104 104 104 105 105 105 106 106 106 104 104 104 106 106 106 107 107 107 104 104 104 107 107 107 106 106 106 108 108 108 109 109 109 107 107 107 108 108 108 110 110 110 109 109 109 108 108 108 111 111 111 110 110 110 108 108 108 110 110 110 111 111 111 112 112 112 111 111 111 113 113 113 112 112 112 113 113 113 114 114 114 112 112 112 114 114 114 115 115 115 112 112 112 115 115 115 114 114 114 116 116 116 117 117 117 115 115 115 116 116 116 118 118 118 117 117 117 116 116 116 119 119 119 118 118 118 116 116 116 118 118 118 119 119 119 120 120 120 119 119 119 121 121 121 120 120 120 121 121 121 122 122 122 120 120 120 122 122 122 123 123 123 120 120 120 123 123 123 122 122 122 124 124 124 125 125 125 123 123 123 124 124 124 126 126 126 125 125 125 124 124 124 127 127 127 126 126 126 124 124 124 126 126 126 127 127 127 128 128 128 127 127 127 129 129 129 128 128 128 </p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_controllers>
+    <controller id="Armature_magic1__PtcBayonettaMgic_lambert4-mesh">
+      <skin source="#magic1__PtcBayonettaMgic_lambert4-mesh">
+        <bind_shape_matrix>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</bind_shape_matrix>
+        <source id="magic1__PtcBayonettaMgic_lambert4-mesh-joint">
+          <Name_array id="magic1__PtcBayonettaMgic_lambert4-mesh-joint-array" count="1">magic1</Name_array>
+          <technique_common>
+            <accessor source="#magic1__PtcBayonettaMgic_lambert4-mesh-joint-array" count="1" stride="1">
+              <param name="JOINT" type="name" />
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="magic1__PtcBayonettaMgic_lambert4-mesh-inv_bind_matrix">
+          <float_array id="magic1__PtcBayonettaMgic_lambert4-mesh-inv_bind_matrix-array" count="16">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#magic1__PtcBayonettaMgic_lambert4-mesh-inv_bind_matrix-array" count="1" stride="16">
+              <param name="TRANSFORM" type="float4x4" />
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="magic1__PtcBayonettaMgic_lambert4-mesh-weight">
+          <float_array id="magic1__PtcBayonettaMgic_lambert4-mesh-weight-array" count="1">1</float_array>
+          <technique_common>
+            <accessor source="#magic1__PtcBayonettaMgic_lambert4-mesh-weight-array" count="1" stride="1">
+              <param name="WEIGHT" type="float" />
+            </accessor>
+          </technique_common>
+        </source>
+        <joints>
+          <input semantic="JOINT" source="#magic1__PtcBayonettaMgic_lambert4-mesh-joint" />
+          <input semantic="INV_BIND_MATRIX" source="#magic1__PtcBayonettaMgic_lambert4-mesh-inv_bind_matrix" />
+        </joints>
+        <vertex_weights count="130">
+          <input semantic="JOINT" source="#magic1__PtcBayonettaMgic_lambert4-mesh-joint" offset="0" />
+          <input semantic="WEIGHT" source="#magic1__PtcBayonettaMgic_lambert4-mesh-weight" offset="1" />
+          <vcount>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </vcount>
+          <v>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </v>
+        </vertex_weights>
+      </skin>
+    </controller>
+  </library_controllers>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="Armature" name="Armature" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <node id="Armature_magic1" name="magic1" sid="magic1" type="JOINT">
+          <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        </node>
+      </node>
+      <node id="magic1__PtcBayonettaMgic_lambert4" name="magic1__PtcBayonettaMgic_lambert4" type="NODE">
+        <instance_controller url="#Armature_magic1__PtcBayonettaMgic_lambert4-mesh">
+          <skeleton>#Armature_magic1</skeleton>
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="PtcBayonettaMgic_lambert4" target="#PtcBayonettaMgic_lambert4" />
+              <bind_vertex_input semantic="CHANNEL0" input_semantic="TEXCOORD" input_set="0" />
+              <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="1" />
+              <bind_vertex_input semantic="CHANNEL2" input_semantic="TEXCOORD" input_set="2" />
+            </technique_common>
+          </bind_material>
+        </instance_controller>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene" />
+  </scene>
+</COLLADA>
