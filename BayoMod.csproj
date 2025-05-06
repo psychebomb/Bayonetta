@@ -14,6 +14,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="BayoUnityProject\**" />
+    <EmbeddedResource Remove="BayoUnityProject\**" />
+    <None Remove="BayoUnityProject\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove="nuget.config" />
   </ItemGroup>
