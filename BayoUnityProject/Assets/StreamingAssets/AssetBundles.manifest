@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 3893678074
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: bayobundle
+      Dependencies: {}
