@@ -1,0 +1,379 @@
+ManifestFileVersion: 0
+CRC: 2011411816
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 107d5308a36ea40c773ced210d1e3a53
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9c68fed68343d0ca309622dd2e428764
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 54
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 1788389205, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1679506310, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1490543093, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -46258121, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1845404088, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -226763392, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1783796254, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1294804675, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 296141222, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1122936093, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1985007777, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 488236779, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -432102721, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1848696948, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1790887305, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 678291247, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -270136354, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -899414464, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1819008361, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1095921540, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1895344032, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1561644061, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 816898038, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 372142912, guid: d382a022563c7517aadbc92ca1060016, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 68ee60b5bcd2668489cac0473619dffe, type: 3}
+- Class: 114
+  Script: {fileID: -2099961501, guid: e161fae64b898bc22624d03ed611378f, type: 3}
+- Class: 114
+  Script: {fileID: 708136152, guid: e161fae64b898bc22624d03ed611378f, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f9ac8d30c6a0d9642a11e5be4c440740, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 751bd37d2e55f5f448dbb0d97812d9ba, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: baedd976e12657241bf7ff2d1c685342, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 144
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+- Class: 331
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: RoR2
+  ClassName: ChildLocator/NameTransformPair
+- AssemblyName: RoR2
+  ClassName: RoR2.DamageTypeCombo
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.UnityEvent
+- AssemblyName: com.unity.multiplayer-hlapi.Runtime
+  ClassName: UnityEngine.Networking.NetworkHash128
+- AssemblyName: com.unity.multiplayer-hlapi.Runtime
+  ClassName: UnityEngine.Networking.NetworkSceneId
+Assets:
+- Assets/BayoAssets/BayoBundle/Mesh/gun1(R-h)_03.mesh
+- Assets/BayoAssets/BayoBundle/Mesh/gun4(L-l)_01.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_FlurryP Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AAIdle Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/eyee.png
+- Assets/BayoAssets/BayoBundle/Materials/bayomat9.mat
+- Assets/BayoAssets/BayoBundle/Mesh/09(eye_kage_game)_02.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AirPunch1 Layer.anim
+- Assets/BayoAssets/BayoBundle/VFX/backspin.prefab
+- Assets/BayoAssets/BayoBundle/Textures/eyee_shading.png
+- Assets/BayoAssets/BayoBundle/Materials/bayomat26.mat
+- Assets/BayoAssets/BayoBundle/Icons/texStomp.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_bone-1.001_Noesis Frames_Noesis
+  Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/eyebroww.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_bone-1.001_pl0010_0d3.mot_pl0010_0d3.mot
+  Layer.anim
+- Assets/BayoAssets/BayoBundle/VFX/kiss.prefab
+- Assets/BayoAssets/BayoBundle/VFX/spin.prefab
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AimWalkB Layer.anim
+- Assets/BayoAssets/BayoBundle/Mesh/00(body)_05.mesh
+- Assets/BayoAssets/BayoBundle/Icons/texSpecial.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Punch3 Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/ribbonn.png
+- Assets/BayoAssets/BayoBundle/Mesh/gun2(L-h)_00.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_ABKEnd Layer.anim
+- Assets/BayoAssets/BayoBundle/VFX/m1p2a.prefab
+- Assets/BayoAssets/BayoBundle/VFX/heels.prefab
+- Assets/BayoAssets/BayoBundle/Mesh/01(hair_drill)_00.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_HeelExit Layer.anim
+- Assets/BayoAssets/BayoBundle/Materials/bayomat2.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_TetzuEnd Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/mouthh.png
+- Assets/BayoAssets/BayoBundle/Textures/body_bump.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_FallKickStart Layer.anim
+- Assets/BayoAssets/BayoBundle/Materials/bayomat10.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AimAirExit Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_WalkL Layer.anim
+- Assets/BayoAssets/BayoBundle/weavehand.prefab
+- Assets/BayoAssets/BayoBundle/Icons/texM2.png
+- Assets/BayoAssets/BayoBundle/Mesh/12(hair_drill3)_00.mesh
+- Assets/BayoAssets/BayoBundle/wtward.prefab
+- Assets/BayoAssets/BayoBundle/Mesh/gun3(R-l)_03.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_HeelStart Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/bayotex007.png
+- Assets/BayoAssets/BayoBundle/Mesh/gun1(R-h)_04.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_WalkF Layer.anim
+- Assets/BayoAssets/BayoBundle/Materials/bayomat23.mat
+- Assets/BayoAssets/BayoBundle/VFX/m1p1a.prefab
+- Assets/BayoAssets/BayoBundle/Icons/texTetsu.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_HeelKick Layer.anim
+- Assets/BayoAssets/BayoBundle/VFX/m1p1.prefab
+- Assets/BayoAssets/BayoBundle/Materials/bayomat0.001.mat
+- Assets/BayoAssets/BayoBundle/Textures/texRampWt.png
+- Assets/BayoAssets/BayoBundle/VFX/m1p4.prefab
+- Assets/BayoAssets/BayoBundle/Materials/bayomat17.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AimEnter Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_WalkR Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_BackKick2 Layer.anim
+- Assets/BayoAssets/BayoBundle/mdlBayonettaaDisplay.prefab
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AimWalkF Layer.anim
+- Assets/BayoAssets/BayoBundle/wtoverlay.prefab
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Punch2Exit Layer.anim
+- Assets/BayoAssets/BayoBundle/Mesh/02(ribon1)_00.mesh
+- Assets/BayoAssets/BayoBundle/Textures/bayotex011.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Stunned Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/WingController.controller
+- Assets/BayoAssets/BayoBundle/Animation/weaveFootController.controller
+- Assets/BayoAssets/BayoBundle/Mesh/13(front_hair_omote)_00.mesh
+- Assets/BayoAssets/BayoBundle/Mesh/28(glass)_01.mesh
+- Assets/BayoAssets/BayoBundle/Textures/hair2.png
+- Assets/BayoAssets/BayoBundle/Mesh/gun4(L-l)_00.mesh
+- Assets/BayoAssets/BayoBundle/Mesh/09(eye_kage_game)_00.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_tetzuAir Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AirFlurryEnd Layer.anim
+- Assets/BayoAssets/BayoBundle/Materials/bayomat18.mat
+- Assets/BayoAssets/BayoBundle/Mesh/08(face_game)_01.mesh
+- Assets/BayoAssets/BayoBundle/Textures/gun_bump.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Punch4 Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/hairr1.png
+- Assets/BayoAssets/BayoBundle/Textures/bayotex015.png
+- Assets/BayoAssets/FBX/p_bayonettaattack100a_line3.dae
+- Assets/BayoAssets/BayoBundle/Textures/ef_bayonetta_rose01.png
+- Assets/BayoAssets/BayoBundle/Textures/ef_bayonetta_mask02.png
+- Assets/BayoAssets/BayoBundle/Icons/texUtility.png
+- Assets/BayoAssets/BayoBundle/Mesh/08(face_game)_00.mesh
+- Assets/BayoAssets/BayoBundle/Mesh/00(body)_06.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AirPunch2Exit Layer.anim
+- Assets/BayoAssets/BayoBundle/Mesh/00(body)_04.mesh
+- Assets/BayoAssets/BayoBundle/Textures/misc_bump.png
+- Assets/BayoAssets/BayoBundle/mdlBayonettaa.prefab
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_DodgeB Layer.anim
+- Assets/BayoAssets/BayoBundle/Icons/texMainSkin.png
+- Assets/BayoAssets/BayoBundle/Materials/bayomat16.001.mat
+- Assets/BayoAssets/BayoBundle/Mesh/gun2(L-h)_03.mesh
+- Assets/BayoAssets/BayoBundle/Textures/cleavagee.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AirFlurryStart Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_FallKick Layer.anim
+- Assets/BayoAssets/BayoBundle/Mesh/gun1(R-h)_01.mesh
+- Assets/BayoAssets/BayoBundle/Mesh/gun4(L-l)_02.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_DodgeL Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/animBayo.controller
+- Assets/BayoAssets/BayoBundle/weavefoot.prefab
+- Assets/BayoAssets/BayoBundle/Textures/clockk.png
+- Assets/BayoAssets/BayoBundle/Mesh/28(glass)_00.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_tetzuAirEnd Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/engraving.png
+- Assets/BayoAssets/BayoBundle/Mesh/gun3(R-l)_02.mesh
+- Assets/BayoAssets/BayoBundle/VFX/djump.prefab
+- Assets/BayoAssets/BayoBundle/Icons/texM1.png
+- Assets/BayoAssets/BayoBundle/Mesh/gun2(L-h)_01.mesh
+- Assets/BayoAssets/BayoBundle/Textures/bayotex017.png
+- Assets/BayoAssets/BayoBundle/VFX/m1p3a.prefab
+- Assets/BayoAssets/BayoBundle/Materials/bayomat11.mat
+- Assets/BayoAssets/BayoBundle/Mesh/gun2(L-h)_04.mesh
+- Assets/BayoAssets/BayoBundle/Materials/bayomat7.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AirPunch4 Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AirFlurry Layer.anim
+- Assets/BayoAssets/BayoBundle/Mesh/01(hair_drill)_01.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Punch1 Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_FlurryStartP Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/headd.png
+- Assets/BayoAssets/BayoBundle/Materials/bayomat6.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_JumpNew Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/lens1.png
+- Assets/BayoAssets/FBX/weavepunchnew.anim
+- Assets/BayoAssets/BayoBundle/Materials/bayomat20.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AimIdle Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/bayotex010.png
+- Assets/BayoAssets/BayoBundle/Materials/bayomat22.mat
+- Assets/BayoAssets/BayoBundle/VFX/backkick.prefab
+- Assets/BayoAssets/BayoBundle/Mesh/gun4(L-l)_03.mesh
+- Assets/BayoAssets/BayoBundle/Materials/bayomat13.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AirPunch2 Layer.anim
+- Assets/BayoAssets/BayoBundle/Mesh/gun3(R-l)_01.mesh
+- Assets/BayoAssets/BayoBundle/Mesh/25(watch)_00.mesh
+- Assets/bayoproj_Profiles/PP wt.asset
+- Assets/BayoAssets/BayoBundle/Mesh/21(L_hand_2)_00.mesh
+- Assets/BayoAssets/BayoBundle/Materials/bayomat8.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AirPunch3Exit Layer.anim
+- Assets/BayoAssets/BayoBundle/Mesh/09(eye_kage_game)_01.mesh
+- Assets/BayoAssets/BayoBundle/Materials/bayomat21.mat
+- Assets/BayoAssets/BayoBundle/VFX/heelkick.prefab
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AimWalkL Layer.anim
+- Assets/BayoAssets/BayoBundle/Mesh/24(boots)_00.mesh
+- Assets/BayoAssets/FBX/p_bayonettaattackline_line1.dae
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_SprintL Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AirPunch1Exit Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_DodgeR2 Layer.anim
+- Assets/BayoAssets/BayoBundle/Materials/bayomat4.mat
+- Assets/BayoAssets/BayoBundle/Mesh/14(chain)_00.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_FallKickEnd Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Descend Layer.anim
+- Assets/BayoAssets/FBX/p_bayonettaattack100a_line2.dae
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AirPunch4Exit Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AimWalkR Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/gun.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_StanceOut Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/misc.png
+- Assets/BayoAssets/BayoBundle/Textures/eyelashess.png
+- Assets/BayoAssets/BayoBundle/Mesh/08(face_game)_02.mesh
+- Assets/BayoAssets/BayoBundle/Mesh/gun1(R-h)_02.mesh
+- Assets/BayoAssets/BayoBundle/Textures/chainn.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_TetzuStart Layer.anim
+- Assets/BayoAssets/BayoBundle/Materials/m1swing1mat.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Impactx Layer.anim
+- Assets/BayoAssets/BayoBundle/Materials/bayomat6.001.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Punch3Exit Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Punch2 Layer.anim
+- Assets/BayoAssets/BayoBundle/footproj.prefab
+- Assets/BayoAssets/BayoBundle/VFX/m1flur.prefab
+- Assets/BayoAssets/BayoBundle/Icons/texBayoIcon.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_BackKick Layer.anim
+- Assets/BayoAssets/BayoBundle/Materials/bayomat19.mat
+- Assets/BayoAssets/BayoBundle/Materials/bayomat0.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Punch1Exit Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Dreadfulx Layer.anim
+- Assets/BayoAssets/BayoBundle/Mesh/00(body)_03.mesh
+- Assets/BayoAssets/BayoBundle/Materials/bayomat2.001.mat
+- Assets/BayoAssets/BayoBundle/VFX/m1p2.prefab
+- Assets/BayoAssets/FBX/line2.dae
+- Assets/BayoAssets/BayoBundle/VFX/damage.prefab
+- Assets/BayoAssets/BayoBundle/Mesh/gun4(L-l)_04.mesh
+- Assets/BayoAssets/BayoBundle/Mesh/01(hair_drill)_03.mesh
+- Assets/BayoAssets/BayoBundle/Materials/bayomat1.001.mat
+- Assets/BayoAssets/BayoBundle/Mesh/gun1(R-h)_00.mesh
+- Assets/BayoAssets/BayoBundle/Mesh/00(body)_07.mesh
+- Assets/BayoAssets/BayoBundle/Materials/bayomat15.mat
+- Assets/BayoAssets/BayoBundle/Mesh/01(hair_drill)_02.mesh
+- Assets/BayoAssets/BayoBundle/Textures/engraving_bump.png
+- Assets/BayoAssets/BayoBundle/Mesh/00(body)_02.mesh
+- Assets/BayoAssets/BayoBundle/Icons/texCancel.png
+- Assets/BayoAssets/BayoBundle/Mesh/gun3(R-l)_00.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AirAim Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/ef_bayonetta_rose00.png
+- Assets/BayoAssets/BayoBundle/BayoMonsterMaster.prefab
+- Assets/BayoAssets/BayoBundle/Animation/animBayoMenu.controller
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_StompAir Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_DodgeR Layer.anim
+- Assets/BayoAssets/BayoBundle/fistproj.prefab
+- Assets/BayoAssets/BayoBundle/Mesh/gun2(L-h)_02.mesh
+- Assets/BayoAssets/BayoBundle/Mesh/20(R_hand_2)_00.mesh
+- Assets/BayoAssets/BayoBundle/Materials/bayomat14.mat
+- Assets/BayoAssets/BayoBundle/Mesh/00(body)_00.mesh
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Punch5Exit Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/zipperr.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_FlurryEndP Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/shoee.png
+- Assets/BayoAssets/BayoBundle/VFX/fallkick.prefab
+- Assets/BayoAssets/BayoBundle/Mesh/gun3(R-l)_04.mesh
+- Assets/BayoAssets/BayoBundle/Materials/m1swing2mat.mat
+- Assets/BayoAssets/BayoBundle/Textures/lens2.png
+- Assets/BayoAssets/BayoBundle/Materials/bayomat28.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AirPunch3 Layer.anim
+- Assets/BayoAssets/BayoBundle/Materials/bayomat3.mat
+- Assets/BayoAssets/BayoBundle/VFX/m1p4a.prefab
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_DodgeF Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/texRampWtt.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_AimExit Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/bodyy.png
+- Assets/BayoAssets/BayoBundle/Materials/bayomat4.001.mat
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Stance Layer.anim
+- Assets/BayoAssets/BayoBundle/Materials/bayomat1.mat
+- Assets/BayoAssets/BayoBundle/VFX/m1p3.prefab
+- Assets/BayoAssets/BayoBundle/Textures/chain_endss.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_BackKickExitStart_ Layer.anim
+- Assets/BayoAssets/BayoBundle/Mesh/00(body)_01.mesh
+- Assets/BayoAssets/BayoBundle/Mesh/14(chain)_01.mesh
+- Assets/BayoAssets/FBX/line2.fbx
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Taunt1x Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/bayotex005.png
+- Assets/BayoAssets/BayoBundle/Mesh/00(body)_08.mesh
+- Assets/BayoAssets/FBX/p_bayonettaattack100a_line1.dae
+- Assets/BayoAssets/BayoBundle/Textures/ef_bayonetta_line01_red.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_WalkB Layer.anim
+- Assets/BayoAssets/BayoBundle/Mesh/00(body)_09.mesh
+- Assets/BayoAssets/BayoBundle/VFX/abk.prefab
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_SprintR Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_DJumpNew Layer.anim
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_Stomp Layer.anim
+- Assets/BayoAssets/BayoBundle/Textures/bayotex001.png
+- Assets/BayoAssets/BayoBundle/Animation/clips/bone-1_SprintF Layer.anim
+- Assets/BayoAssets/BayoBundle/VFX/wings.prefab
+Dependencies: []
