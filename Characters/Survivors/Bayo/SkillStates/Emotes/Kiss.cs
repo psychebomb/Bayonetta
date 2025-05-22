@@ -14,7 +14,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
     {
         private bool voiced = false;
         private BayoWeaponComponent bwc;
-        private CameraRigController Camera;
+        private CameraRigController cameraRig;
 
         private float kissDone = 1.2f;
         private bool zoomed = false;
@@ -29,9 +29,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
             stance = true;
             canCancel = false;
 
-            this.gameObject.AddComponent<BayoWeaponComponent>();
-            bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
-            //Destroy(this.gameObject.GetComponent<KissCountdown>());
             y = -1.5f;
             z = -2.25f;
 
@@ -39,13 +36,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
             {
                 if (characterBody.master.playerCharacterMasterController.networkUser)
                 {
-                    Camera = characterBody.master.playerCharacterMasterController.networkUser.cameraRigController;
+                    cameraRig = characterBody.master.playerCharacterMasterController.networkUser.cameraRigController;
                 }
             }
 
             if (NetworkServer.active && characterBody)
             {
-                characterBody.AddTimedBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility, animDuration);
+                characterBody.AddTimedBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility, animDuration + 0.3f);
             }
 
             cameraParams = ScriptableObject.CreateInstance<CharacterCameraParams>();
@@ -65,10 +62,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
 
             GameObject kissVfx = BayoAssets.hearts;
 
-            if (kissVfx)
+            if (kissVfx && isAuthority)
             {
                 EffectManager.SimpleMuzzleFlash(kissVfx, gameObject, "SwingCenter", true);
             }
+
+            bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
+            bwc.currentWeapon = BayoWeaponComponent.WeaponState.Open;
 
             base.OnEnter();
 
@@ -96,7 +96,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
                 }
             }
 
-            if (Camera)
+            if (cameraRig)
             {
                 Quaternion rotation = Quaternion.AngleAxis(-140f, Vector3.up);
                 Quaternion rotation2 = Quaternion.AngleAxis(-165f, Vector3.up);
@@ -107,13 +107,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
                 targetAngles.y = 0.1f;
                 targetAngles2.y = 0.2f;
                 Vector3 rotateAngle = Vector3.Lerp(targetAngles2, targetAngles, Mathf.SmoothStep(0.0f, 1.0f, stopwatch / kissDone));
-                ((CameraModePlayerBasic.InstanceData)Camera.cameraMode.camToRawInstanceData[Camera]).SetPitchYawFromLookVector(rotateAngle);
+                ((CameraModePlayerBasic.InstanceData)cameraRig.cameraMode.camToRawInstanceData[cameraRig]).SetPitchYawFromLookVector(rotateAngle);
             }
         }
 
         public override void OnExit()
         {
-            Destroy(bwc);
+            bwc.currentWeapon = BayoWeaponComponent.WeaponState.Guns;
             if (base.cameraTargetParams && cam2.isValid && zoom)
             {
                 cam2 = base.cameraTargetParams.RemoveParamsOverride(cam2, zoomOutDur);

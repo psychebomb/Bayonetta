@@ -123,7 +123,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
 
         protected void DoFireEffects()
         {
-            Util.PlaySound("weave", base.gameObject);
             AddRecoil(-2f * recoilAmplitude, -3f * recoilAmplitude, -1f * recoilAmplitude, 1f * recoilAmplitude);
             base.characterBody.AddSpreadBloom(bloom);
         }

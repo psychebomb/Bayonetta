@@ -29,6 +29,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
             flag1 = false;
             flag2 = false;
             outmove = GetModelRootMotionAccumulator();
+            if (characterBody && characterBody.isSprinting) characterBody.isSprinting = false;
 
             PlayCrossfade("Body", "StanceIdle", "Emote.playbackRate", idleDuration, 0.05f);
 

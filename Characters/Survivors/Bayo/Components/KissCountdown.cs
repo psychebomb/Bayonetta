@@ -4,6 +4,7 @@ using BayoMod.Characters.Survivors.Bayo.SkillStates;
 using BayoMod.Survivors.Bayo;
 using UnityEngine.TextCore.Text;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
+using RoR2.ConVar;
 
 namespace BayoMod.Characters.Survivors.Bayo.Components
 {
@@ -13,10 +14,30 @@ namespace BayoMod.Characters.Survivors.Bayo.Components
         private float stopwatch;
         private CharacterMaster cm;
         private bool done = false;
+        private string oldMusic;
+        private BaseConVar convar;
         void Start()
         {
             stopwatch = 0f;
             cm = GetComponent<CharacterMaster>();
+
+            if (cm.hasAuthority)
+            {
+                convar = RoR2.Console.instance.FindConVar("volume_music");
+                if (convar != null)
+                {
+                    oldMusic = convar.GetString();
+                    convar.SetString("0");
+                }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (convar != null)
+            {
+                convar.SetString(oldMusic);
+            }
         }
 
         // Update is called once per frame

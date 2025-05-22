@@ -15,6 +15,8 @@ namespace BayoMod.Characters.Survivors.Bayo.Components
 
         private bool rotatedVFX = false;
 
+        public bool rVFX = false;
+
         private Transform boneTrans;
 
         private Transform vfxTrans;
@@ -35,7 +37,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components
             if (lookDir != Vector3.zero && rotate)
             {
                 boneTrans.rotation *= Quaternion.AngleAxis((lookDir.y * 90f), Vector3.forward);
-                if (!rotatedVFX)
+                if (!rotatedVFX && rVFX)
                 {
                     rotatedVFX = true;
                     origRotation = vfxTrans.rotation;
@@ -43,7 +45,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components
                 }
             }
 
-            if (!rotate && rotatedVFX)
+            if (!rotate && rotatedVFX || !rVFX && rotatedVFX)
             {
                 rotatedVFX = false;
                 vfxTrans.rotation = origRotation;

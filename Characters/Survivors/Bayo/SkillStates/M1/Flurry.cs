@@ -48,6 +48,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             Util.PlaySound("falling", this.gameObject);
             loopEffectPrefab = BayoAssets.pflur;
 
+            GameObject dam = BayoAssets.sum;
+            if(isAuthority) EffectManager.SimpleMuzzleFlash(dam, this.gameObject, "DamageCenter", true);
+            Util.PlaySound("portalsum", this.gameObject);
+
             base.OnEnter();
 
             if (characterMotor.isGrounded)
@@ -156,7 +160,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             for (int i = 0; i < num; ++i)
             {
                 HealthComponent item = results[i];
-                if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || (item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body"))) && item && item.transform)
+                if (item && item.transform && FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || (item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body"))))
                 {
                     CharacterBody body = item.body;
                     if (body && body.characterMotor && !body.characterMotor.isGrounded)

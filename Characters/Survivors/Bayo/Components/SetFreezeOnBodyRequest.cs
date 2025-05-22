@@ -93,7 +93,7 @@ namespace BayoMod.Modules.Components
 
                     }
 
-                    if (healthComponent.health > 0) //Fucking idiot.
+                    if (healthComponent.health > 0) //Beautiful queen snap snap haha
                     {
                         masterobject.AddComponent<KissCountdown>();
                         stateMachine.SetNextState(new BayoFreeze { duration = this.duration });

@@ -46,6 +46,9 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         protected readonly List<HealthComponent> results = new List<HealthComponent>();
         private bool launch = true;
+
+        private GameObject swingEffectPrefab = BayoAssets.fall;
+        private GameObject loopEffectInstance;
         public override void OnEnter()
         {
             base.OnEnter();
@@ -63,6 +66,25 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             characterDirection.forward = GetAimRay().direction;
             PlayAnimation("Body", "FallKick");
             //Util.PlaySound(kickSoundString, gameObject);
+
+            /*
+            ChildLocator childLocator = GetModelChildLocator();
+            if (childLocator)
+            {
+                Transform transform = childLocator.FindChild("SwingCenter") ?? base.characterBody.coreTransform;
+                Quaternion rot = transform.rotation;
+                if (transform)
+                {
+                    loopEffectInstance = Object.Instantiate(swingEffectPrefab, transform.position, rot);
+                    //EffectManager.SpawnEffect(loopEffectPrefab, new EffectData
+                    //{
+                    //    origin = transform.position,
+                    //    rotation = transform.rotation
+                    //}, true);
+                    loopEffectInstance.transform.parent = transform;
+                }
+            }
+            */
 
         }
 
@@ -236,6 +258,12 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             characterMotor.airControl = previousAirControl;
             characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
             results.Clear();
+            /*
+            if (loopEffectInstance)
+            {
+                Destroy(loopEffectInstance);
+            }
+            */
             base.OnExit();
         }
 

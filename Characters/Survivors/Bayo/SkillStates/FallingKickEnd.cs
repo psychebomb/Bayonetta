@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using EntityStates.Merc;
 using EntityStates;
+using RoR2;
 
 namespace BayoMod.Survivors.Bayo.SkillStates
 {
@@ -10,6 +11,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         {
             swing = "land";
             sEffect = BayoAssets.slam;
+            if (isAuthority) EffectManager.SimpleMuzzleFlash(BayoAssets.falle, gameObject, muzzleString, true);
             base.OnEnter();
             duration = 0.85f;
             upForce = 8 * Vector3.up;

@@ -29,11 +29,11 @@ namespace BayoMod.Modules
                 return new Material(hotpoo);
             }
 
-            return tempMat.ConvertDefaultShaderToHopoo();
+            return tempMat.ConvertDefaultShaderToHopoo(false);
         }
 
-        public static Material SetHopooMaterial(this Material tempMat) => ConvertDefaultShaderToHopoo(tempMat);
-        public static Material ConvertDefaultShaderToHopoo(this Material tempMat)
+        public static Material SetHopooMaterial(this Material tempMat) => ConvertDefaultShaderToHopoo(tempMat, false);
+        public static Material ConvertDefaultShaderToHopoo(this Material tempMat, bool actuallyConvert)
         {
             if (cachedMaterials.Contains(tempMat)) {
                 //Log.Debug($"{tempMat.name} has already been converted. returning cached");
@@ -49,6 +49,7 @@ namespace BayoMod.Modules
 
             float? bumpScale = null;
             Color? emissionColor = null;
+            float? smooth = null;
 
             //grab values before the shader changes
             if (tempMat.IsKeywordEnabled("_NORMALMAP"))
@@ -59,13 +60,19 @@ namespace BayoMod.Modules
             {
                 emissionColor = tempMat.GetColor("_EmissionColor");
             }
+            smooth = tempMat.GetFloat("_Glossiness");
 
             //set shader
-            //tempMat.shader = hotpoo;
+            //if(actuallyConvert) tempMat.shader = hotpoo;
 
             //apply values after shader is set
             tempMat.SetTexture("_EmTex", tempMat.GetTexture("_EmissionMap"));
-            tempMat.EnableKeyword("DITHER");
+            //tempMat.DisableKeyword("DITHER");
+            tempMat.EnableKeyword("CUTOUT");
+            tempMat.EnableKeyword("PRINT_CUTOFF");
+
+            tempMat.SetFloat("_PrintOn", 1);
+            tempMat.SetFloat("_PrintDirection", 1);
             
             if (bumpScale != null)
             {
@@ -77,7 +84,10 @@ namespace BayoMod.Modules
                 tempMat.SetColor("_EmColor", (Color)emissionColor);
                 tempMat.SetFloat("_EmPower", 1);
             }
-
+            if(smooth != null)
+            {
+                tempMat.SetFloat("_Smoothness", (float)smooth);
+            }
             //set this keyword in unity if you want your model to show backfaces
             //in unity, right click the inspector tab and choose Debug
             if (tempMat.IsKeywordEnabled("NOCULL"))

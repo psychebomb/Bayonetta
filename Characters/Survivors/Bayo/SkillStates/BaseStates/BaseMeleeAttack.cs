@@ -40,7 +40,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected string playbackRateParam = "Slash.playbackRate";
         protected GameObject swingEffectPrefab;
         protected GameObject loopEffectPrefab;
-        private GameObject loopEffectInstance;
+        protected GameObject loopEffectInstance;
         protected GameObject hitEffectPrefab = FireEmbers.hitEffectPrefab;
         protected NetworkSoundEventIndex impactSound = NetworkSoundEventIndex.Invalid;
 
@@ -109,14 +109,24 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             {
                 RemoveHitstop();
             }
-            if(loopEffectInstance && destroyvfx) Destroy(loopEffectInstance);
+            if (loopEffectInstance)
+            {
+                if (destroyvfx)
+                {
+                    Destroy(loopEffectInstance);
+                }
+                else
+                {
+                    loopEffectInstance.transform.parent = null;
+                }
+            }
             results.Clear();
             base.OnExit();
         }
 
         protected virtual void PlaySwingEffect()
         {
-            if (swingEffectPrefab)
+            if (swingEffectPrefab && isAuthority )
             {
                 EffectManager.SimpleMuzzleFlash(swingEffectPrefab, gameObject, muzzleString, true);
             }
@@ -126,9 +136,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 if (childLocator)
                 {
                     Transform transform = childLocator.FindChild(muzzleString) ?? base.characterBody.coreTransform;
+                    Quaternion rot = transform.rotation;
                     if (transform)
                     {
-                        loopEffectInstance = Object.Instantiate(loopEffectPrefab, transform.position, transform.rotation);
+                        loopEffectInstance = Object.Instantiate(loopEffectPrefab, transform.position, rot);
                         //EffectManager.SpawnEffect(loopEffectPrefab, new EffectData
                         //{
                         //    origin = transform.position,
@@ -279,7 +290,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             if (!hasSwung && stopwatch >= playSwing)
             {
                 hasSwung = true;
-                if (isAuthority) PlaySwingEffect();
+                PlaySwingEffect();
                 Util.PlaySound(swingSoundString, gameObject);
             }
             //to guarantee attack comes out if at high attack speed the stopwatch skips past the firing duration between frames

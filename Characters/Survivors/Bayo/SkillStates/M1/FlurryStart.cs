@@ -36,6 +36,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             //Util.PlaySound("flurspin", this.gameObject);
             characterDirection.forward = GetAimRay().direction;
             characterMotor.velocity.y = 0f;
+            if (characterBody && characterBody.isSprinting) characterBody.isSprinting = false;
         }
         protected bool CanDodge()
         {
