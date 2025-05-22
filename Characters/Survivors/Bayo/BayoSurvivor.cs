@@ -32,8 +32,8 @@ namespace BayoMod.Survivors.Bayo
         public override string assetBundleName => "bayobundle";
         public override string bodyName => "BayoBody";
         public override string masterName => "BayoMonsterMaster";
-        public override string modelPrefabName => "mdlBayonettaa";
-        public override string displayPrefabName => "mdlBayonettaaDisplay";
+        public override string modelPrefabName => "mdlBayonetta";
+        public override string displayPrefabName => "mdlBayonettaDisplay";
 
         public const string BAYO_PREFIX = BayoPlugin.DEVELOPER_PREFIX + "_BAYO_";
         public override string survivorTokenPrefix => BAYO_PREFIX;
@@ -61,252 +61,36 @@ namespace BayoMod.Survivors.Bayo
         {
                 new CustomRendererInfo
                 {
-                    childName = "body0",
+                    childName = "Body",
                 },
                 new CustomRendererInfo
                 {
-                    childName = "body1",
-                    
+                    childName = "GFeet",
+                   
                 },
                 new CustomRendererInfo
                 {
-                    childName = "body2",
+                    childName = "GHands",
                 },
                 new CustomRendererInfo
                 {
-                    childName = "body3",
-                    //dontHotpoo = true,
+                    childName = "LHG",
                 },
                 new CustomRendererInfo
                 {
-                    childName = "body4",
+                    childName = "RHG",
                 },
                 new CustomRendererInfo
                 {
-                    childName = "body5",
+                    childName = "LHO",
                 },
                 new CustomRendererInfo
                 {
-                    childName = "body6",
+                    childName = "RHO",
                 },
                 new CustomRendererInfo
                 {
-                    childName = "body7",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "body8",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "body9",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "hair0",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "hair1",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "hair2",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "hair3",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "hair4",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "har5",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "ribbon",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "face0",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "face1",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "face2",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "eye0",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "eye1",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "eye2",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "chain0",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "chain1",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "rhand",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "lhand",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "boots",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "watch",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "glass0",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "glass1",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunrh0",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunrh1",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunrh2",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunrh3",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunrh4",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunlh0",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunlh1",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunlh2",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunlh3",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunlh4",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunrf0",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunrf1",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunrf2",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunrf3",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunrf4",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunlf0",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunlf1",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunlf2",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunlf3",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "gunlf4",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "sleeve1",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "sleeve2",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "sleeve3",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "sleeve4",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "sleeve5",
-                    //dontHotpoo = true,
-                },
-                new CustomRendererInfo
-                {
-                    childName = "sleeve6",
-                    //dontHotpoo = true,
+                    childName = "Sleeves",
                 },
         };
 
@@ -375,6 +159,7 @@ namespace BayoMod.Survivors.Bayo
             AddHitboxes();
             bodyPrefab.AddComponent<PunishTracker>();
             bodyPrefab.AddComponent<ABKRotator>();
+            bodyPrefab.AddComponent<BayoWeaponComponent>();
             displayPrefab.transform.Find("DistantSound").gameObject.GetComponent<RTPCController>().akSoundString = "select";
         }
 
@@ -797,7 +582,7 @@ namespace BayoMod.Survivors.Bayo
             On.RoR2.CharacterMaster.RespawnExtraLifeVoid += ReviveHookd;
             On.RoR2.SetStateOnHurt.SetStunInternal += PunishHook1;
             On.RoR2.SetStateOnHurt.OverrideStunInternal += PunishHook2;
-            On.RoR2.SceneExitController.Begin += FreezeBayoHook;
+            //On.RoR2.SceneExitController.Begin += FreezeBayoHook;
         }
 
         private void FreezeBayoHook(On.RoR2.SceneExitController.orig_Begin orig, SceneExitController self)
@@ -1042,7 +827,7 @@ namespace BayoMod.Survivors.Bayo
 
         private void CdHook(On.RoR2.CharacterBody.orig_OnBuffFinalStackLost orig, CharacterBody self, BuffDef buffDef)
         {
-            if (NetworkServer.active && self.gameObject && self.gameObject.name.Contains("BayoBody"))
+            if (NetworkServer.active && self && self.gameObject && self.gameObject.name.Contains("BayoBody"))
             {
                 bool flagg = (buffDef == BayoBuffs.wtBuff);
                 int alien = self.inventory.GetItemCount(RoR2Content.Items.AlienHead);
@@ -1065,7 +850,7 @@ namespace BayoMod.Survivors.Bayo
                 if(cd < 0) cd = 0;
 
                 SlowDownProjectiles temp = self.GetComponentInParent<SlowDownProjectiles>();
-                if (temp) wtWard = temp.gameObject;     //this night be a huge problem, suprised it already hasn't been a problem with the punish obj
+                if (temp) wtWard = temp.gameObject;
 
                 if (flagg && wtWard)
                 {
@@ -1081,7 +866,7 @@ namespace BayoMod.Survivors.Bayo
                     }
                 }
             }
-            if (buffDef == BayoBuffs.dodgeBuff)
+            if ( buffDef && buffDef == BayoBuffs.dodgeBuff)
             {
                 if(self && self.gameObject)
                 {

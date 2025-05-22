@@ -26,6 +26,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         protected float blastDamage = .3f;
         protected float blastRadius = 10f;
         private float blastStopwatch;
+        protected Vector3 forwardDir;
 
         protected bool cancel = false;
         protected bool jumped = false;
@@ -54,6 +55,9 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             hitboxName = hbn;
             PlayAnim();
             loopEffectPrefab = effect;
+
+            forwardDir = GetAimRay().direction;
+            characterDirection.forward = forwardDir;
 
             component = gameObject.GetComponent<ModelLocator>();
             component2 = component.modelTransform.GetComponent<ChildLocator>();
@@ -139,6 +143,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             if (characterMotor && characterDirection)
             {
                 characterMotor.velocity = characterMotor.velocity * 0f;
+                characterDirection.forward = forwardDir;
             }
 
             if (stopwatch >= earlyExitPercentTime && !hasEnded)

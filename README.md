@@ -14,16 +14,16 @@ A Special thanks goes to <a href="https://thunderstore.io/package/LONK/">LONK</a
 
 ## Screenshots
 <img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/select.jpg?raw=true"/>
-<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/booooom.jpg?raw=true"/>
-<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/heel.jpg?raw=true"/>
-<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/stomp.jpg?raw=true"/>
+<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/boooom.jpg?raw=true"/>
+<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/djump.jpg?raw=true"/>
+<img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/flurry.jpg?raw=true"/>
 <img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/bayogif.gif?raw=true"/>
 
 ## Skills
 ### Primary: Bullet Arts
 <img src="https://github.com/psychebomb/Bayonetta/blob/master/uploadthings/texM1.png?raw=true"/>
 
-Perform a 5 hit punch sequence, dealing 2000% damage for the first four hits. The last hit is a flurry attack that deals 165% damage each hit and summons a wicked weave when released, dealing 1400% damage. Bayonetta will also continuously fire her guns during the sequence, each shot dealing 50% damage.
+Perform a 5 hit punch sequence, dealing 200% damage for the first four hits. The last hit is a flurry attack that deals 165% damage each hit and summons a wicked weave when released, dealing 1400% damage. Bayonetta will also continuously fire her guns during the sequence, each shot dealing 50% damage.
 If dodge is used during this sequence, Bayonetta will pick up the sequence where she left off as long as M1 is still held. Additionally, using this move against airborne enemies will juggle them, stunning them and knocking them upwards.
 
 #### Secondary: Umbran Techniques
@@ -106,8 +106,9 @@ Bayonetta has special interactions with items that reduce cooldowns:
 - Buffs are handled a little akwardly for non-host multiplayer users, causing some issues with punish attack invul and some witch time effects
 
 ## Todo
-- Effects
-- Extra Skins
+- Extra skins
+- Extra skills
+- Polish VFX
 - Other secret stuff
 
 ## Credits

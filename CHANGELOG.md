@@ -1,4 +1,8 @@
 ## Changelog
+- 0.4.0
+    - Added VFX :)
+    - Updated model - this is to make it easier in the future for skin creation, but this should also help improve performance
+    - Adjusted some hitboxes
 - 0.3.2
     - Fixed incompatibility with new SOTS update
     - Added more info to character select screen in regards to her special

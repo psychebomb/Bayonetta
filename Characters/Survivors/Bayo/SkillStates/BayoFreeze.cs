@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using RoR2.CameraModes;
-using BayoMod.Modules;
+using RoR2.ConVar;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -151,7 +151,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 base.characterDirection.moveVector = base.characterDirection.forward;
             }
 
-            if (characterBody.characterMotor) characterMotor.velocity = Vector3.zero;
+            if (characterBody.characterMotor)
+            {
+                characterMotor.velocity = Vector3.zero;
+                if(!characterMotor.isGrounded)characterMotor.velocity.y -= Time.fixedDeltaTime * Physics.gravity.y;
+            }
 
             if(base.fixedAge < snap2)
             {

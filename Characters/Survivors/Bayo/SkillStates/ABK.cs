@@ -102,6 +102,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             if(stopwatch >= rotTime && !rotated)
             {
                 abkr.rotate = true;
+                abkr.rVFX = true;
                 abkr.lookDir = forwardDir;
                 rotated = true;
             }
@@ -128,6 +129,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         }
         public override void OnExit()
         {
+            abkr.rVFX = false;
             if (!hasExtended)
             {
                 PlayAnimation("Body", "AbkExit");
@@ -224,14 +226,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             for (int i = 0; i < num; ++i)
             {
                 HealthComponent item = results[i];
-                if (FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || (item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body"))) && item && item.transform)
+                if (item && item.transform && FriendlyFireManager.ShouldDirectHitProceed(item, team) && (!item.body.isChampion || (item.gameObject.name.Contains("Brother") && item.gameObject.name.Contains("Body"))))
                 {
                     CharacterBody body = item.body;
-                    if (body.characterMotor)
+                    if (body && body.characterMotor)
                     {
                         body.characterMotor.velocity = speedVec.normalized * (1.5f * 0.9f);
                     }
-                    else if (body.rigidbody)
+                    else if (body && body.rigidbody)
                     {
                         body.rigidbody.velocity = speedVec.normalized * (1.5f * 0.9f);
                         //body.rigidbody.detectCollisions = true;

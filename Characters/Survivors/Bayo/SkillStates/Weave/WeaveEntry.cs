@@ -8,6 +8,7 @@ using EntityStates.Seeker;
 using System.Diagnostics;
 using BayoMod.Survivors.Bayo.SkillStates;
 using System.ComponentModel;
+using BayoMod.Survivors.Bayo;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
 {
@@ -48,6 +49,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
             base.skillLocator.special.SetSkillOverride(base.skillLocator.special, WeaveEntry.cancelDef, GenericSkill.SkillOverridePriority.Contextual);
 
             if (base.cameraTargetParams) aimRequest = base.cameraTargetParams.RequestAimType((CameraTargetParams.AimType)UnseenHand.abilityAimType);
+
+            GameObject dam = BayoAssets.sum;
+            EffectManager.SimpleMuzzleFlash(dam, this.gameObject, "DamageCenter", true);
 
         }
 

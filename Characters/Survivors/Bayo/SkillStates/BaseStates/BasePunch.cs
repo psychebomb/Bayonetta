@@ -22,6 +22,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
         protected float hopVelocity = 2.5f;
         protected Vector3 forwardDir;
+        private Vector3 vfxPos;
         public override void OnEnter()
         {
             damageCoefficient = 2f;
@@ -40,7 +41,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             gunDamage = 0.5f;
             launch = false;
             fireTime = 0.166f;
-            destroyvfx = true;
+            destroyvfx = false;
 
             forwardDir = GetAimRay().direction;
             characterDirection.forward = forwardDir;
@@ -66,6 +67,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 juggleHop = 7f / this.attackSpeedStat;
                 exitToStance = false;
             }
+
+            if(characterBody && characterBody.isSprinting) characterBody.isSprinting = false;
 
         }
 
@@ -171,6 +174,16 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 
             base.FixedUpdate();
 
+
+        }
+
+        protected override void PlaySwingEffect()
+        {
+            base.PlaySwingEffect();
+            if (loopEffectInstance)
+            {
+                if(animStart != "P1") loopEffectInstance.transform.Find("swing1").gameObject.GetComponent<MoveOffset>().atSpeedMult = this.attackSpeedStat;
+            }
 
         }
         public void SetStep()

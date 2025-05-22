@@ -8,6 +8,8 @@ using UnityEngine.Networking;
 using UnityEngine.Rendering.PostProcessing;
 using BayoMod.Modules.Components;
 using R2API.Utils;
+using RoR2.Audio;
+using TMPro;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -18,6 +20,10 @@ namespace BayoMod.Survivors.Bayo
         public static GameObject fistProjectilePrefab;
 
         public static GameObject footProjectilePrefab;
+
+        public static GameObject fistFast;
+
+        public static GameObject footFast;
 
         public static GameObject bulletMuz;
 
@@ -59,11 +65,15 @@ namespace BayoMod.Survivors.Bayo
         public static GameObject spin;
         public static GameObject slam;
         public static GameObject fallk;
+        public static GameObject fall;
+        public static GameObject falle;
         public static GameObject abk;
 
         public static GameObject bwings;
+        public static GameObject bwings2;
         public static GameObject djump;
         public static GameObject hearts;
+        public static GameObject sum;
         #endregion
 
         public static void Init(AssetBundle assetBundle)
@@ -104,7 +114,9 @@ namespace BayoMod.Survivors.Bayo
             pflur = _assetBundle.LoadAsset<GameObject>("m1flur");
 
             heelk = _assetBundle.LoadEffect("heelkick", true);
-            fallk = _assetBundle.LoadEffect("fallkick", true);
+            fallk = _assetBundle.LoadAsset<GameObject>("fallkick");
+            fall = _assetBundle.LoadAsset<GameObject>("fall");
+            falle = _assetBundle.LoadEffect("fallend", true);
             heels = _assetBundle.LoadAsset<GameObject>("heels");
             spin = _assetBundle.LoadAsset<GameObject>("spin");
             backk = _assetBundle.LoadAsset<GameObject>("backkick");
@@ -113,9 +125,15 @@ namespace BayoMod.Survivors.Bayo
             slam = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/HermitCrab/HermitCrabBombExplosion.prefab").WaitForCompletion().InstantiateClone("BayoSlam", false);
 
             bwings = _assetBundle.LoadAsset<GameObject>("wings");
+            bwings2 = _assetBundle.LoadAsset<GameObject>("wings2");
             djump = _assetBundle.LoadEffect("djump", true);
             hearts = _assetBundle.LoadEffect("kiss", true);
+            sum = _assetBundle.LoadEffect("summon", true);
 
+            p1s.gameObject.AddComponent<VFXrm>();
+            p2s.gameObject.AddComponent<VFXrm>();
+            p3s.gameObject.AddComponent<VFXrm>();
+            p4s.gameObject.AddComponent<VFXrm>();
             p2s.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
             p2as.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
             MoveOffset mo = p3s.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
@@ -141,6 +159,21 @@ namespace BayoMod.Survivors.Bayo
             Color temp = slam.transform.Find("Water, Directional").gameObject.GetComponent<ParticleSystem>().main.startColor.color;
             temp = new Color(0.231372f, 0.2f, 231372f, temp.a);
             bwings.AddComponent<WingComponent>();
+            bwings2.AddComponent<WingComponent2>();
+
+            mo = fall.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
+            mo.startOffset = -3f;
+            mo.idealOffset = 0;
+            mo.smooth = false;
+            mo.slideDur = 0.25f;
+
+            mo = falle.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
+            mo.startOffset = -3f;
+            mo.idealOffset = 0;
+            mo.atEnd = true;
+            mo.atStart = false;
+            mo.duration = 0.4f;
+            mo.slideDur = 0.2f;
 
             //312B25
             ContentAddition.AddEffect(slam);
@@ -258,6 +291,10 @@ namespace BayoMod.Survivors.Bayo
             Content.AddProjectilePrefab(footProjectilePrefab);
             PrefabAPI.RegisterNetworkPrefab(fistProjectilePrefab);
             PrefabAPI.RegisterNetworkPrefab(footProjectilePrefab);
+            Content.AddProjectilePrefab(fistFast);
+            Content.AddProjectilePrefab(footFast);
+            PrefabAPI.RegisterNetworkPrefab(fistFast);
+            PrefabAPI.RegisterNetworkPrefab(footFast);
             ContentAddition.AddNetworkedObject(wardPrefab);
             ContentAddition.AddNetworkedObject(evilObject);
 
@@ -265,6 +302,8 @@ namespace BayoMod.Survivors.Bayo
 
         private static void CreateWeaveProjectiles()
         {
+            Material mat = Addressables.LoadAssetAsync<Material>("RoR2/Base/Nullifier/matNullifierGemPortal2.mat").WaitForCompletion();
+
             if (_assetBundle.LoadAsset<GameObject>("footproj") != null && _assetBundle.LoadAsset<GameObject>("weavefoot") != null)
             {
                 footProjectilePrefab = _assetBundle.LoadAsset<GameObject>("footproj");
@@ -283,6 +322,33 @@ namespace BayoMod.Survivors.Bayo
                     frequency = 7f,
                     cycleOffset = 0f
                 };
+                LoopSoundDef loop = ScriptableObject.CreateInstance<LoopSoundDef>();
+                loop.startSoundName = "weaved";
+                footProjectilePrefab.gameObject.GetComponent<ProjectileController>().flightSoundLoop = loop;
+                footProjectilePrefab.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/ring").GetComponent<ParticleSystemRenderer>().material = mat;
+                footProjectilePrefab.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/hair").GetComponent<ParticleSystemRenderer>().material = mat;
+
+                footFast = _assetBundle.LoadAsset<GameObject>("footproj").InstantiateClone("footfast");
+                footFast.GetComponent<ProjectileController>().ghostPrefab = _assetBundle.CreateProjectileGhostPrefab("weavefootfast");
+                ww = footFast.AddComponent<WickedWeave>();
+                ww.startTime = 0f;
+                ww.hitboxEnd = 0.8f;
+                shakeEmitter = footFast.AddComponent<ShakeEmitter>();
+                shakeEmitter.amplitudeTimeDecay = true;
+                shakeEmitter.duration = 0.36f;
+                shakeEmitter.radius = 100f;
+                shakeEmitter.scaleShakeRadiusWithLocalScale = false;
+                shakeEmitter.wave = new Wave
+                {
+                    amplitude = 2f,
+                    frequency = 7f,
+                    cycleOffset = 0f
+                };
+                loop = ScriptableObject.CreateInstance<LoopSoundDef>();
+                loop.startSoundName = "weave";
+                footFast.gameObject.GetComponent<ProjectileController>().flightSoundLoop = loop;
+                footFast.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/ring").GetComponent<ParticleSystemRenderer>().material = mat;
+                footFast.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/hair").GetComponent<ParticleSystemRenderer>().material = mat;
             }
             if (_assetBundle.LoadAsset<GameObject>("fistproj") != null && _assetBundle.LoadAsset<GameObject>("weavehand") != null)
             {
@@ -300,6 +366,33 @@ namespace BayoMod.Survivors.Bayo
                     frequency = 7f,
                     cycleOffset = 0f
                 };
+                LoopSoundDef loop = ScriptableObject.CreateInstance<LoopSoundDef>();
+                loop.startSoundName = "weaved";
+                fistProjectilePrefab.gameObject.GetComponent<ProjectileController>().flightSoundLoop = loop;
+                fistProjectilePrefab.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/ring").GetComponent<ParticleSystemRenderer>().material = mat;
+                fistProjectilePrefab.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/hair").GetComponent<ParticleSystemRenderer>().material = mat;
+
+                fistFast = _assetBundle.LoadAsset<GameObject>("fistproj").InstantiateClone("fistfast");
+                fistFast.GetComponent<ProjectileController>().ghostPrefab = _assetBundle.CreateProjectileGhostPrefab("weavehandfast");
+                WickedWeave ww = fistFast.AddComponent<WickedWeave>();
+                ww.startTime = 0f;
+                ww.hitboxEnd = 0.8f;
+                shakeEmitter = fistFast.AddComponent<ShakeEmitter>();
+                shakeEmitter.amplitudeTimeDecay = true;
+                shakeEmitter.duration = 0.36f;
+                shakeEmitter.radius = 100f;
+                shakeEmitter.scaleShakeRadiusWithLocalScale = false;
+                shakeEmitter.wave = new Wave
+                {
+                    amplitude = 2f,
+                    frequency = 7f,
+                    cycleOffset = 0f
+                };
+                loop = ScriptableObject.CreateInstance<LoopSoundDef>();
+                loop.startSoundName = "weave";
+                fistFast.gameObject.GetComponent<ProjectileController>().flightSoundLoop = loop;
+                fistFast.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/ring").GetComponent<ParticleSystemRenderer>().material = mat;
+                fistFast.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/hair").GetComponent<ParticleSystemRenderer>().material = mat;
             }
         }
         #endregion 

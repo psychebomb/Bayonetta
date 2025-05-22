@@ -36,7 +36,7 @@ namespace BayoMod.Modules
             }
             characterModel.baseRendererInfos = prefab.GetComponentInChildren<CharacterModel>().baseRendererInfos;
 
-            Modules.Asset.ConvertAllRenderersToHopooShader(display);
+            Modules.Asset.ConvertAllRenderersToHopooShader(display, false);
 
             return display;
         }
@@ -343,7 +343,7 @@ namespace BayoMod.Modules
                 {
                     Log.Error($"no material for rendererinfo of this renderer: {characterModel.baseRendererInfos[i].renderer}");
                 }
-                characterModel.baseRendererInfos[i].defaultMaterial.ConvertDefaultShaderToHopoo();
+                characterModel.baseRendererInfos[i].defaultMaterial.ConvertDefaultShaderToHopoo(false);
             }
         }
 
@@ -381,7 +381,7 @@ namespace BayoMod.Modules
                             }
                             else
                             {
-                                mat = rend.sharedMaterial.ConvertDefaultShaderToHopoo();
+                                mat = rend.sharedMaterial.ConvertDefaultShaderToHopoo(false);
                             }
                         }
 

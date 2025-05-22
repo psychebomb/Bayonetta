@@ -34,6 +34,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         private Vector3 dir;
         private float fireProj;
         private bool actuallyFired = false;
+        private bool fast = false;
 
         public override void OnEnter()
         {
@@ -65,7 +66,17 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             duration = 1.92f / this.attackSpeedStat;
             earlyExit = 1f / this.attackSpeedStat;
 
-            fireProj = Mathf.Min(((duration * attackStartPercentTime) - 0.24f), 0);
+            fireProj = (duration * attackStartPercentTime) - 0.24f;
+            if(fireProj < 0f)
+            {
+                fireProj = duration * attackStartPercentTime;
+                projectilePrefab = BayoAssets.fistFast;
+                fast = true;
+            }
+            else
+            {
+                projectilePrefab = BayoAssets.fistProjectilePrefab;
+            }
 
             if (characterMotor.isGrounded)
             {
@@ -80,6 +91,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
 
             PlayAnimation("Body", animName, "Slash.playbackRate", duration);
+
+            if (characterBody && characterBody.isSprinting) characterBody.isSprinting = false;
 
 
         }
@@ -182,7 +195,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 characterDirection.forward = GetAimRay().direction;
             }
 
-            if (stopwatch >= fireProj + 0.24f && !actuallyFired)
+            if (((stopwatch >= fireProj + 0.24f)|| (fast && stopwatch >= fireProj)) && !actuallyFired)
             {
                 actuallyFired = true;
                 DoFireEffects();
@@ -211,7 +224,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         }
         protected void DoFireEffects()
         {
-            Util.PlaySound("weave", base.gameObject);
             AddRecoil(-2f * recoilAmplitude, -3f * recoilAmplitude, -1f * recoilAmplitude, 1f * recoilAmplitude);
             base.characterBody.AddSpreadBloom(bloom);
         }

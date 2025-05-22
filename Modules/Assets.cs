@@ -65,7 +65,7 @@ namespace BayoMod.Modules
             return newTracer;
         }
 
-        internal static void ConvertAllRenderersToHopooShader(GameObject objectToConvert)
+        internal static void ConvertAllRenderersToHopooShader(GameObject objectToConvert, bool actuallyConvert)
         {
             if (!objectToConvert) return;
 
@@ -75,7 +75,7 @@ namespace BayoMod.Modules
                 {
                     if (i.sharedMaterial)
                     {
-                        i.sharedMaterial.ConvertDefaultShaderToHopoo();
+                        i.sharedMaterial.ConvertDefaultShaderToHopoo(actuallyConvert);
                     }
                 }
             }
@@ -86,7 +86,7 @@ namespace BayoMod.Modules
                 {
                     if (i.sharedMaterial)
                     {
-                        i.sharedMaterial.ConvertDefaultShaderToHopoo();
+                        i.sharedMaterial.ConvertDefaultShaderToHopoo(actuallyConvert);
                     }
                 }
             }
@@ -141,7 +141,7 @@ namespace BayoMod.Modules
             if (!ghostPrefab.GetComponent<NetworkIdentity>()) ghostPrefab.AddComponent<NetworkIdentity>();
             if (!ghostPrefab.GetComponent<ProjectileGhostController>()) ghostPrefab.AddComponent<ProjectileGhostController>();
 
-            Modules.Asset.ConvertAllRenderersToHopooShader(ghostPrefab);
+            Modules.Asset.ConvertAllRenderersToHopooShader(ghostPrefab, true);
 
             return ghostPrefab;
         }

@@ -27,6 +27,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         public SpeedState speedState;
         private bool hasEnded;
         private float enderTime = 0.9f;
+        private RootMotionAccumulator rootMotionAccumulator;
         public override void OnEnter()
         {
             duration = 1f;
@@ -49,6 +50,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             rollSpeed = 0f;
             characterDirection.forward = GetAimRay().direction;
             loopEffectPrefab = BayoAssets.backk;
+            rootMotionAccumulator = GetModelRootMotionAccumulator();
 
             if (characterMotor && characterDirection)
             {
@@ -113,6 +115,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             if (characterDirection) characterDirection.forward = GetAimRay().direction;
             if (!inHitPause)
             {
+                if (rootMotionAccumulator)
+                {
+                    Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
+                    if (vector != Vector3.zero && base.isAuthority && base.characterMotor)
+                    {
+                        //base.characterMotor.rootMotion += vector;
+                    }
+                }
                 Vector3 normalized = (transform.position - previousPosition).normalized;
                 if (characterMotor && characterDirection)
                 {

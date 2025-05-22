@@ -50,11 +50,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     outer.SetNextState(new LetsDance());
                     return;
                 }
-                if (Input.GetKeyDown(Modules.Config.emote5Keybind.Value))
+                /*
+                if (Input.GetKeyDown(KeyCode.Alpha5))
                 {
                     outer.SetNextState(new Kiss());
                     return;
                 }
+                */
                 if (pTracker)
                 {
                     if (pTracker.GetTrackingTarget() && inputBank.interact.down)
@@ -105,9 +107,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             else
             {
                 if(wingInstance) UnityEngine.Object.Destroy(wingInstance);
-                wingPrefab = BayoAssets.bwings;
-                UnityEngine.Object.Destroy(wingPrefab.GetComponent<WingComponent>());
-                wingPrefab.AddComponent<WingComponent>();
+                wingPrefab = BayoAssets.bwings2;
+                UnityEngine.Object.Destroy(wingPrefab.GetComponent<WingComponent2>());
+                wingPrefab.AddComponent<WingComponent2>();
                 ChildLocator childLocator = GetModelChildLocator();
                 if (childLocator)
                 {

@@ -15,6 +15,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         private GameObject swingEffectPrefab = BayoAssets.fallk;
 
+        private GameObject loopEffectInstance;
+
 
         public override void OnEnter()
         {
@@ -27,7 +29,22 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             characterMotor.disableAirControlUntilCollision = false;
             characterMotor.velocity.y = 0f;
             characterDirection.forward = GetAimRay().direction;
-            EffectManager.SimpleMuzzleFlash(swingEffectPrefab, gameObject, "SwingCenter", true);
+            ChildLocator childLocator = GetModelChildLocator();
+            if (childLocator)
+            {
+                Transform transform = childLocator.FindChild("SwingCenter") ?? base.characterBody.coreTransform;
+                Quaternion rot = transform.rotation;
+                if (transform)
+                {
+                    loopEffectInstance = Object.Instantiate(swingEffectPrefab, transform.position, rot);
+                    //EffectManager.SpawnEffect(loopEffectPrefab, new EffectData
+                    //{
+                    //    origin = transform.position,
+                    //    rotation = transform.rotation
+                    //}, true);
+                    loopEffectInstance.transform.parent = transform;
+                }
+            }
         }
 
         public override void FixedUpdate()
@@ -50,6 +67,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         public override void OnExit()
         {
+            loopEffectInstance.transform.parent = null;
             base.OnExit();
         }
     }

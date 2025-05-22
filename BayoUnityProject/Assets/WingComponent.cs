@@ -4,32 +4,41 @@ public class WingComponent : MonoBehaviour
 
 
     private Vector3 origSize;
-    private Material mat;
-    private Color origColor;
-    private float matNum;
-    private float stopwatch = 0f;
-
     private float growDur = 0.3f;
     private Vector3 startSize;
 
-    private float fadeStart = 0.5f;
-    private float fadeEnd = 0.9f;
+    private Material mat;
+    private Color origColor;
+    public float fadeStart = 0.6f;
+    public float fadeEnd = 0.75f;
+
+    private float stopwatch = 0f;
+    private float myTime = 0f;
     //private int id = 0;
 
     void Start()
     {
         origSize = transform.localScale;
         startSize = origSize * 0.2f;
+        transform.localScale = startSize;
         mat = transform.Find("wingmesh").gameObject.GetComponent<SkinnedMeshRenderer>().material;
         origColor = mat.color;
-        origColor.a = 1;
-        mat.SetColor("_Color", origColor);
+        stopwatch = 0f;
+    }
+
+    void OnEnable()
+    {
+        origSize = transform.localScale;
+        startSize = origSize * 0.2f;
+        //transform.localScale = startSize;
+        mat = transform.Find("wingmesh").gameObject.GetComponent<SkinnedMeshRenderer>().material;
+        //mat.SetColor("_Color", origColor);
+        stopwatch = 0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        stopwatch += Time.deltaTime;
 
         if (stopwatch <= growDur)
         {
@@ -38,9 +47,29 @@ public class WingComponent : MonoBehaviour
 
         if (stopwatch >= fadeStart && stopwatch <= fadeEnd)
         {
-            float alpha = Mathf.Lerp(1f, 0f, (stopwatch - fadeStart) / (fadeEnd - fadeStart));
-            origColor.a = alpha;
-            mat.SetColor("_Color", origColor);
+            float emAll = Mathf.Lerp(0f, 0.8f, (stopwatch - fadeStart) / (fadeEnd - fadeStart));
+            Color newColor = Color.black;
+            newColor.b = emAll;
+            newColor.r = emAll;
+            newColor.g = emAll;
+            mat.SetColor("_EmissionColor", newColor);
+
+            /*
+            float darker = Mathf.Lerp(origColor.r, 0.5f, (stopwatch - fadeStart) / (fadeEnd - fadeStart));
+            newColor = origColor;
+            newColor.r = darker;
+            newColor.b = darker;
+            newColor.g = darker;
+            mat.SetColor("_Color", newColor);
+            */
         }
+        if (stopwatch >= fadeEnd)
+        {
+            Color newColor = origColor;
+            newColor.a = 0f;
+            mat.SetColor("_Color", newColor);
+        }
+
+        stopwatch += Time.deltaTime;
     }
 }

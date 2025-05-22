@@ -1,8 +1,6 @@
 ﻿using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
-using static R2API.SoundAPI;
 using RoR2.ConVar;
 using BayoMod.Survivors.Bayo.Components;
-
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
 {
@@ -42,8 +40,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
                 }
             }
 
-            this.gameObject.AddComponent<BayoWeaponComponent>();
             bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
+            bwc.currentWeapon = BayoWeaponComponent.WeaponState.Open;
             y = -2.25f;
             z = -6f;
             base.OnEnter();
@@ -73,7 +71,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
                 }
             }
 
-            Destroy(bwc);
+            bwc.currentWeapon = BayoWeaponComponent.WeaponState.Guns;
             base.OnExit();
         }
 
