@@ -170,12 +170,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         public override void Update()
         {
             base.Update();
-            if(flag1)
-            {
-                //Vector2 forward = new Vector2(0, 1);
-                //base.characterBody.master.playerCharacterMasterController.bodyInputs.SetRawMoveStates(forward);
-                //walkSpeed
-            }
         }
 
         public override void OnExit()

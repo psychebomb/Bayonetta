@@ -1,6 +1,6 @@
 ## Changelog
 - 0.4.0
-    - Added VFX :)
+    - Added VFX :D
     - Updated model - this is to make it easier in the future for skin creation, but this should also help improve performance
     - Adjusted some hitboxes
 - 0.3.2
