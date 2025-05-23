@@ -252,7 +252,7 @@ namespace BayoMod.Survivors.Bayo
             UnityEngine.Object.Destroy(wtOverlay2.transform.Find("VisualEffect/Small Sparks").gameObject);
             UnityEngine.Object.Destroy(wtOverlay2.transform.Find("VisualEffect/Smoke").gameObject);
             wtOverlay2.transform.Find("VisualEffect/Point Light").gameObject.GetComponent<Light>().color = Color.white;
-            wtOverlay2.transform.Find("VisualEffect/Point Light").gameObject.GetComponent<Light>().intensity = 8f;
+            wtOverlay2.transform.Find("VisualEffect/Point Light").gameObject.GetComponent<Light>().intensity = 10f;
             UnityEngine.Object.Destroy(wtOverlay2.transform.Find("CameraEffect/Shake").gameObject);
             //wtOverlay2.GetComponent<TemporaryVisualEffect>().visualTransform = null;
 
