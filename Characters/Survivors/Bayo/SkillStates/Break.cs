@@ -49,6 +49,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             hgn = "CoverGroup2";
             hbn = "Envelop2";
             effect = null;
+            effect2 = null;
 
             base.OnEnter();
 

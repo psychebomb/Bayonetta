@@ -1,5 +1,6 @@
 ﻿using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using BayoMod.Survivors.Bayo;
+using RoR2;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 {
@@ -14,7 +15,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 animStart = "P1";
                 animEnd = "P1E";
                 endDuration = 0.72f;
-                loopEffectPrefab = BayoAssets.p1s;
+                ReplacePrefabs(BayoAssets.p1s, BayoAssets.p1s2);
             }
             else
             {

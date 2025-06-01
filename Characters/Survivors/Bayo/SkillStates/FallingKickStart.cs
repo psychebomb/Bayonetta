@@ -13,7 +13,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         private RootMotionAccumulator rootMotionAccumulator;
 
-        private GameObject swingEffectPrefab = BayoAssets.fallk;
+        private GameObject swingEffectPrefab;
 
         private GameObject loopEffectInstance;
 
@@ -30,6 +30,16 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             characterMotor.velocity.y = 0f;
             characterDirection.forward = GetAimRay().direction;
             ChildLocator childLocator = GetModelChildLocator();
+
+            SkinDef curSkin = SkinCatalog.FindCurrentSkinDefForBodyInstance(this.characterBody.gameObject);
+            if (curSkin == BayoSurvivor.defaultSkin)
+            {
+                swingEffectPrefab = BayoAssets.fallk;
+            }
+            else
+            {
+                swingEffectPrefab = BayoAssets.fallk2;
+            }
             if (childLocator)
             {
                 Transform transform = childLocator.FindChild("SwingCenter") ?? base.characterBody.coreTransform;

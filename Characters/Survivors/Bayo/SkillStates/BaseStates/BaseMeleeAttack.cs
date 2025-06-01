@@ -381,5 +381,18 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             characterBody.AddSpreadBloom(spreadBloomValue);
             Util.PlaySound("shoot", gameObject);
         }
+
+        protected void ReplacePrefabs(GameObject pref1, GameObject pref2)
+        {
+            SkinDef curSkin = SkinCatalog.FindCurrentSkinDefForBodyInstance(this.characterBody.gameObject);
+            if(curSkin == BayoSurvivor.defaultSkin)
+            {
+                loopEffectPrefab = pref1;
+            }
+            else
+            {
+                loopEffectPrefab = pref2;
+            }
+        }
     }
 }

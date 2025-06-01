@@ -46,7 +46,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             Util.PlaySound("flurry", this.gameObject);
             Util.PlaySound("falling", this.gameObject);
-            loopEffectPrefab = BayoAssets.pflur;
+            ReplacePrefabs(BayoAssets.pflur, BayoAssets.pflur2);
 
             GameObject dam = BayoAssets.sum;
             if(isAuthority) EffectManager.SimpleMuzzleFlash(dam, this.gameObject, "DamageCenter", true);

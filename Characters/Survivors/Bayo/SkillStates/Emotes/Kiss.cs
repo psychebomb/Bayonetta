@@ -77,7 +77,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-            if (fixedAge > 0.44f && !voiced)
+            if (fixedAge > 0.4f && !voiced)
             {
                 Util.PlaySound("peck", this.gameObject);
                 voiced = true;
