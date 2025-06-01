@@ -64,7 +64,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     if (convar != null)
                     {
                         oldMusic = convar.GetString();
-                        convar.SetString("0");
+                        if (oldMusic != "0") convar.SetString("0");
                     }
                 }
             }
@@ -181,7 +181,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             {
                 if (convar != null)
                 {
-                    convar.SetString(oldMusic);
+                    if (oldMusic != "0") convar.SetString(oldMusic);
                 }
                 if (sound != 0)
                 {

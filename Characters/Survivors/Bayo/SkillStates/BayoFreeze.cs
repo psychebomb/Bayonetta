@@ -59,7 +59,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             Util.PlaySound("clear", this.gameObject);
             if (NetworkServer.active && characterBody)
             {
-                characterBody.AddTimedBuff(BayoBuffs.snapBuff, 0.12f);
+                characterBody.AddTimedBuff(BayoBuffs.snapBuff, 0.09f);
                 characterBody.AddTimedBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility, 1.25f);
             }
 
@@ -126,7 +126,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             }
             if (NetworkServer.active && characterBody)
             {
-                characterBody.AddTimedBuff(BayoBuffs.snapBuff, 0.12f);
+                characterBody.AddTimedBuff(BayoBuffs.snapBuff, 0.09f);
             }
             if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid)
             {
@@ -173,7 +173,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 if (NetworkServer.active && characterBody && !snap2ed)
                 {
                     snap2ed = true;
-                    characterBody.AddTimedBuff(BayoBuffs.snapBuff, 0.12f);
+                    characterBody.AddTimedBuff(BayoBuffs.snapBuff, 0.09f);
                 }
 
             }

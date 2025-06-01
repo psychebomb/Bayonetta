@@ -26,6 +26,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             hgn = "CoverGroup2";
             hbn = "Envelop2";
             effect = BayoAssets.spin;
+            effect2 = BayoAssets.spin2;
             base.OnEnter();
         }
 

@@ -35,7 +35,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             forwardDir.y = 0f;
             hitboxGroupName = "HeelGroup";
             hitboxName = "HeelHitbox";
-            loopEffectPrefab = BayoAssets.heels;
+            ReplacePrefabs(BayoAssets.heels, BayoAssets.heels2);
 
             characterDirection.forward = forwardDir;
 

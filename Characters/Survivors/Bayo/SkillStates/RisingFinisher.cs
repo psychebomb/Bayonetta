@@ -32,6 +32,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         protected bool jumped = false;
         protected bool clear = true;
         protected GameObject effect = BayoAssets.backs;
+        protected GameObject effect2 = BayoAssets.backs2;
         public override void OnEnter()
         {
             duration = dur;
@@ -54,7 +55,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             hitboxGroupName = hgn;
             hitboxName = hbn;
             PlayAnim();
-            loopEffectPrefab = effect;
+            ReplacePrefabs(effect, effect2);
 
             forwardDir = GetAimRay().direction;
             characterDirection.forward = forwardDir;

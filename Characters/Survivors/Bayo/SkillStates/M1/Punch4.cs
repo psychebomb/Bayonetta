@@ -16,7 +16,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 earlyExitPercentTime = 0.4f;
                 endDuration = 0.52f;
                 playSwing = 0.34f;
-                loopEffectPrefab = BayoAssets.p4s;
+                ReplacePrefabs(BayoAssets.p4s, BayoAssets.p4s2);
             }
             else
             {

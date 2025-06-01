@@ -37,7 +37,7 @@ namespace BayoMod.Survivors.Bayo
 
         public const string BAYO_PREFIX = BayoPlugin.DEVELOPER_PREFIX + "_BAYO_";
         public override string survivorTokenPrefix => BAYO_PREFIX;
-        
+
         public override BodyInfo bodyInfo => new BodyInfo
         {
             bodyName = bodyName,
@@ -92,6 +92,10 @@ namespace BayoMod.Survivors.Bayo
                 {
                     childName = "Sleeves",
                 },
+                new CustomRendererInfo
+                {
+                    childName = "Chest",
+                },
         };
 
         public override UnlockableDef characterUnlockableDef => BayoUnlockables.characterUnlockableDef;
@@ -122,6 +126,9 @@ namespace BayoMod.Survivors.Bayo
         internal static SkillDef tetsuSkillDef;
         internal static SkillDef stompSkillDef;
         internal static SkillDef weaveCancelSkillDef;
+
+        internal static SkinDef defaultSkin;
+        internal static SkinDef masterySkin;
         public override void Initialize()
         {
             base.Initialize();
@@ -140,11 +147,11 @@ namespace BayoMod.Survivors.Bayo
             BayoTokens.Init();
 
             BayoBuffs.Init(assetBundle);
+            InitializeSkins();
             BayoAssets.Init(assetBundle);
 
             InitializeEntityStateMachines();
             InitializeSkills();
-            InitializeSkins();
             InitializeCharacterMaster();
 
             AdditionalBodySetup();
@@ -474,7 +481,7 @@ namespace BayoMod.Survivors.Bayo
 
             #region DefaultSkin
             //this creates a SkinDef with all default fields
-            SkinDef defaultSkin = Skins.CreateSkinDef("DEFAULT_SKIN",
+            defaultSkin = Modules.Skins.CreateSkinDef("DEFAULT_SKIN",
                 assetBundle.LoadAsset<Sprite>("texMainSkin"),
                 defaultRendererinfos,
                 prefabCharacterModel.gameObject);
@@ -483,10 +490,26 @@ namespace BayoMod.Survivors.Bayo
                 //pass in meshes as they are named in your assetbundle
             //currently not needed as with only 1 skin they will simply take the default meshes
                 //uncomment this when you have another skin
-            //defaultSkin.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
-            //    "meshHenrySword",
-            //    "meshHenryGun",
-            //    "meshHenry");
+            defaultSkin.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
+                "Body",
+                "GunsFeet",
+                "GunsHands",
+                "LHandGun",
+                "RHandGun",
+                "LHandOpen",
+                "RHandOpen",
+                "Sleeves",
+                "Hairrr");
+
+            defaultSkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
+{
+                new SkinDef.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("Chest"),
+                    shouldActivate = false
+                    
+                }
+};
 
             //add new skindef to our list of skindefs. this is what we'll be passing to the SkinController
             skins.Add(defaultSkin);
@@ -495,39 +518,49 @@ namespace BayoMod.Survivors.Bayo
             //uncomment this when you have a mastery skin
             #region MasterySkin
             
-            ////creating a new skindef as we did before
-            //SkinDef masterySkin = Modules.Skins.CreateSkinDef(HENRY_PREFIX + "MASTERY_SKIN_NAME",
-            //    assetBundle.LoadAsset<Sprite>("texMasteryAchievement"),
-            //    defaultRendererinfos,
-            //    prefabCharacterModel.gameObject,
-            //    HenryUnlockables.masterySkinUnlockableDef);
+            //creating a new skindef as we did before
+            masterySkin = Modules.Skins.CreateSkinDef(BAYO_PREFIX + "BAYO2_SKIN_NAME",
+                assetBundle.LoadAsset<Sprite>("texMainSkin"),
+                defaultRendererinfos,
+                prefabCharacterModel.gameObject);
 
-            ////adding the mesh replacements as above. 
-            ////if you don't want to replace the mesh (for example, you only want to replace the material), pass in null so the order is preserved
-            //masterySkin.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
-            //    "meshHenrySwordAlt",
-            //    null,//no gun mesh replacement. use same gun mesh
-            //    "meshHenryAlt");
+            //adding the mesh replacements as above. 
+            //if you don't want to replace the mesh (for example, you only want to replace the material), pass in null so the order is preserved
+            masterySkin.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
+                "Body2",
+                "LiB_Feet",
+                "LiB_Hands",
+                "LHGun2",
+                "RHGun2",
+                "LHOpen2",
+                "RHOpen2",
+                null,
+                null);
 
-            ////masterySkin has a new set of RendererInfos (based on default rendererinfos)
-            ////you can simply access the RendererInfos' materials and set them to the new materials for your skin.
-            //masterySkin.rendererInfos[0].defaultMaterial = assetBundle.LoadMaterial("matHenryAlt");
-            //masterySkin.rendererInfos[1].defaultMaterial = assetBundle.LoadMaterial("matHenryAlt");
-            //masterySkin.rendererInfos[2].defaultMaterial = assetBundle.LoadMaterial("matHenryAlt");
+            //masterySkin has a new set of RendererInfos (based on default rendererinfos)
+            //you can simply access the RendererInfos' materials and set them to the new materials for your skin.
+            masterySkin.rendererInfos[0].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.rendererInfos[1].defaultMaterial = assetBundle.LoadMaterial("lib");
+            masterySkin.rendererInfos[2].defaultMaterial = assetBundle.LoadMaterial("lib");
+            masterySkin.rendererInfos[3].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.rendererInfos[4].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.rendererInfos[5].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.rendererInfos[6].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.rendererInfos[7].defaultMaterial = assetBundle.LoadMaterial("hairrr");
 
-            ////here's a barebones example of using gameobjectactivations that could probably be streamlined or rewritten entirely, truthfully, but it works
-            //masterySkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
-            //{
-            //    new SkinDef.GameObjectActivation
-            //    {
-            //        gameObject = childLocator.FindChildGameObject("GunModel"),
-            //        shouldActivate = false,
-            //    }
-            //};
-            ////simply find an object on your child locator you want to activate/deactivate and set if you want to activate/deacitvate it with this skin
+            //here's a barebones example of using gameobjectactivations that could probably be streamlined or rewritten entirely, truthfully, but it works
+            masterySkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
+            {
+                new SkinDef.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("Sleeves"),
+                    shouldActivate = false,
+                }
+            };
+            //simply find an object on your child locator you want to activate/deactivate and set if you want to activate/deacitvate it with this skin
 
-            //skins.Add(masterySkin);
-            
+            skins.Add(masterySkin);
+
             #endregion
 
             skinController.skins = skins.ToArray();
@@ -582,7 +615,7 @@ namespace BayoMod.Survivors.Bayo
             On.RoR2.CharacterMaster.RespawnExtraLifeVoid += ReviveHookd;
             On.RoR2.SetStateOnHurt.SetStunInternal += PunishHook1;
             On.RoR2.SetStateOnHurt.OverrideStunInternal += PunishHook2;
-            //On.RoR2.SceneExitController.Begin += FreezeBayoHook;
+            On.RoR2.SceneExitController.Begin += FreezeBayoHook;
         }
 
         private void FreezeBayoHook(On.RoR2.SceneExitController.orig_Begin orig, SceneExitController self)
