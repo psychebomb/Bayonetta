@@ -12,11 +12,15 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         protected AnimationCurve hoverSpeed;
         private Transform boneTrans;
         private ABKRotator abkr;
+
+        protected float fireAge;
+        protected float fireFreq;
+        protected float hopVelocity = 2f;
         public override void OnEnter()
         {
-            duration = 0.75f;
-            attackStartPercentTime = 1.1f;
-            attackEndPercentTime = 1.11f;
+            duration = 0.4f;
+            attackStartPercentTime = 0f;
+            attackEndPercentTime = 1f;
             damageCoefficient = 0f;
             procCoefficient = 0f;
 
@@ -26,7 +30,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             hoverSpeed = new AnimationCurve(new Keyframe[]
             {
                 new Keyframe(0f, 1.5f),
-                new Keyframe(0.25f, 0f),
+                new Keyframe(0.3f, 0.5f),
             });
 
             ModelLocator component = this.gameObject.GetComponent<ModelLocator>();
@@ -44,8 +48,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             gunName = "muzrf";
             gunDamage = 1f;
             fireTime = 0.15f;
+            launch = true;
 
             base.OnEnter();
+
+            juggleHop = 2.5f / this.attackSpeedStat;
+            fireFreq = 0.15f / this.attackSpeedStat;
         }
 
         public override void FixedUpdate()
@@ -65,8 +73,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             {
                 float num = hoverSpeed.Evaluate(stopwatch / duration);
                 characterMotor.velocity = forwardDirr * num * moveSpeedStat;
+                characterMotor.velocity.y = -1.25f;
 
             }
+
+            fireAge += Time.fixedDeltaTime;
 
             if (!base.inputBank.skill2.down)
             {
@@ -74,6 +85,23 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 return;
             }
 
+        }
+
+        protected override void FireAttack()
+        {
+            if (fireAge >= fireFreq)
+            {
+                fireAge = 0f;
+                //attack.ResetIgnoredHealthComponents();
+                //attack.Fire();
+                hasFired = false;
+                results.Clear();
+                if (characterMotor && hopVelocity > 0f)
+                {
+                    SmallHop(characterMotor, hopVelocity);
+                }
+            }
+            base.FireAttack();
         }
         public override void OnExit()
         {

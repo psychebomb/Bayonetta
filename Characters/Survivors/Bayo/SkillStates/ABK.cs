@@ -41,6 +41,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             ReplacePrefabs(BayoAssets.abk, BayoAssets.abk2);
             muzzleString = "ABKC";
             playSwing = 0.15f;
+            shootRay = GetAimRay();
+            gunName = "muzrf";
+            gunDamage = 0.75f;
+            //fireTime = 0.15f;
             //bonusForce = 0.8f * forwardDir * Uppercut.upwardForceStrength;
 
             characterDirection.forward = forwardDir;
@@ -82,6 +86,16 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         public override void FixedUpdate()
         {
             base.FixedUpdate();
+            shootRay = GetAimRay();
+
+            if (base.inputBank.skill2.down && isAuthority)
+            {
+                fireTime = 0.15f / this.attackSpeedStat;
+            }
+            else
+            {
+                fireTime = 9999f;
+            }
 
             if (CanDodge())
             {

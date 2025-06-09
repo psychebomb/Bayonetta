@@ -28,7 +28,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             damageType = DamageType.Generic;
             hasHit = false;
 
-            hitStopDuration = 0.1f;
+            hitStopDuration = 0.05f;
             attackRecoil = 1f;
             hitHopVelocity = 4f;
             forwardDir = GetAimRay().direction;

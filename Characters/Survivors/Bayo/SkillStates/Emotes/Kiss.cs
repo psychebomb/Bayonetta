@@ -13,7 +13,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
     public class Kiss : BaseEmote
     {
         private bool voiced = false;
-        private BayoWeaponComponent bwc;
         private CameraRigController cameraRig;
 
         private float kissDone = 1.2f;
@@ -67,8 +66,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
                 EffectManager.SimpleMuzzleFlash(kissVfx, gameObject, "SwingCenter", true);
             }
 
-            bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
-            bwc.currentWeapon = BayoWeaponComponent.WeaponState.Open;
+            //bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
+            //bwc.currentWeapon = BayoWeaponComponent.WeaponState.Open;
 
             base.OnEnter();
 
@@ -113,7 +112,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
 
         public override void OnExit()
         {
-            bwc.currentWeapon = BayoWeaponComponent.WeaponState.Guns;
+            //bwc.currentWeapon = BayoWeaponComponent.WeaponState.Guns;
             if (base.cameraTargetParams && cam2.isValid && zoom)
             {
                 cam2 = base.cameraTargetParams.RemoveParamsOverride(cam2, zoomOutDur);

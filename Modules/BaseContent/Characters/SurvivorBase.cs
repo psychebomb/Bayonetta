@@ -18,6 +18,8 @@ namespace BayoMod.Modules.Characters
 
         public abstract GameObject displayPrefab { get; protected set; }
 
+        public abstract CharacterModel displayCharacterModel { get; protected set; }
+
         public override void InitializeCharacter()
         {
             base.InitializeCharacter();
@@ -30,6 +32,7 @@ namespace BayoMod.Modules.Characters
         protected virtual void InitializeDisplayPrefab()
         {
             displayPrefab = Prefabs.CreateDisplayPrefab(assetBundle, displayPrefabName, bodyPrefab);
+            displayCharacterModel = displayPrefab.GetComponent<CharacterModel>();
         }
 
         protected virtual void InitializeSurvivor()

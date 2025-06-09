@@ -13,7 +13,6 @@ namespace BayoMod.Characters.Survivors.Bayo.Components
         public float waitTime = 2.5f;
         private float stopwatch;
         private CharacterMaster cm;
-        private bool done = false;
         private string oldMusic;
         private BaseConVar convar;
         void Start()

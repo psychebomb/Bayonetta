@@ -111,9 +111,11 @@ namespace BayoMod.Survivors.Bayo
         public override CharacterModel prefabCharacterModel { get; protected set; }
         public override GameObject displayPrefab { get; protected set; }
 
+        public override CharacterModel displayCharacterModel { get; protected set; }
+
         private GameObject wtWard;
 
-        private GameObject pObj;
+        //private GameObject pObj;
 
         private float lessGravity = 0.85f;
 
@@ -473,9 +475,11 @@ namespace BayoMod.Survivors.Bayo
         public override void InitializeSkins()
         {
             ModelSkinController skinController = prefabCharacterModel.gameObject.AddComponent<ModelSkinController>();
+            ModelSkinController displaySkinController = displayCharacterModel.gameObject.AddComponent<ModelSkinController>();
             ChildLocator childLocator = prefabCharacterModel.GetComponent<ChildLocator>();
 
             CharacterModel.RendererInfo[] defaultRendererinfos = prefabCharacterModel.baseRendererInfos;
+            //CharacterModel.RendererInfo[] displayRendererinfos = displayCharacterModel.baseRendererInfos;
 
             List<SkinDef> skins = new List<SkinDef>();
 
@@ -487,10 +491,10 @@ namespace BayoMod.Survivors.Bayo
                 prefabCharacterModel.gameObject);
 
             //these are your Mesh Replacements. The order here is based on your CustomRendererInfos from earlier
-                //pass in meshes as they are named in your assetbundle
+            //pass in meshes as they are named in your assetbundle
             //currently not needed as with only 1 skin they will simply take the default meshes
-                //uncomment this when you have another skin
-            defaultSkin.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
+            //uncomment this when you have another skin
+            defaultSkin.skinDefParams.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
                 "Body",
                 "GunsFeet",
                 "GunsHands",
@@ -501,9 +505,9 @@ namespace BayoMod.Survivors.Bayo
                 "Sleeves",
                 "Hairrr");
 
-            defaultSkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
+            defaultSkin.skinDefParams.gameObjectActivations = new SkinDefParams.GameObjectActivation[]
 {
-                new SkinDef.GameObjectActivation
+                new SkinDefParams.GameObjectActivation
                 {
                     gameObject = childLocator.FindChildGameObject("Chest"),
                     shouldActivate = false
@@ -526,7 +530,7 @@ namespace BayoMod.Survivors.Bayo
 
             //adding the mesh replacements as above. 
             //if you don't want to replace the mesh (for example, you only want to replace the material), pass in null so the order is preserved
-            masterySkin.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
+            masterySkin.skinDefParams.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
                 "Body2",
                 "LiB_Feet",
                 "LiB_Hands",
@@ -539,19 +543,19 @@ namespace BayoMod.Survivors.Bayo
 
             //masterySkin has a new set of RendererInfos (based on default rendererinfos)
             //you can simply access the RendererInfos' materials and set them to the new materials for your skin.
-            masterySkin.rendererInfos[0].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            masterySkin.rendererInfos[1].defaultMaterial = assetBundle.LoadMaterial("lib");
-            masterySkin.rendererInfos[2].defaultMaterial = assetBundle.LoadMaterial("lib");
-            masterySkin.rendererInfos[3].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            masterySkin.rendererInfos[4].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            masterySkin.rendererInfos[5].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            masterySkin.rendererInfos[6].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            masterySkin.rendererInfos[7].defaultMaterial = assetBundle.LoadMaterial("hairrr");
+            masterySkin.skinDefParams.rendererInfos[0].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.skinDefParams.rendererInfos[1].defaultMaterial = assetBundle.LoadMaterial("lib");
+            masterySkin.skinDefParams.rendererInfos[2].defaultMaterial = assetBundle.LoadMaterial("lib");
+            masterySkin.skinDefParams.rendererInfos[3].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.skinDefParams.rendererInfos[4].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.skinDefParams.rendererInfos[5].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.skinDefParams.rendererInfos[6].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.skinDefParams.rendererInfos[7].defaultMaterial = assetBundle.LoadMaterial("hairrr");
 
             //here's a barebones example of using gameobjectactivations that could probably be streamlined or rewritten entirely, truthfully, but it works
-            masterySkin.gameObjectActivations = new SkinDef.GameObjectActivation[]
+            masterySkin.skinDefParams.gameObjectActivations = new SkinDefParams.GameObjectActivation[]
             {
-                new SkinDef.GameObjectActivation
+                new SkinDefParams.GameObjectActivation
                 {
                     gameObject = childLocator.FindChildGameObject("Sleeves"),
                     shouldActivate = false,
@@ -559,11 +563,12 @@ namespace BayoMod.Survivors.Bayo
             };
             //simply find an object on your child locator you want to activate/deactivate and set if you want to activate/deacitvate it with this skin
 
-            skins.Add(masterySkin);
+            //skins.Add(masterySkin);
 
             #endregion
 
             skinController.skins = skins.ToArray();
+            displaySkinController.skins = skins.ToArray();
         }
         #endregion skins
         public override void InitializeCharacterMaster()
@@ -615,7 +620,7 @@ namespace BayoMod.Survivors.Bayo
             On.RoR2.CharacterMaster.RespawnExtraLifeVoid += ReviveHookd;
             On.RoR2.SetStateOnHurt.SetStunInternal += PunishHook1;
             On.RoR2.SetStateOnHurt.OverrideStunInternal += PunishHook2;
-            On.RoR2.SceneExitController.Begin += FreezeBayoHook;
+            //On.RoR2.SceneExitController.Begin += FreezeBayoHook;
         }
 
         private void FreezeBayoHook(On.RoR2.SceneExitController.orig_Begin orig, SceneExitController self)

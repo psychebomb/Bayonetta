@@ -7,7 +7,7 @@ namespace BayoMod.Modules.Components
 {
     public class BayoTracker : MonoBehaviour
     {
-        public float maxTrackingDistance = 50f;
+        public float maxTrackingDistance = 60f;
         public float maxTrackingAngle = 45f;
         public float trackerUpdateFrequency = 10f;
         public BullseyeSearch.SortMode sort = BullseyeSearch.SortMode.Angle;

@@ -10,7 +10,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
         private bool music;
         BaseConVar convar;
         private string oldMusic;
-        private BayoWeaponComponent bwc;
+        //private BayoWeaponComponent bwc;
         public override void OnEnter()
         {
             animString = "Letsdance";
@@ -40,8 +40,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
                 }
             }
 
-            bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
-            bwc.currentWeapon = BayoWeaponComponent.WeaponState.Open;
+            //bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
+            //bwc.currentWeapon = BayoWeaponComponent.WeaponState.Open;
             y = -2.25f;
             z = -6f;
             base.OnEnter();
@@ -71,7 +71,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
                 }
             }
 
-            bwc.currentWeapon = BayoWeaponComponent.WeaponState.Guns;
+            //bwc.currentWeapon = BayoWeaponComponent.WeaponState.Guns;
             base.OnExit();
         }
 

@@ -1,4 +1,13 @@
 ## Changelog
+- 0.4.1
+    - Now doing the skindef optimization thingy
+    - The punish prompt when getting close to an enemy no longer appears if Bayonetta is in the middle of another skill
+        - Having the prompt appear in this scenario lead to a bug that allowed Bayonetta to infinatley activate interactable items such as fireworks
+        - I will add a more elegant way of alerting the player when an enemy is punishable eventually
+    - ABK's shooting state (state from holding m2 down after ABK) has been adjusted in order to flow better:
+        - The shooting state itself has been shortened, but Bayonetta will now shoot during the main ABK state as long as the m2 button is held down
+        - The bullets from the shooting state now juggle nearby enemies
+    - Bayonetta's guns are now hidden during some of her taunts
 - 0.4.0
     - Added VFX :D
     - Updated model - this is to make it easier in the future for skin creation, but this should also help improve performance
