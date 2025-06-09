@@ -4,6 +4,7 @@ using BayoMod.Survivors.Bayo.SkillStates;
 using UnityEngine.Networking;
 using RoR2.CameraModes;
 using BayoMod.Survivors.Bayo;
+using BayoMod.Survivors.Bayo.Components;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -25,7 +26,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         private bool inPose = false;
         private bool posed = false;
         private HitStopCachedState poseCachedState;
-        private Vector3 forwardDir;
+        private BayoWeaponComponent bwc;
         private bool flip = false;
         public override void OnEnter()
         {
@@ -50,6 +51,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             hbn = "Envelop2";
             effect = null;
             effect2 = null;
+            bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
 
             base.OnEnter();
 
@@ -139,6 +141,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             {
                 ConsumeHitStopCachedState(poseCachedState, characterMotor, animator);
                 inPose = false;
+                //bwc.currentWeapon = BayoWeaponComponent.WeaponState.Guns;
                 if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid)
                 {
                     cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle, 0.8f);
@@ -259,6 +262,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 characterMotor.moveDirection = forwardDir;
                 characterDirection.moveVector = forwardDir;
                 PlayAnimation("Body", "BreakExit", playbackRateParam, duration - earlyExitPercentTime);
+                //bwc.currentWeapon = BayoWeaponComponent.WeaponState.Open;
 
                 if (base.cameraTargetParams & cameraParamsOverrideHandle.isValid)
                 {

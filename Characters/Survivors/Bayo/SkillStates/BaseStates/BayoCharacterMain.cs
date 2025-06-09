@@ -129,7 +129,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         public override void OnExit()
         {
             //if (wingInstance) UnityEngine.Object.Destroy(wingInstance);
-            //if(pTracker) Destroy(pTracker);
+            pTracker.enabled = false;
             base.OnExit();
         }
     }

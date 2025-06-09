@@ -1,4 +1,5 @@
 ﻿using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
+using BayoMod.Survivors.Bayo.Components;
 using EntityStates;
 using RoR2;
 using UnityEngine;
@@ -34,6 +35,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected bool stance = false;
         protected bool canCancel = true;
 
+        private BayoWeaponComponent bwc;
+        protected bool hideWeapon = true;
         public override void OnEnter()
         {
             rootmotion = GetModelRootMotionAccumulator();
@@ -57,6 +60,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     priority = 1f
                 }, zoomDur);
             }
+
+            bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
+            if(hideWeapon) bwc.currentWeapon = BayoWeaponComponent.WeaponState.Open;
 
         }
 
@@ -129,6 +135,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             base.OnExit();
             characterBody.hideCrosshair = false;
             if (NetworkServer.active) base.characterBody.RemoveBuff(RoR2Content.Buffs.Slow60);
+            if(hideWeapon) bwc.currentWeapon = BayoWeaponComponent.WeaponState.Guns;
 
             if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid && zoom)
             {
