@@ -49,6 +49,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         private GameObject swingEffectPrefab = BayoAssets.fall;
         private GameObject loopEffectInstance;
+        private bool refunded = false;
         public override void OnEnter()
         {
             base.OnEnter();
@@ -233,6 +234,16 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         protected virtual void OnHitEnemyAuthority()
         {
             Util.PlaySound(hitSoundString, gameObject);
+
+            if (!refunded)
+            {
+                if (base.skillLocator.secondary.stock < base.skillLocator.secondary.maxStock)
+                {
+                    base.skillLocator.secondary.rechargeStopwatch += 2.5f;
+                }
+
+                refunded = true;
+            }
 
             ApplyHitstop();
         }

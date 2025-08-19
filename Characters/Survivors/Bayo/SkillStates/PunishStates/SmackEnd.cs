@@ -2,6 +2,7 @@
 using UnityEngine;
 using BayoMod.Survivors.Bayo;
 using RoR2.Projectile;
+using RoR2.CameraModes;
 
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
@@ -12,12 +13,24 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
         public override void OnEnter()
         {
             duration = 1.48f;
-            fireTime = 0.64f;
+            fireTime = 0.24f;
             animName = "SpankEnd";
-            //projectilePrefab = BayoAssets.fistProjectilePrefab;
+            projectilePrefab = BayoAssets.fistDown;
             base.OnEnter();
         }
 
+        public override void FixedUpdate()
+        {
+            base.FixedUpdate();
+
+            if (Camera)
+            {
+                Vector3 targetAngles = cameraDir;
+                targetAngles.y *= 15f;
+                Vector3 newCamera = Vector3.Lerp(cameraDir, targetAngles, stopwatch/(fireTime + 0.24f));
+                ((CameraModePlayerBasic.InstanceData)Camera.cameraMode.camToRawInstanceData[Camera]).SetPitchYawFromLookVector(newCamera);
+            }
+        }
         public override void FireProjectile()
         {
             /*
@@ -33,7 +46,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
             */
             Vector3 dir = forwardDir;
             dir.y = 0;
-            Vector3 pos = characterBody.transform.position + (dir.normalized * 1.5f) + (cameraDir * 1.5f);
+            Vector3 pos = characterBody.transform.position + (dir.normalized * 2f); //+ (cameraDir * f);
             pos.y = pos.y - 1.5f;
 
 

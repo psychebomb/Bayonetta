@@ -247,9 +247,11 @@ namespace BayoMod.Survivors.Bayo.SkillStates
 
         public override void OnExit()
         {
-            int wtDur = 6;
+            int wtDur = Modules.Config.wtdur.Value;
+            int wtDurP = Modules.Config.wtpdur.Value;
             int hardlights = this.characterBody.inventory.GetItemCount(RoR2Content.Items.UtilitySkillMagazine);
             wtDur += (hardlights * 3);
+            wtDurP += (hardlights * 3);
 
             if (cancel) PlayAnimation("FullBody, Override", "BufferEmpty");
             if (evadeDone && NetworkServer.active)
@@ -257,14 +259,14 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 Util.PlaySound("wtv", this.gameObject);
                 if (rlyGoodTiming)
                 {
-                    for (int k = 1; k <= wtDur; k++)
+                    for (int k = 1; k <= wtDurP; k++)
                     {
                         characterBody.AddTimedBuff(BayoBuffs.wtBuff, k);
                     }
                 }
                 else
                 {
-                    for (int k = 1; k <= (wtDur - 2); k++)
+                    for (int k = 1; k <= wtDur; k++)
                     {
                         characterBody.AddTimedBuff(BayoBuffs.wtBuff, k);
                     }

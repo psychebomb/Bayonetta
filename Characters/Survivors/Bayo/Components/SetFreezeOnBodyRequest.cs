@@ -5,6 +5,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Networking;
 using BayoMod.Characters.Survivors.Bayo.SkillStates;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.ClimaxStates;
 using BayoMod.Characters.Survivors.Bayo.Components;
 
 namespace BayoMod.Modules.Components
@@ -93,10 +94,17 @@ namespace BayoMod.Modules.Components
 
                     }
 
-                    if (healthComponent.health > 0) //Beautiful queen snap snap haha
+                    if (healthComponent.health > 0)
                     {
-                        masterobject.AddComponent<KissCountdown>();
-                        stateMachine.SetNextState(new BayoFreeze { duration = this.duration });
+                        if (healthComponent.body.name.Contains("BayoBody"))  //Beautiful queen snap snap haha
+                        {
+                            masterobject.AddComponent<KissCountdown>();
+                            stateMachine.SetNextState(new BayoFreeze { duration = this.duration });
+                        }
+                        else
+                        {
+                            stateMachine.SetNextState(new EnemyFreeze { duration = this.duration });
+                        }
                     }
                     return;
                 }

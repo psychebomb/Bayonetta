@@ -61,7 +61,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
         {
             if (music)
             {
-                if (convar != null)
+                if (convar != null && isAuthority)
                 {
                     if (oldMusic != "0") convar.SetString(oldMusic);
                 }

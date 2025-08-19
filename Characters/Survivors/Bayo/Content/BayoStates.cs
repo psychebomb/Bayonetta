@@ -6,6 +6,8 @@ using BayoMod.Characters.Survivors.Bayo.SkillStates.Weave;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
 using BayoMod.Survivors.Bayo.SkillStates.PunishStates;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.ClimaxStates;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -99,6 +101,8 @@ namespace BayoMod.Survivors.Bayo
 
             Modules.Content.AddEntityState(typeof(LetsDance));
 
+            Modules.Content.AddEntityState(typeof(LetsDance2));
+
             Modules.Content.AddEntityState(typeof(PunishStun));
 
             Modules.Content.AddEntityState(typeof(PunishEntry));
@@ -120,6 +124,20 @@ namespace BayoMod.Survivors.Bayo
             Modules.Content.AddEntityState(typeof(Grab));
 
             Modules.Content.AddEntityState(typeof(Throw));
+
+            Modules.Content.AddEntityState(typeof(EnemyFreeze));
+
+            Modules.Content.AddEntityState(typeof(ClimaxEntry));
+
+            Modules.Content.AddEntityState(typeof(GrabStun));
+
+            Modules.Content.AddEntityState(typeof(SummonGom));
+
+            Modules.Content.AddEntityState(typeof(BatsWithinChargeUp));
+
+            Modules.Content.AddEntityState(typeof(BatsWithin));
+
+            Modules.Content.AddEntityState(typeof(Land));
             #endregion
         }
     }

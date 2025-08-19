@@ -51,6 +51,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             characterDirection.forward = GetAimRay().direction;
             ReplacePrefabs(BayoAssets.backk, BayoAssets.backk2);
             rootMotionAccumulator = GetModelRootMotionAccumulator();
+            m2Refund = true;
 
             if (characterMotor && characterDirection)
             {

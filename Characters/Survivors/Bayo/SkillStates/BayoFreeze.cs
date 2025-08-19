@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 using RoR2.CameraModes;
 using RoR2.ConVar;
+using BayoMod.Characters.Survivors.Bayo.Components;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -26,6 +27,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         private Vector3 lookDir;
         private Vector3 dir1;
         private Vector3 dir2;
+
+        public UIController uiController;
 
         public override void OnEnter()
         {
@@ -81,6 +84,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                     Camera = characterBody.master.playerCharacterMasterController.networkUser.cameraRigController;
                 }
             }
+
+            uiController = this.gameObject.GetComponent<UIController>();
+            uiController.SetRORUIActiveState(false);
+
         }
 
         private void GetRandomDirections()
@@ -136,6 +143,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             {
                 ((CameraModePlayerBasic.InstanceData)Camera.cameraMode.camToRawInstanceData[Camera]).SetPitchYawFromLookVector(lookDir);
             }
+
+            uiController.SetRORUIActiveState(true);
+
             base.OnExit();
         }
 

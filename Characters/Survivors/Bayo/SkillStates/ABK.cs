@@ -21,6 +21,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         private ABKRotator abkr;
         private float rotTime = 0.18f;
         private bool rotated = false;
+        private bool down = false;
         public override void OnEnter()
         {
             duration = 0.65f;
@@ -44,13 +45,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             shootRay = GetAimRay();
             gunName = "muzrf";
             gunDamage = 0.75f;
+            m2Refund = true;
             //fireTime = 0.15f;
             //bonusForce = 0.8f * forwardDir * Uppercut.upwardForceStrength;
 
             characterDirection.forward = forwardDir;
             characterBody.bodyFlags |= CharacterBody.BodyFlags.IgnoreFallDamage;
 
-            if (forwardDir.y < -0.5)
+            if (forwardDir.y <= -0.5)
             {
                 kickSpeed = new AnimationCurve(new Keyframe[]
                 {
@@ -59,6 +61,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 new Keyframe(0.5f, 7f),
                 });
                 launch = false;
+                down = true;
                 animName = "AbkDown";
             }
             else
@@ -102,6 +105,16 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 outer.SetNextState(new Dodge());
                 inputBank.skill3.hasPressBeenClaimed = true;
                 return;
+            }
+
+            if (stopwatch >= 0.1f && down)
+            {
+                if (inputBank.jump.justPressed && base.characterMotor.jumpCount < base.characterBody.maxJumpCount)
+                {
+                    inputBank.jump.PushState(false);
+                    outer.SetNextStateToMain();
+                    return;
+                }
             }
 
             if (characterDirection) characterDirection.forward = forwardDir;
@@ -150,7 +163,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 abkr.lookDir = Vector3.zero;
                 abkr.rotate = false;
             }
-            if (forwardDir.y > -0.5) characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
+            if (!down) characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
             LastHit();
             base.OnExit();
         }

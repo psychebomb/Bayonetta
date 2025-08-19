@@ -94,7 +94,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Weave
         {
             if (inputBank)
             {
-                if (inputBank.jump.down)
+                if (inputBank.jump.down && base.characterMotor.jumpCount < base.characterBody.maxJumpCount)
                 {
                     cancel = true;
                     jumped = true;

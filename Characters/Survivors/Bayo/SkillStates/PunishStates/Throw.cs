@@ -127,6 +127,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
                 if(enemyBody && enemyBody.HasBuff(BayoBuffs.punishable)) enemyBody.RemoveBuff(BayoBuffs.punishable);
                 if(this.characterBody.HasBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility)) this.characterBody.RemoveBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility);
             }
+            if (base.GetComponent<PunishTracker>()) base.GetComponent<PunishTracker>().ReleaseTarget();
             if (base.GetComponent<PunishTracker>()) base.GetComponent<PunishTracker>().punishing = false;
             base.OnExit();
         }

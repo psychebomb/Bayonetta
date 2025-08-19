@@ -29,7 +29,7 @@ namespace BayoMod.Modules
                 return new Material(hotpoo);
             }
 
-            return tempMat.ConvertDefaultShaderToHopoo(false);
+            return tempMat.ConvertDefaultShaderToHopoo(true);
         }
 
         public static Material SetHopooMaterial(this Material tempMat) => ConvertDefaultShaderToHopoo(tempMat, false);
@@ -69,10 +69,6 @@ namespace BayoMod.Modules
             tempMat.SetTexture("_EmTex", tempMat.GetTexture("_EmissionMap"));
             //tempMat.DisableKeyword("DITHER");
             tempMat.EnableKeyword("CUTOUT");
-            tempMat.EnableKeyword("PRINT_CUTOFF");
-
-            tempMat.SetFloat("_PrintOn", 1);
-            tempMat.SetFloat("_PrintDirection", 1);
             
             if (bumpScale != null)
             {

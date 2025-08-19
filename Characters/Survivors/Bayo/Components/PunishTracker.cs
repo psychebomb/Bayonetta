@@ -14,13 +14,13 @@ namespace BayoMod.Modules.Components
         public float trackerUpdateFrequency = 10f;
         public BullseyeSearch.SortMode sort = BullseyeSearch.SortMode.Distance;
 
-        private HurtBox trackingTarget;
+        protected HurtBox trackingTarget;
         private CharacterBody characterBody;
-        private TeamComponent teamComponent;
+        protected TeamComponent teamComponent;
         private InputBankTest inputBank;
         private float trackerUpdateStopwatch;
         private GameObject curTarget = null;
-        private readonly BullseyeSearch search = new BullseyeSearch();
+        protected readonly BullseyeSearch search = new BullseyeSearch();
         private GameObject evil;
         public bool punishing = false;
         private bool highRemoved = false;
@@ -51,6 +51,11 @@ namespace BayoMod.Modules.Components
         public HurtBox GetTrackingTarget()
         {
             return this.trackingTarget;
+        }
+
+        public void ReleaseTarget()
+        {
+            this.trackingTarget = null;
         }
         private void OnEnable()
         {

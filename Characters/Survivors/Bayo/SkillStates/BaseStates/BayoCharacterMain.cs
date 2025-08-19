@@ -4,7 +4,9 @@ using UnityEngine;
 using BayoMod.Modules.Components;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.ClimaxStates;
 using BayoMod.Survivors.Bayo;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 {
@@ -13,12 +15,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 
         private BayoTracker tracker;
         private PunishTracker pTracker;
+        //private ClimaxTracker cTracker;
         private bool fallRemoved = false;
         private GameObject wingPrefab;
         private GameObject wingInstance;
         private GameObject jumpPrefab = BayoAssets.djump;
         public override void OnEnter()
         {
+            //cTracker = GetComponent<ClimaxTracker>();
             pTracker = GetComponent<PunishTracker>();
             tracker = GetComponent<BayoTracker>();
             base.OnEnter();
@@ -53,19 +57,40 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 /*
                 if (Input.GetKeyDown(KeyCode.Alpha5))
                 {
-                    outer.SetNextState(new Kiss());
+                    outer.SetNextState(new LetsDance2());
                     return;
                 }
                 */
+                /*
+                if (cTracker)
+                {
+                    if (cTracker.GetTrackingTarget() != null && inputBank.interact.down)
+                    {
+                        outer.SetNextState(new ClimaxEntry());
+                        return;
+                    }
+                }
+                */
+                
                 if (pTracker)
                 {
-                    if (pTracker.GetTrackingTarget() && inputBank.interact.down)
+                    if (pTracker.GetTrackingTarget() != null && inputBank.interact.down)
                     {
                         outer.SetNextState(new PunishEntry());
                         return;
                     }
                 }
             }
+            /*
+            if (Util.HasEffectiveAuthority(gameObject))
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha6))
+                {
+                    outer.SetNextState(new BatsWithinChargeUp());
+                    return;
+                }
+            }
+            */
 
             if (characterMotor.isGrounded)
             {
@@ -74,9 +99,16 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
                     fallRemoved = true;
                 }
-                
-                if(pTracker) pTracker.enabled = true;
+
+                //if (cTracker) cTracker.enabled = true;
+                if (pTracker) pTracker.enabled = true;
             }
+            /*
+            if (cTracker && !characterMotor.isGrounded)
+            {
+                cTracker.enabled = false;
+            }
+            */
             if (pTracker && !characterMotor.isGrounded)
             {
                 pTracker.enabled = false;
@@ -129,6 +161,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         public override void OnExit()
         {
             //if (wingInstance) UnityEngine.Object.Destroy(wingInstance);
+            //cTracker.enabled = false;
             pTracker.enabled = false;
             base.OnExit();
         }

@@ -9,6 +9,8 @@ using UnityEngine.Rendering.PostProcessing;
 using BayoMod.Modules.Components;
 using RoR2.Audio;
 using TMPro;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.ClimaxStates;
+using BayoMod.Characters.Survivors.Bayo.Components.Demon;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -23,6 +25,8 @@ namespace BayoMod.Survivors.Bayo
         public static GameObject fistFast;
 
         public static GameObject footFast;
+
+        public static GameObject fistDown;
 
         public static GameObject bulletMuz;
 
@@ -43,6 +47,12 @@ namespace BayoMod.Survivors.Bayo
         public static GameObject evilObject;
 
         public static PostProcessProfile profile;
+
+        public static GameObject gomorrah;
+
+        public static GameObject summonHair;
+
+        public static GameObject camObj;
 
         #region vfx hehe
 
@@ -88,12 +98,28 @@ namespace BayoMod.Survivors.Bayo
         public static GameObject falle2;
         public static GameObject abk2;
 
+        private static Material fireMat;
+        public static GameObject p1art;
+        //public static GameObject p1aart;
+        public static GameObject p2art;
+        //public static GameObject p2aart;
+        public static GameObject p3art;
+        //public static GameObject p3aart;
+        public static GameObject p4art;
+        //public static GameObject p4aart;
+
         public static GameObject bwings;
         public static GameObject bwings2;
+        public static GameObject land;
+        public static GameObject bats;
         public static GameObject djump;
         public static GameObject hearts;
         public static GameObject sum;
         public static GameObject damage;
+        public static GameObject glintL;
+        public static GameObject glintR;
+        public static GameObject spotlight;
+        public static GameObject spotlight2;
         #endregion
 
         public static void Init(AssetBundle assetBundle)
@@ -107,6 +133,8 @@ namespace BayoMod.Survivors.Bayo
 
             CreateTrackers();
 
+            CreateDemons();
+
         }
 
 
@@ -118,6 +146,7 @@ namespace BayoMod.Survivors.Bayo
             CreateCommonEffects();
             CreateSwings();
             CreateSwings2();
+            MakeArtstyleVFX();
             CreateOverlay();
             CreateMuz();
         }
@@ -131,6 +160,11 @@ namespace BayoMod.Survivors.Bayo
             djump = _assetBundle.LoadEffect("djump", true);
             hearts = _assetBundle.LoadEffect("kiss", true);
             sum = _assetBundle.LoadEffect("summon", true);
+            bats = _assetBundle.LoadAsset<GameObject>("batswithin");
+            land = _assetBundle.LoadEffect("land", true);
+            camObj = _assetBundle.LoadAsset<GameObject>("CamObject");
+            glintL = _assetBundle.LoadEffect("shinel", true);
+            glintR = _assetBundle.LoadEffect("shiner", true);
 
             //UnityEngine.Object.Destroy(slam.GetComponent<ShakeEmitter>());
             UnityEngine.Object.Destroy(slam.transform.Find("Water, Billboard").gameObject);
@@ -206,7 +240,7 @@ namespace BayoMod.Survivors.Bayo
                 mo = pflur.transform.Find("swing" + i.ToString()).gameObject.AddComponent<MoveOffset>();
                 mo.slideDur = 0.15f;
             }
-
+            
             for (int i = 1; i < 3; ++i)
             {
                 mo = heelk.transform.Find("swing" + i.ToString()).gameObject.AddComponent<MoveOffset>();
@@ -350,6 +384,59 @@ namespace BayoMod.Survivors.Bayo
             SkinVFX.AddSkinVFX(BayoSurvivor.masterySkin, falle, falle2);
 
         }
+
+    
+        private static void MakeArtstyleVFX()
+        {
+            MakeMaterial();
+
+            MakeArtSwings();
+        }
+
+        private static void MakeMaterial()
+        {
+            GameObject tempThingy = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Wisp/TracerEmbers.prefab").WaitForCompletion().InstantiateClone("TempBayoThingy", false);
+            fireMat = tempThingy.gameObject.GetComponent<LineRenderer>().material;
+            fireMat.mainTexture = _assetBundle.LoadAsset<Texture>("texBasicMask");
+            fireMat.SetTexture("_Cloud1Tex", _assetBundle.LoadAsset<Texture>("testmask"));
+            Vector4 scrollVec = new Vector4(0, 25, 4, 4);
+            fireMat.SetVector("_CutoffScroll", scrollVec);
+
+            fireMat.mainTextureOffset = new Vector2(0, 0.1f);
+            fireMat.mainTextureScale = new Vector2(1, 0.8f);
+        }
+
+        private static void MakeArtSwings()
+        {
+            p1art = _assetBundle.LoadAsset<GameObject>("artm1p1");
+            p1art.transform.Find("swing1").gameObject.GetComponent<ParticleSystemRenderer>().material = fireMat;
+
+            p2art = _assetBundle.LoadAsset<GameObject>("artm1p2");
+            p2art.transform.Find("swing1").gameObject.GetComponent<ParticleSystemRenderer>().material = fireMat;
+            MoveOffset mo = p2art.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
+            mo.startOffset = 0.3f;
+            mo.idealOffset = -0.65f;
+
+            p3art = _assetBundle.LoadAsset<GameObject>("artm1p3");
+            p3art.transform.Find("swing1").gameObject.GetComponent<ParticleSystemRenderer>().material = fireMat;
+            mo = p3art.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
+            mo.startOffset = 0.3f;
+            mo.idealOffset = -0.65f;
+            mo.slideDur = 0.15f;
+
+            p4art = _assetBundle.LoadAsset<GameObject>("artm1p4");
+            p4art.transform.Find("swing1").gameObject.GetComponent<ParticleSystemRenderer>().material = fireMat;
+            mo = p4art.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
+            mo.startOffset = 0.3f;
+            mo.idealOffset = -0.65f;
+            mo.slideDur = 0.15f;
+
+            p1art.gameObject.AddComponent<VFXrm>();
+            p2art.gameObject.AddComponent<VFXrm>();
+            p3art.gameObject.AddComponent<VFXrm>();
+            p4art.gameObject.AddComponent<VFXrm>();
+
+        }
         private static void CreateOverlay()
         {
             if (Modules.Config.overlayOn.Value)
@@ -380,6 +467,15 @@ namespace BayoMod.Survivors.Bayo
             wtOverlay2.transform.Find("VisualEffect/Point Light").gameObject.GetComponent<Light>().color = Color.white;
             wtOverlay2.transform.Find("VisualEffect/Point Light").gameObject.GetComponent<Light>().intensity = 10f;
             UnityEngine.Object.Destroy(wtOverlay2.transform.Find("CameraEffect/Shake").gameObject);
+
+            spotlight = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/VoidFogMildEffect.prefab").WaitForCompletion().InstantiateClone("BayoSpotlight", false);
+            UnityEngine.Object.Destroy(spotlight.transform.Find("VisualEffect/BleedOverTime").gameObject);
+            UnityEngine.Object.Destroy(spotlight.transform.Find("VisualEffect/Small Sparks").gameObject);
+            UnityEngine.Object.Destroy(spotlight.transform.Find("VisualEffect/Smoke").gameObject);
+            UnityEngine.Object.Destroy(spotlight.transform.Find("VisualEffect/Point Light").gameObject);
+            UnityEngine.Object.Destroy(spotlight.transform.Find("CameraEffect/Shake").gameObject);
+
+            spotlight2 = _assetBundle.LoadEffect("spotlight", true);
             //wtOverlay2.GetComponent<TemporaryVisualEffect>().visualTransform = null;
 
             //wtOverlay.transform.Find("CameraEffect/PP").gameObject.GetComponent<PostProcessVolume>();
@@ -421,6 +517,8 @@ namespace BayoMod.Survivors.Bayo
             Content.AddProjectilePrefab(footFast);
             PrefabAPI.RegisterNetworkPrefab(fistFast);
             PrefabAPI.RegisterNetworkPrefab(footFast);
+            Content.AddProjectilePrefab(fistDown);
+            PrefabAPI.RegisterNetworkPrefab(fistDown);
             ContentAddition.AddNetworkedObject(wardPrefab);
             ContentAddition.AddNetworkedObject(evilObject);
 
@@ -442,6 +540,8 @@ namespace BayoMod.Survivors.Bayo
                 shakeEmitter.duration = 0.36f;
                 shakeEmitter.radius = 100f;
                 shakeEmitter.scaleShakeRadiusWithLocalScale = false;
+                shakeEmitter.shakeOnStart = false;
+                shakeEmitter.shakeOnEnable = true;
                 shakeEmitter.wave = new Wave
                 {
                     amplitude = 2f,
@@ -456,10 +556,10 @@ namespace BayoMod.Survivors.Bayo
 
                 footFast = _assetBundle.LoadAsset<GameObject>("footproj").InstantiateClone("footfast");
                 footFast.GetComponent<ProjectileController>().ghostPrefab = _assetBundle.CreateProjectileGhostPrefab("weavefootfast");
-                ww = footFast.AddComponent<WickedWeave>();
+                ww = footFast.GetComponent<WickedWeave>();
                 ww.startTime = 0f;
                 ww.hitboxEnd = 0.8f;
-                shakeEmitter = footFast.AddComponent<ShakeEmitter>();
+                shakeEmitter = footFast.GetComponent<ShakeEmitter>();
                 shakeEmitter.amplitudeTimeDecay = true;
                 shakeEmitter.duration = 0.36f;
                 shakeEmitter.radius = 100f;
@@ -475,6 +575,28 @@ namespace BayoMod.Survivors.Bayo
                 footFast.gameObject.GetComponent<ProjectileController>().flightSoundLoop = loop;
                 footFast.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/ring").GetComponent<ParticleSystemRenderer>().material = mat;
                 footFast.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/hair").GetComponent<ParticleSystemRenderer>().material = mat;
+
+                fistDown = _assetBundle.LoadAsset<GameObject>("footproj").InstantiateClone("fastweaveHand");
+                fistDown.GetComponent<ProjectileController>().ghostPrefab = _assetBundle.CreateProjectileGhostPrefab("weavehandDown");
+                shakeEmitter = fistDown.GetComponent<ShakeEmitter>();
+                shakeEmitter.amplitudeTimeDecay = true;
+                shakeEmitter.duration = 0.36f;
+                shakeEmitter.radius = 100f;
+                shakeEmitter.scaleShakeRadiusWithLocalScale = false;
+                shakeEmitter.wave = new Wave
+                {
+                    amplitude = 2f,
+                    frequency = 7f,
+                    cycleOffset = 0f
+                };
+                loop = ScriptableObject.CreateInstance<LoopSoundDef>();
+                loop.startSoundName = "weaved";
+                fistDown.gameObject.GetComponent<ProjectileController>().flightSoundLoop = loop;
+                fistDown.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/ring").GetComponent<ParticleSystemRenderer>().material = mat;
+                fistDown.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/hair").GetComponent<ParticleSystemRenderer>().material = mat;
+                ww = fistDown.GetComponent<WickedWeave>();
+                ww.startTime = 0.32f;
+                ww.hitboxEnd = 1.12f;
             }
             if (_assetBundle.LoadAsset<GameObject>("fistproj") != null && _assetBundle.LoadAsset<GameObject>("weavehand") != null)
             {
@@ -486,6 +608,8 @@ namespace BayoMod.Survivors.Bayo
                 shakeEmitter.duration = 0.36f;
                 shakeEmitter.radius = 100f;
                 shakeEmitter.scaleShakeRadiusWithLocalScale = false;
+                shakeEmitter.shakeOnStart = false;
+                shakeEmitter.shakeOnEnable = true;
                 shakeEmitter.wave = new Wave
                 {
                     amplitude = 2f,
@@ -500,10 +624,10 @@ namespace BayoMod.Survivors.Bayo
 
                 fistFast = _assetBundle.LoadAsset<GameObject>("fistproj").InstantiateClone("fistfast");
                 fistFast.GetComponent<ProjectileController>().ghostPrefab = _assetBundle.CreateProjectileGhostPrefab("weavehandfast");
-                WickedWeave ww = fistFast.AddComponent<WickedWeave>();
+                WickedWeave ww = fistFast.GetComponent<WickedWeave>();
                 ww.startTime = 0f;
                 ww.hitboxEnd = 0.8f;
-                shakeEmitter = fistFast.AddComponent<ShakeEmitter>();
+                shakeEmitter = fistFast.GetComponent<ShakeEmitter>();
                 shakeEmitter.amplitudeTimeDecay = true;
                 shakeEmitter.duration = 0.36f;
                 shakeEmitter.radius = 100f;
@@ -652,5 +776,56 @@ namespace BayoMod.Survivors.Bayo
 
         }
 
+        private static void CreateDemons()
+        {
+            summonHair = _assetBundle.LoadAsset<GameObject>("sumHair");
+            summonHair.transform.Find("summonhair").gameObject.AddComponent<SummonHair>();
+
+            gomorrah = _assetBundle.LoadAsset<GameObject>("gomorrah");
+            gomorrah.gameObject.AddComponent<DemonVisualController>();
+            gomorrah.gameObject.AddComponent<DemonController>();
+            gomorrah.gameObject.AddComponent<NetworkIdentity>();
+            DestroyOnTimer timer = gomorrah.gameObject.AddComponent<DestroyOnTimer>();
+            timer.duration = 17.98f;
+
+            Material mat = Addressables.LoadAssetAsync<Material>("RoR2/DLC1/Common/Void/matNullifierGemPortal3.mat").WaitForCompletion();
+            ChildLocator component = gomorrah.gameObject.GetComponent<ChildLocator>();
+            if ((bool)component)
+            {
+                int childIndex = component.FindChildIndex("portal");
+                Transform transformm = component.FindChild(childIndex);
+                transformm.Find("hair").GetComponent<ParticleSystemRenderer>().material = mat;
+                transformm.Find("ring").GetComponent<ParticleSystemRenderer>().material = mat;
+            }
+
+            //profile = gomorrah.transform.Find("PP").gameObject.GetComponent<PostProcessVolume>().profile;
+            profile = ScriptableObject.CreateInstance<PostProcessProfile>();
+            RampFog rf = profile.AddSettings<RampFog>();
+            profile.name = "DemonPPEffect";
+            rf.enabled.value = true;
+            rf.fogIntensity.overrideState = true;
+            rf.fogIntensity.value = 1f;
+            rf.fogPower.overrideState = true;
+            rf.fogPower.value = 1f;
+            rf.fogZero.overrideState = true;
+            rf.fogZero.value = 0f;
+            rf.fogOne.overrideState = true;
+            rf.fogOne.value = 0.163f;
+            rf.fogHeightEnd.overrideState = false;
+            rf.fogHeightIntensity.overrideState = false;
+            rf.fogHeightStart.overrideState = false;
+            rf.fogColorStart.overrideState = true;
+            rf.fogColorStart.value = new Color(0f, 0f, 0f, 0f);
+            rf.fogColorMid.overrideState = true;
+            rf.fogColorMid.value = new Color(0f, 0f, 0f, 0f);
+            rf.fogColorEnd.overrideState = true;
+            rf.fogColorEnd.value = new Color(0.3886792f, 0.1400712f, 0.1400712f, 1f);
+            rf.skyboxStrength.overrideState = true;
+            rf.skyboxStrength.value = 0f;
+
+            gomorrah.transform.Find("PP").gameObject.GetComponent<PostProcessVolume>().sharedProfile = profile;
+
+            ContentAddition.AddNetworkedObject(gomorrah);
+        }
     }
 }

@@ -20,7 +20,11 @@ namespace BayoMod.Survivors.Bayo
 
         public static BuffDef snapBuff;
 
+        public static BuffDef spotBuff;
+
         public static BuffDef punishable;
+
+        public static BuffDef climaxed;
 
         public static void Init(AssetBundle assetBundle)
         {
@@ -54,6 +58,12 @@ namespace BayoMod.Survivors.Bayo
                 true,
                 false);
 
+            spotBuff = Modules.Content.CreateAndAddBuff("BayoSpotBuff",
+                LegacyResourcesAPI.Load<BuffDef>("BuffDefs/Overheat").iconSprite,
+                Color.yellow,
+                true,
+                false);
+
             wtCoolDown = Modules.Content.CreateAndAddBuff("BayoWTCDBuff",
                 LegacyResourcesAPI.Load<BuffDef>("BuffDefs/Overheat").iconSprite,
                 Color.gray,
@@ -68,6 +78,12 @@ namespace BayoMod.Survivors.Bayo
 
             punishable = Modules.Content.CreateAndAddBuff("BayoPunishable",
                 LegacyResourcesAPI.Load<BuffDef>("BuffDefs/HiddenInvincibility").iconSprite,
+                Color.black,
+                false,
+                true);
+
+            climaxed = Modules.Content.CreateAndAddBuff("BayoClimaxed",
+                LegacyResourcesAPI.Load<BuffDef>("BuffDefs/VoidFogMild").iconSprite,
                 Color.black,
                 false,
                 true);

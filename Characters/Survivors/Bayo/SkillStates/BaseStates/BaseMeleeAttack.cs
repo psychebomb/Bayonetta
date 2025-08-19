@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
+using UnityEngine.AddressableAssets;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 {
@@ -79,13 +80,26 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected bool destroyvfx = true;
 
         protected HealthComponent item;
-
+        private GameObject gunMuz;
+        public bool m2Refund = false;
+        private bool refunded = false;
         public override void OnEnter()
         {
             base.OnEnter();
             animator = GetModelAnimator();
             StartAimMode(0.5f + duration, false);
             inHitPause = false;
+
+            SkinDef curSkin = SkinCatalog.FindCurrentSkinDefForBodyInstance(this.characterBody.gameObject);
+            if (curSkin == BayoSurvivor.artSkin)
+            {
+                gunMuz = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Mage/MuzzleflashMageFire.prefab").WaitForCompletion();
+                gunName = gunName + "art";
+            }
+            else
+            {
+                gunMuz = BayoAssets.bulletMuz;
+            }
 
             attack = new OverlapAttack();
             attack.damageType = damageType;
@@ -175,6 +189,18 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             }
 
             ApplyHitstop();
+
+            /*
+            if (m2Refund && !refunded)
+            {
+                if (base.skillLocator.secondary.stock < base.skillLocator.secondary.maxStock)
+                {
+                    base.skillLocator.secondary.rechargeStopwatch += 2.5f;
+                }
+
+                refunded = true;
+            }
+            */
         }
 
         protected void ApplyHitstop()
@@ -352,7 +378,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private void FireBullet()
         {
             Ray aimRay = shootRay;
-            EffectManager.SimpleMuzzleFlash(BayoAssets.bulletMuz, gameObject, gunName, false);
+            EffectManager.SimpleMuzzleFlash(gunMuz, gameObject, gunName, false);
             AddRecoil(-0.4f * recoilAmplitude, -0.8f * recoilAmplitude, -0.3f * recoilAmplitude, 0.3f * recoilAmplitude);
             if (isAuthority)
             {
@@ -392,6 +418,23 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             else
             {
                 loopEffectPrefab = pref2;
+            }
+        }
+
+        protected void ReplacePrefab2(GameObject pref1, GameObject pref2, GameObject pref3)
+        {
+            SkinDef curSkin = SkinCatalog.FindCurrentSkinDefForBodyInstance(this.characterBody.gameObject);
+            if (curSkin == BayoSurvivor.defaultSkin)
+            {
+                loopEffectPrefab = pref1;
+            }
+            else if (curSkin == BayoSurvivor.masterySkin)
+            {
+                loopEffectPrefab = pref2;
+            }
+            else
+            {
+                loopEffectPrefab = pref3;
             }
         }
     }

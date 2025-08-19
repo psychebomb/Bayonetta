@@ -18,6 +18,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
         private float kissDone = 1.2f;
         private bool zoomed = false;
         private CameraTargetParams.CameraParamsOverrideHandle cam2;
+        public UIController uiController;
         public override void OnEnter()
         {
             animString = "Mwah";
@@ -68,6 +69,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
 
             //bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
             //bwc.currentWeapon = BayoWeaponComponent.WeaponState.Open;
+            uiController = this.gameObject.GetComponent<UIController>();
+            uiController.SetRORUIActiveState(false);
 
             base.OnEnter();
 
@@ -113,6 +116,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
         public override void OnExit()
         {
             //bwc.currentWeapon = BayoWeaponComponent.WeaponState.Guns;
+            uiController.SetRORUIActiveState(true);
             if (base.cameraTargetParams && cam2.isValid && zoom)
             {
                 cam2 = base.cameraTargetParams.RemoveParamsOverride(cam2, zoomOutDur);
