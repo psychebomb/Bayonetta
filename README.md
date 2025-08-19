@@ -4,11 +4,11 @@ Adds Bayonetta from the Bayonetta series, a versatile melee-ranged hybrid charac
 Multiplayer Compatible! (from what I've tested)
 Feel free to message me (ppsychee) on the RoR2 Modding Discord for any issues that arise, as well as for any general feedback!!
 
-It's highly recommended that you install viliger's <a href="https://thunderstore.io/package/viliger/RevertStunBuff/">RevertStunBuff</a> mod with this mod, as this mod's intended balance relies on the pre-SOTS stun effect. 
+## Videos
 
-## Video
+A Special thanks goes to <a href="https://thunderstore.io/package/LONK/">LONK</a> for creating all the trailer videos for this mod!!
 
-A Special thanks goes to <a href="https://thunderstore.io/package/LONK/">LONK</a> for creating the trailer video for this mod!!
+[![BAYONETTA ROR2 MOD TRAILER 2](https://img.youtube.com/vi/mmJlcK4EcAg/0.jpg)](https://www.youtube.com/watch?v=mmJlcK4EcAg "BAYONETTA ROR2 MOD TRAILER")
 
 [![BAYONETTA ROR2 MOD TRAILER](https://img.youtube.com/vi/2o8AFYMIa6M/0.jpg)](https://www.youtube.com/watch?v=2o8AFYMIa6M "BAYONETTA ROR2 MOD TRAILER")
 
@@ -90,7 +90,7 @@ Bayonetta now has new punish attacks!!!!!
 - Hitting an enemy with a move that sends downwards (death drop or  heel stomp) will now put enemies in a special stun state.
 - If bayonetta is grounded and near an enemy in this state, she will be prompted with the interact button to punish the enemy.
 - Mashing the primary skill button (M1) during a punish attack will speed up the attack.
-- Two different punish attacks: one for grounded enemies, one for airborne/flying enemies.
+- Three different punish attacks: two for grounded enemies, one for airborne/flying enemies.
 
 Bayonetta has special interactions with items that reduce cooldowns:
 - Bandolier: If Witch Time is active, gain an additional 4 seconds when picking up an ammo pack. If Bayonetta has the Witch Time cooldown debuff, remove the debuff upon picking up an ammo pack.

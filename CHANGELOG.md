@@ -15,6 +15,7 @@
         - Witch time activation range: 6 -> 4
         - Worry not because if you're not a fan of these changes you can now change her stats to your liking in the config!! everyone wins yayyyy
      - Fixed bug that allowed Bayonetta to keep looping punish attacks on the same downed enemy
+     - Added LordVGames' attack speed fix as a dependency because I hate player autonomy
 - 0.4.1
     - Now doing the skindef optimization thingy
     - The punish prompt when getting close to an enemy no longer appears if Bayonetta is in the middle of another skill
