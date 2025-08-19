@@ -12,6 +12,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         protected float fallOffTime = 0.35f;
         protected float initialSpeedCoefficient = 0f;
         protected float midSpeedCoefficient = 8f;
+        private float jumpTime = 0.8f;
         private Vector3 forwardDir;
         private bool hasEnded;
         private bool hasHit;
@@ -38,6 +39,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             ReplacePrefabs(BayoAssets.heels, BayoAssets.heels2);
 
             characterDirection.forward = forwardDir;
+            m2Refund = true;
 
             kickSpeed = new AnimationCurve(new Keyframe[]
             {
@@ -45,7 +47,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 new Keyframe(0.39f, 2f),
                 new Keyframe(0.4f, 9f),
                 new Keyframe(0.8f, 6.5f),
-                new Keyframe(0.1f, 3f),
+                new Keyframe(1f, 3f),
                 new Keyframe(earlyExitPercentTime, 1f),
                 new Keyframe(1.72f, 0f)
             });
@@ -76,8 +78,20 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 inputBank.skill3.hasPressBeenClaimed = true;
                 return;
             }
+            if(stopwatch >= jumpTime && inputBank.jump.down)
+            {
+                inputBank.jump.PushState(false);
+                outer.SetNextStateToMain();
+                return;
+            }
 
-            if (characterDirection) characterDirection.forward = forwardDir;
+            if (characterDirection)
+            {
+                forwardDir = GetAimRay().direction;
+                forwardDir.y = 0f;
+                characterDirection.forward = forwardDir;
+                shootRay = new Ray(GetAimRay().origin, forwardDir);
+            }
             if (!inHitPause && characterMotor)
             {
                 float num = kickSpeed.Evaluate(stopwatch);

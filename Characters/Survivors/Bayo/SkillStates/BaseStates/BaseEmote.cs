@@ -21,7 +21,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected bool jumped;
         protected bool flag1;
         protected bool half = false;
-        protected bool zoom;
+        protected bool zoom = true;
 
         protected float x = 0;
         protected float y = -1.5f;
@@ -34,8 +34,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected string bodyName = "FullBody, Override";
         protected bool stance = false;
         protected bool canCancel = true;
+        protected bool playBuffer = true;
 
-        private BayoWeaponComponent bwc;
+        private BayoController bwc;
         protected bool hideWeapon = true;
         public override void OnEnter()
         {
@@ -51,7 +52,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             cameraParams.data.wallCushion = 0.1f;
             cameraParams.data.idealLocalCameraPos = new Vector3(x, y, z);
 
-            zoom = Modules.Config.eZoom.Value;
+            if(zoom != false) zoom = Modules.Config.eZoom.Value;
             if (base.cameraTargetParams && zoom)
             {
                 cameraParamsOverrideHandle = base.cameraTargetParams.AddParamsOverride(new CameraTargetParams.CameraParamsOverrideRequest
@@ -61,8 +62,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 }, zoomDur);
             }
 
-            bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
-            if(hideWeapon) bwc.currentWeapon = BayoWeaponComponent.WeaponState.Open;
+            bwc = this.gameObject.GetComponent<BayoController>();
+            if(hideWeapon) bwc.currentWeapon = BayoController.WeaponState.Open;
 
         }
 
@@ -135,13 +136,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             base.OnExit();
             characterBody.hideCrosshair = false;
             if (NetworkServer.active) base.characterBody.RemoveBuff(RoR2Content.Buffs.Slow60);
-            if(hideWeapon) bwc.currentWeapon = BayoWeaponComponent.WeaponState.Guns;
+            if(hideWeapon) bwc.currentWeapon = BayoController.WeaponState.Guns;
 
             if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid && zoom)
             {
                 cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle, zoomOutDur);
             }
-            PlayAnimation("FullBody, Override", "BufferEmpty");
+            if(playBuffer) PlayAnimation("FullBody, Override", "BufferEmpty");
 
         }
 

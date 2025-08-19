@@ -13,6 +13,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
         private PunishTracker tracker = null;
         protected HurtBox target;
         protected CharacterBody body;
+        int randNum = 0;
         public override void OnEnter()
         {
             base.OnEnter();
@@ -55,6 +56,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
 
             //Destroy(tracker);
 
+            randNum = Random.Range(0, 3);
+
             if (base.characterMotor.isGrounded)
             {
                 if ((this.target.healthComponent.body.characterMotor && !this.target.healthComponent.body.characterMotor.isGrounded))
@@ -65,7 +68,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
                 }
                 else if (this.target.healthComponent.body.characterMotor)
                 {
-                    if( this.target.healthComponent.body.characterMotor.mass >= 300 || (this.modelLocator && this.modelLocator.gameObject.name == "VultureBody(Clone)"))
+                    if(this.target.healthComponent.body && (this.target.healthComponent.body.characterMotor.mass >= 300 || this.target.healthComponent.body.name.Contains("VultureBody") || this.target.healthComponent.body.name.Contains("FlyingVerminBody") || randNum == 0))
                     {
                         //outer.SetNextState(new SmackStart());
                         // Chat.AddMessage("enemy large");
@@ -76,7 +79,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
                     {
                         //Chat.AddMessage("petite");
                         this.tracker.punishing = true;
-                        outer.SetNextState(new StepStart());
+                        outer.SetNextState(new SmackStart());
                     }
                 }
                 else if (this.target.healthComponent.GetComponent<Rigidbody>())

@@ -44,11 +44,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
 
         protected Quaternion rotation = Quaternion.AngleAxis(120f, Vector3.up);
 
+        protected Quaternion rotation2 = Quaternion.AngleAxis(165f, Vector3.up);
+
         protected float x = -1;
         protected float y = -2.25f;
         protected float z = -5;
+        protected float turnAmount = 67.5f;
         protected bool strongModif = false;
-
 
         public override void OnEnter()
         {
@@ -73,8 +75,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
                     motor.velocity = Vector3.zero;
                     motor.rootMotion = Vector3.zero;
                     Vector3 pos = characterDirection.forward * (enemyBody.GetComponent<CapsuleCollider>().bounds.extents.x * 1.25f + 1);
-                    Vector3 modif = Quaternion.AngleAxis(67.5f, Vector3.up) * characterDirection.forward * enemyBody.GetComponent<CapsuleCollider>().bounds.extents.y;
-                    if (strongModif) modif *= 1.5f;
+                    Vector3 modif = Quaternion.AngleAxis(turnAmount, Vector3.up) * characterDirection.forward * enemyBody.GetComponent<CapsuleCollider>().bounds.extents.y;
+                    if (strongModif) modif *= 1.25f;
 
                     motor.Motor.SetPosition(characterBody.transform.position + (pos - modif), true);
                 }
@@ -82,7 +84,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
                 if (modelTrans)
                 {
                     Quaternion quat = characterBody.modelLocator.modelTransform.rotation;
-                    quat *= Quaternion.AngleAxis(67.5f, Vector3.up);
+                    quat *= Quaternion.AngleAxis(turnAmount, Vector3.up);
                     modelTrans.rotation = quat * Quaternion.AngleAxis(90f, Vector3.right);
 
                 }
@@ -141,7 +143,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
 
             if (Camera)
             {
-                Quaternion rotation2 = Quaternion.AngleAxis(165f, Vector3.up);
                 Vector3 targetAngles = characterDirection.forward;
                 Vector3 targetAngles2 = characterDirection.forward;
                 targetAngles.y = 0f;

@@ -9,7 +9,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
         public override void OnEnter()
         {
             attackStart = 0.05454f;
-            rotation = Quaternion.AngleAxis(165f, Vector3.up);
+            rotation = Quaternion.AngleAxis(170f, Vector3.up);
+            rotation2 = Quaternion.AngleAxis(0f, Vector3.up);
             zoomOut = 0.5f;
             base.OnEnter();
         }

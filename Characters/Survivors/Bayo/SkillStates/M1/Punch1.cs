@@ -15,7 +15,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 animStart = "P1";
                 animEnd = "P1E";
                 endDuration = 0.72f;
-                ReplacePrefabs(BayoAssets.p1s, BayoAssets.p1s2);
+                ReplacePrefab2(BayoAssets.p1s, BayoAssets.p1s2, BayoAssets.p1art);
             }
             else
             {

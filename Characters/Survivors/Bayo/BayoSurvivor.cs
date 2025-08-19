@@ -1,29 +1,33 @@
-﻿using BepInEx.Configuration;
-using R2API;
+﻿using BayoMod.Characters.Survivors.Bayo.Components;
+using BayoMod.Characters.Survivors.Bayo.Components.Demon;
+using BayoMod.Characters.Survivors.Bayo.SkillStates;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.Weave;
 using BayoMod.Modules;
 using BayoMod.Modules.Characters;
+using BayoMod.Modules.Components;
 using BayoMod.Survivors.Bayo.Components;
-using R2API.Networking.Interfaces;
 using BayoMod.Survivors.Bayo.SkillStates;
+using BepInEx.Configuration;
+using EntityStates;
+using EntityStates.BrotherMonster;
+using R2API;
+using R2API.Networking;
+using R2API.Networking.Interfaces;
 using RoR2;
+using RoR2.Projectile;
 using RoR2.Skills;
 using System.Collections.Generic;
-using UnityEngine;
-using BayoMod.Characters.Survivors.Bayo.SkillStates;
-using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
-using BayoMod.Characters.Survivors.Bayo.SkillStates.Weave;
-using UnityEngine.Networking;
-using RoR2.Projectile;
-using static BayoMod.Modules.Skins;
-using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
-using BayoMod.Modules.Components;
 using System.Collections.ObjectModel;
-using EntityStates;
-using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
 using System.Globalization;
-using EntityStates.BrotherMonster;
-using BayoMod.Characters.Survivors.Bayo.Components;
-using R2API.Networking;
+using System.Text;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Networking;
+using static BayoMod.Modules.Skins;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -49,11 +53,11 @@ namespace BayoMod.Survivors.Bayo
             sortPosition = 100,
 
             crosshair = Asset.LoadCrosshair("Standard"),
-            podPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/SurvivorPod"),
+            podPrefab = null,
 
-            maxHealth = 160f,
-            healthRegen = 2.5f,
-            armor = 20f,
+            maxHealth = 110f,
+            healthRegen = 1f,
+            armor = 0f,
 
             jumpCount = 2,
         };
@@ -95,7 +99,69 @@ namespace BayoMod.Survivors.Bayo
                 new CustomRendererInfo
                 {
                     childName = "Chest",
+                }/*,
+                new CustomRendererInfo
+                {
+                    childName = "armrings",
                 },
+                new CustomRendererInfo
+                {
+                    childName = "belt",
+                },
+                new CustomRendererInfo
+                {
+                    childName = "bow",
+                },
+                new CustomRendererInfo
+                {
+                    childName = "bow1",
+                },
+                new CustomRendererInfo
+                {
+                    childName = "button",
+                },
+                new CustomRendererInfo
+                {
+                    childName = "clock",
+                },
+                new CustomRendererInfo
+                {
+                    childName = "core",
+                },
+                new CustomRendererInfo
+                {
+                    childName = "hands",
+                },
+                new CustomRendererInfo
+                {
+                    childName = "heels",
+                },
+                new CustomRendererInfo
+                {
+                    childName = "helmet",
+                },
+                new CustomRendererInfo
+                {
+                    childName = "legs",
+                },
+                new CustomRendererInfo
+                {
+                    childName = "pants",
+
+                },
+                new CustomRendererInfo
+                {
+                    childName = "sash",
+                },
+                new CustomRendererInfo
+                {
+                    childName = "top",
+                },
+                new CustomRendererInfo
+                {
+                    childName = "top1",
+                },
+                */
         };
 
         public override UnlockableDef characterUnlockableDef => BayoUnlockables.characterUnlockableDef;
@@ -123,6 +189,11 @@ namespace BayoMod.Survivors.Bayo
 
         private uint sound = 0;
 
+        private float xval = 4;
+        private float yval = 2;
+        private float zval = 4f;
+        private int wtcooldur = 10;
+
         // wicked weave skill overrides
 
         internal static SkillDef tetsuSkillDef;
@@ -131,6 +202,7 @@ namespace BayoMod.Survivors.Bayo
 
         internal static SkinDef defaultSkin;
         internal static SkinDef masterySkin;
+        internal static SkinDef artSkin;
         public override void Initialize()
         {
             base.Initialize();
@@ -141,9 +213,18 @@ namespace BayoMod.Survivors.Bayo
             //need the character unlockable before you initialize the survivordef
             BayoUnlockables.Init();
 
-            base.InitializeCharacter();
-
             Modules.Config.ReadConfig();
+
+            bodyInfo.maxHealth = Modules.Config.hpStat.Value;
+            bodyInfo.healthRegen = Modules.Config.regenStat.Value;
+            bodyInfo.armor = Modules.Config.armorStat.Value;
+
+            xval = Modules.Config.wtx.Value;
+            yval = Modules.Config.wty.Value;
+            zval = Modules.Config.wtz.Value;
+            wtcooldur = Modules.Config.wtcoold.Value;
+
+            base.InitializeCharacter();
 
             BayoStates.Init();
             BayoTokens.Init();
@@ -167,8 +248,11 @@ namespace BayoMod.Survivors.Bayo
         {
             AddHitboxes();
             bodyPrefab.AddComponent<PunishTracker>();
+            //bodyPrefab.AddComponent<ClimaxTracker>();
             bodyPrefab.AddComponent<ABKRotator>();
-            bodyPrefab.AddComponent<BayoWeaponComponent>();
+            bodyPrefab.AddComponent<BayoController>();
+            bodyPrefab.AddComponent<UIController>();
+            bodyPrefab.AddComponent<CameraController>();
             displayPrefab.transform.Find("DistantSound").gameObject.GetComponent<RTPCController>().akSoundString = "select";
         }
 
@@ -181,7 +265,6 @@ namespace BayoMod.Survivors.Bayo
             Prefabs.SetupHitBoxGroup(characterModelObject, "CoverGroup2", "Envelop2");
             Prefabs.SetupHitBoxGroup(characterModelObject, "HeelGroup", "HeelHitbox");
         }
-
         public override void InitializeEntityStateMachines() 
         {
             Prefabs.ClearEntityStateMachines(bodyPrefab);
@@ -485,7 +568,7 @@ namespace BayoMod.Survivors.Bayo
 
             #region DefaultSkin
             //this creates a SkinDef with all default fields
-            defaultSkin = Modules.Skins.CreateSkinDef("DEFAULT_SKIN",
+            defaultSkin = Modules.Skins.CreateSkinDef(BAYO_PREFIX + "BAYO1_SKIN_NAME",
                 assetBundle.LoadAsset<Sprite>("texMainSkin"),
                 defaultRendererinfos,
                 prefabCharacterModel.gameObject);
@@ -503,7 +586,22 @@ namespace BayoMod.Survivors.Bayo
                 "LHandOpen",
                 "RHandOpen",
                 "Sleeves",
-                "Hairrr");
+                "Hairrr"/*,
+                "armrings",
+                "belt",
+                "bow",
+                "bow.001",
+                "button",
+                "clock",
+                "core",
+                "hands",
+                "heels",
+                "helmet",
+                "legs",
+                "pants",
+                "sash",
+                "top",
+                "top.001"*/);
 
             defaultSkin.skinDefParams.gameObjectActivations = new SkinDefParams.GameObjectActivation[]
 {
@@ -524,7 +622,7 @@ namespace BayoMod.Survivors.Bayo
             
             //creating a new skindef as we did before
             masterySkin = Modules.Skins.CreateSkinDef(BAYO_PREFIX + "BAYO2_SKIN_NAME",
-                assetBundle.LoadAsset<Sprite>("texMainSkin"),
+                assetBundle.LoadAsset<Sprite>("texFamedSkin"),
                 defaultRendererinfos,
                 prefabCharacterModel.gameObject);
 
@@ -539,7 +637,22 @@ namespace BayoMod.Survivors.Bayo
                 "LHOpen2",
                 "RHOpen2",
                 null,
-                null);
+                null/*,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null*/);
 
             //masterySkin has a new set of RendererInfos (based on default rendererinfos)
             //you can simply access the RendererInfos' materials and set them to the new materials for your skin.
@@ -563,7 +676,108 @@ namespace BayoMod.Survivors.Bayo
             };
             //simply find an object on your child locator you want to activate/deactivate and set if you want to activate/deacitvate it with this skin
 
-            //skins.Add(masterySkin);
+            skins.Add(masterySkin);
+
+            #endregion
+
+            #region artsyle skin
+
+            artSkin = Modules.Skins.CreateSkinDef(BAYO_PREFIX + "ART_SKIN_NAME",
+                assetBundle.LoadAsset<Sprite>("texMainSkin"),
+                defaultRendererinfos,
+                prefabCharacterModel.gameObject);
+
+            //adding the mesh replacements as above. 
+            //if you don't want to replace the mesh (for example, you only want to replace the material), pass in null so the order is preserved
+            artSkin.skinDefParams.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
+                "Body2",
+                "LiB_Feet",
+                null,
+                "LHOpen2",
+                "RHOpen2",
+                "LHOpen2",
+                "RHOpen2",
+                null,
+                null/*,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null*/);
+
+            //masterySkin has a new set of RendererInfos (based on default rendererinfos)
+            //you can simply access the RendererInfos' materials and set them to the new materials for your skin.
+            artSkin.skinDefParams.rendererInfos[0].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            artSkin.skinDefParams.rendererInfos[1].defaultMaterial = assetBundle.LoadMaterial("lib");
+            artSkin.skinDefParams.rendererInfos[2].defaultMaterial = assetBundle.LoadMaterial("lib");
+            artSkin.skinDefParams.rendererInfos[3].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            artSkin.skinDefParams.rendererInfos[4].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            artSkin.skinDefParams.rendererInfos[5].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            artSkin.skinDefParams.rendererInfos[6].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            artSkin.skinDefParams.rendererInfos[7].defaultMaterial = assetBundle.LoadMaterial("hairrr");
+
+            //here's a barebones example of using gameobjectactivations that could probably be streamlined or rewritten entirely, truthfully, but it works
+            artSkin.skinDefParams.gameObjectActivations = new SkinDefParams.GameObjectActivation[]
+            {
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("Body"),
+                    shouldActivate = false,
+                },
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("GFeet"),
+                    shouldActivate = false,
+                },
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("GHands"),
+                    shouldActivate = false,
+                },
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("LHG"),
+                    shouldActivate = false,
+                },
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("RHG"),
+                    shouldActivate = false,
+                },
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("LHO"),
+                    shouldActivate = false,
+                },
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("RHO"),
+                    shouldActivate = false,
+                },
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("Sleeves"),
+                    shouldActivate = false,
+                },
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("Chest"),
+                    shouldActivate = false,
+                }
+            };
+            //simply find an object on your child locator you want to activate/deactivate and set if you want to activate/deacitvate it with this skin
+
+            //skins.Add(artSkin);
 
             #endregion
 
@@ -593,6 +807,10 @@ namespace BayoMod.Survivors.Bayo
                 TempVisualEffectAPI.AddTemporaryVisualEffect(BayoAssets.wtOverlay, HasWT);
             }
             TempVisualEffectAPI.AddTemporaryVisualEffect(BayoAssets.wtOverlay2, SnapOverlay);
+
+            TempVisualEffectAPI.AddTemporaryVisualEffect(BayoAssets.spotlight, SpotOverlay);
+
+            // TempVisualEffectAPI.AddTemporaryVisualEffect(BayoAssets.demonPP, SnapOverlay);
         }
 
         static bool HasWT(CharacterBody body)
@@ -602,6 +820,11 @@ namespace BayoMod.Survivors.Bayo
         static bool SnapOverlay(CharacterBody body)
         {
             return body.HasBuff(BayoBuffs.snapBuff);
+        }
+
+        static bool SpotOverlay(CharacterBody body)
+        {
+            return body.HasBuff(BayoBuffs.spotBuff);
         }
         private void AddHooks()
         {
@@ -620,20 +843,48 @@ namespace BayoMod.Survivors.Bayo
             On.RoR2.CharacterMaster.RespawnExtraLifeVoid += ReviveHookd;
             On.RoR2.SetStateOnHurt.SetStunInternal += PunishHook1;
             On.RoR2.SetStateOnHurt.OverrideStunInternal += PunishHook2;
-            //On.RoR2.SceneExitController.Begin += FreezeBayoHook;
+            On.RoR2.SceneExitController.Begin += FreezeBayoHook;
+            On.RoR2.UI.SurvivorIconController.Update += IconUpdaterHook;
+        }
+
+        private void IconUpdaterHook(On.RoR2.UI.SurvivorIconController.orig_Update orig, RoR2.UI.SurvivorIconController self)
+        {
+            orig(self);
+
+            BodyIndex bayoIndex = BodyCatalog.FindBodyIndex("BayoBody");
+            LocalUser localUser = self.GetLocalUser();
+            UserProfile userProfile = ((localUser != null) ? localUser.userProfile : null);
+            Loadout loadout = userProfile.loadout;
+
+            if (self && self.survivorIcon && self.survivorBodyIndex == bayoIndex)
+            {
+                switch (loadout.bodyLoadoutManager.GetSkinIndex(bayoIndex))
+                {
+                    case 1:
+                        self.survivorIcon.texture = assetBundle.LoadAsset<Texture>("texBayo2Icon");
+                        break;
+                    default:
+                        self.survivorIcon.texture = assetBundle.LoadAsset<Texture>("texBayoIcon");
+                        break;
+                }
+            }
         }
 
         private void FreezeBayoHook(On.RoR2.SceneExitController.orig_Begin orig, SceneExitController self)
         {
-            ReadOnlyCollection<CharacterMaster> readOnlyInstancesList = CharacterMaster.readOnlyInstancesList;
-            for (int i = 0; i < readOnlyInstancesList.Count; i++)
+            if (Config.tpFreeze.Value)
             {
-                CharacterMaster component = readOnlyInstancesList[i].GetComponent<CharacterMaster>();
-                if (component && component.GetBodyObject() && component.GetBodyObject().name.Contains("BayoBody"))
+                ReadOnlyCollection<CharacterMaster> readOnlyInstancesList = CharacterMaster.readOnlyInstancesList;
+                for (int i = 0; i < readOnlyInstancesList.Count; i++)
                 {
-                    new SetFreezeOnBodyRequest(component.netId, 0.912f).Send(NetworkDestination.Clients);
+                    CharacterMaster component = readOnlyInstancesList[i].GetComponent<CharacterMaster>();
+                    if (component && component.GetBodyObject() && component.GetBodyObject().name.Contains("BayoBody"))
+                    {
+                        new SetFreezeOnBodyRequest(component.netId, 0.912f).Send(NetworkDestination.Clients);
+                    }
                 }
             }
+
             orig(self);
         }
 
@@ -871,7 +1122,7 @@ namespace BayoMod.Survivors.Bayo
                 int alien = self.inventory.GetItemCount(RoR2Content.Items.AlienHead);
                 int light = self.inventory.GetItemCount(DLC1Content.Items.HalfAttackSpeedHalfCooldowns);
                 int pure = self.inventory.GetItemCount(RoR2Content.Items.LunarBadLuck);
-                float cd = 10f;
+                float cd = wtcooldur;
 
                 for (int k = 0; k < alien; k++)
                 {
@@ -917,7 +1168,7 @@ namespace BayoMod.Survivors.Bayo
                             int childIndex = component2.FindChildIndex("MainHurtbox");
                             Transform trans = component2.FindChild(childIndex);
                             Vector3 origScale = trans.localScale;
-                            Vector3 newScale = new Vector3((float)origScale.x / 6, (float)origScale.y / 3f, (float)origScale.z / 6);
+                            Vector3 newScale = new Vector3((float)origScale.x / xval, (float)origScale.y / yval, (float)origScale.z / zval);
                             trans.set_localScale_Injected(ref newScale);
                         }
                     }
@@ -962,13 +1213,13 @@ namespace BayoMod.Survivors.Bayo
                             int childIndex = component2.FindChildIndex("MainHurtbox");
                             Transform trans = component2.FindChild(childIndex);
                             Vector3 origScale = trans.localScale;
-                            Vector3 newScale = new Vector3((float)origScale.x * 6, (float)origScale.y * 3f, (float)origScale.z * 6);
+                            Vector3 newScale = new Vector3((float)origScale.x * xval, (float)origScale.y * yval, (float)origScale.z * zval);
                             trans.set_localScale_Injected(ref newScale);
                         }
                     }
                 }
             }
-
+            
             orig(self, buffDef);
         }
 
@@ -981,7 +1232,7 @@ namespace BayoMod.Survivors.Bayo
             }
             if (sender.HasBuff(BayoBuffs.wtBuff))
             {
-                if(!Modules.Config.wtInvul.Value) args.armorAdd += 350;
+                args.armorAdd += 350;
             }
             if (sender.HasBuff(BayoBuffs.wtDebuff))
             {
@@ -1014,7 +1265,7 @@ namespace BayoMod.Survivors.Bayo
                 EffectManager.SimpleMuzzleFlash(dam, self.gameObject, "DamageCenter", true);
             }
 
-            if (self.body.HasBuff(BayoBuffs.wtBuff) && damageInfo.damage > 0f && Modules.Config.wtInvul.Value)
+            if (self.body.HasBuff(BayoBuffs.climaxed) && damageInfo.damage > 0f)
             {
                 if (!flag)
                 {

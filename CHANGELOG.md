@@ -1,4 +1,20 @@
 ## Changelog
+- 0.5.0
+    - New skin 'Famed' added based off of Bayo's appearance in Bayonetta 2. Comes with VFX and a new voiceline for emote 1
+    - New freeze-frame + kiss event that happens upon exiting through a teleporter. This can be disabled in config
+    - New punish attack that has a chance to activate while punishing smaller enemies. Functionally the same as the stomp punish attack
+    - New spawn state based on her spawn anim in Smash Bros.
+    - M2 Tweeks:
+        - Heel slide and ABK down are now jump-cancellable
+        - Jump-cancellable moves now properly check to see if Bayo has any mid-air jumps remaining
+        - Heel slide can now be directionally influenced mid-slide
+    - Stat Nerfs :):
+        - Base Health: 160 -> 110
+        - Base Health Regen: 2.5/s -> 1/s
+        - Base Armor: 20 -> 0
+        - Witch time activation range: 6 -> 4
+        - Worry not because if you're not a fan of these changes you can now change her stats to your liking in the config!! everyone wins yayyyy
+     - Fixed bug that allowed Bayonetta to keep looping punish attacks on the same downed enemy
 - 0.4.1
     - Now doing the skindef optimization thingy
     - The punish prompt when getting close to an enemy no longer appears if Bayonetta is in the middle of another skill

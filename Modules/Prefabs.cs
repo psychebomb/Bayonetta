@@ -9,6 +9,7 @@ using RoR2.Skills;
 using System;
 using System.Linq;
 using static Rewired.UI.ControlMapper.ControlMapper;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates;
 
 namespace BayoMod.Modules
 {
@@ -36,7 +37,7 @@ namespace BayoMod.Modules
             }
             characterModel.baseRendererInfos = prefab.GetComponentInChildren<CharacterModel>().baseRendererInfos;
 
-            Modules.Asset.ConvertAllRenderersToHopooShader(display, false);
+            Modules.Asset.ConvertAllRenderersToHopooShader(display, true);
 
             return display;
         }
@@ -151,6 +152,7 @@ namespace BayoMod.Modules
             bodyComponent._defaultCrosshairPrefab = bodyInfo.crosshair;
             bodyComponent.hideCrosshair = false;
             bodyComponent.preferredPodPrefab = bodyInfo.podPrefab;
+            bodyComponent.preferredInitialStateType.stateType = typeof(BatsWithinChargeUp);
 
             //stats
             bodyComponent.baseMaxHealth = bodyInfo.maxHealth;
@@ -343,7 +345,7 @@ namespace BayoMod.Modules
                 {
                     Log.Error($"no material for rendererinfo of this renderer: {characterModel.baseRendererInfos[i].renderer}");
                 }
-                characterModel.baseRendererInfos[i].defaultMaterial.ConvertDefaultShaderToHopoo(false);
+                characterModel.baseRendererInfos[i].defaultMaterial.ConvertDefaultShaderToHopoo(true);
             }
         }
 
@@ -381,7 +383,7 @@ namespace BayoMod.Modules
                             }
                             else
                             {
-                                mat = rend.sharedMaterial.ConvertDefaultShaderToHopoo(false);
+                                mat = rend.sharedMaterial.ConvertDefaultShaderToHopoo(true);
                             }
                         }
 

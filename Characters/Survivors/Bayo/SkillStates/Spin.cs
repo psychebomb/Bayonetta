@@ -27,6 +27,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             hbn = "Envelop2";
             effect = BayoAssets.spin;
             effect2 = BayoAssets.spin2;
+            m2Refund = true;
             base.OnEnter();
         }
 
@@ -36,7 +37,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             base.FixedUpdate();
             if(stopwatch >= fireFreq)
             {
-                if (inputBank.jump.down)
+                if (inputBank.jump.down && base.characterMotor.jumpCount < base.characterBody.maxJumpCount)
                 {
                     inputBank.jump.PushState(false);
                     outer.SetNextStateToMain();

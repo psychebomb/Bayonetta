@@ -26,8 +26,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
         private bool inPose = false;
         private bool posed = false;
         private HitStopCachedState poseCachedState;
-        private BayoWeaponComponent bwc;
+        private BayoController bwc;
         private bool flip = false;
+        public GameObject glint = BayoAssets.glintL;
         public override void OnEnter()
         {
             dur = 4.04f;
@@ -51,7 +52,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             hbn = "Envelop2";
             effect = null;
             effect2 = null;
-            bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
+            bwc = this.gameObject.GetComponent<BayoController>();
+            m2Refund = true;
 
             base.OnEnter();
 
@@ -119,6 +121,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             if(stopwatch >= earlyEnd + pose && !posed)
             {
                 ApplyPause();
+                if(isAuthority) EffectManager.SimpleMuzzleFlash(glint, gameObject, "glint", true);
             }
             if(poseTimer <= 0.5f && !sounded)
             {
@@ -141,7 +144,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             {
                 ConsumeHitStopCachedState(poseCachedState, characterMotor, animator);
                 inPose = false;
-                //bwc.currentWeapon = BayoWeaponComponent.WeaponState.Guns;
+                bwc.currentWeapon = BayoController.WeaponState.Guns;
                 if (base.cameraTargetParams && cameraParamsOverrideHandle.isValid)
                 {
                     cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle, 0.8f);
@@ -262,7 +265,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 characterMotor.moveDirection = forwardDir;
                 characterDirection.moveVector = forwardDir;
                 PlayAnimation("Body", "BreakExit", playbackRateParam, duration - earlyExitPercentTime);
-                //bwc.currentWeapon = BayoWeaponComponent.WeaponState.Open;
+                bwc.currentWeapon = BayoController.WeaponState.Break;
 
                 if (base.cameraTargetParams & cameraParamsOverrideHandle.isValid)
                 {
@@ -293,6 +296,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             {
                 cameraParamsOverrideHandle = base.cameraTargetParams.RemoveParamsOverride(cameraParamsOverrideHandle);
             }
+            bwc.currentWeapon = BayoController.WeaponState.Guns;
             base.OnExit();
         }
     }

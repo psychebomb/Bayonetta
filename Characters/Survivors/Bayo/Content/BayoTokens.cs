@@ -40,7 +40,9 @@ namespace BayoMod.Survivors.Bayo
             Language.Add(prefix + "PUNISH_PROMPT", "Punish!");
 
             #region Skins
+            Language.Add(prefix + "BAYO1_SKIN_NAME", "Remembrance");
             Language.Add(prefix + "BAYO2_SKIN_NAME", "Famed");
+            Language.Add(prefix + "ART_SKIN_NAME", "Rogue");
             #endregion
 
             #region Passive

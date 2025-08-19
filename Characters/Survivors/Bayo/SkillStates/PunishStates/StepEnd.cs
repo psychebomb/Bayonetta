@@ -14,14 +14,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
     public class StepEnd : BaseSkillState
     {
         protected float duration = 1.88f;
-        protected float fireTime = 0.68f;
+        protected float fireTime = 0.76f;
         private bool hasFired = false;
         private RootMotionAccumulator rootMotionAccumulator;
         protected string animName = "StepEnd";
-        private float stopwatch;
+        protected float stopwatch;
 
         public static float damageCoefficient = 12f;
-        public GameObject projectilePrefab = BayoAssets.footProjectilePrefab;
+        public GameObject projectilePrefab = BayoAssets.footFast;
         protected float force = 1f;
         private float recoilAmplitude = 0.1f;
         private float bloom = 10;
@@ -30,7 +30,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
         public CameraTargetParams.CameraParamsOverrideHandle cameraParamsOverrideHandle;
         public Vector3 forwardDir;
         public Vector3 cameraDir;
-        private CameraRigController Camera;
+        protected CameraRigController Camera;
         private bool hasVoiced = false;
 
         public override void OnEnter()
@@ -143,7 +143,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
                 if (enemyBody && enemyBody.HasBuff(BayoBuffs.punishable)) enemyBody.RemoveBuff(BayoBuffs.punishable);
                 if (this.characterBody.HasBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility)) this.characterBody.RemoveBuff(RoR2.RoR2Content.Buffs.HiddenInvincibility);
             }
-            if(base.GetComponent<PunishTracker>()) base.GetComponent<PunishTracker>().punishing = false;
+            if (base.GetComponent<PunishTracker>()) base.GetComponent<PunishTracker>().ReleaseTarget();
+            if (base.GetComponent<PunishTracker>()) base.GetComponent<PunishTracker>().punishing = false;
             base.OnExit();
         }
         public override void OnSerialize(NetworkWriter writer)

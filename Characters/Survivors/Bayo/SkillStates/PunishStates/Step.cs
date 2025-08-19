@@ -27,6 +27,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
         public float oldDur;
         private CameraRigController Camera;
         protected Quaternion rotation = Quaternion.AngleAxis(120f, Vector3.up);
+        protected Quaternion rotation2 = Quaternion.AngleAxis(165f, Vector3.up);
         protected float zoomOut = 1f;
         public override void OnEnter()
         {
@@ -109,7 +110,6 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
 
             if (Camera)
             {
-                Quaternion rotation2 = Quaternion.AngleAxis(165f, Vector3.up);
                 Vector3 targetAngles = characterDirection.forward;
                 Vector3 targetAngles2 = characterDirection.forward;
                 targetAngles.y = 0f;

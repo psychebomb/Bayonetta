@@ -95,7 +95,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     if (inputBank.skill4.down) cancel = true;
                     if (inputBank.moveVector != Vector3.zero) cancel = true;
                 }
-                if (inputBank.jump.justPressed)
+                if (inputBank.jump.justPressed && base.characterMotor.jumpCount < base.characterBody.maxJumpCount)
                 {
                     cancel = true;
                     jumped = true;
