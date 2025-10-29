@@ -1,10 +1,16 @@
 ## Changelog
+- 0.5.2
+    - Added new version of LDB taunt that uses camera animations. On alpha3 by default, LDB w/o camera anims is still on alpha4 and strut emote has been moved to alpha5
+    - Fixed LDB taunt causing Bayo 1's sleeves to look weird
+    - Added a new song for Bayo's strut emote that plays by default. The old one can still be turned on in config.
+- 0.5.1
+    - Updated the readme...
 - 0.5.0
     - New skin 'Famed' added based off of Bayo's appearance in Bayonetta 2. Comes with VFX and a new voiceline for emote 1
     - New freeze-frame + kiss event that happens upon exiting through a teleporter. This can be disabled in config
     - New punish attack that has a chance to activate while punishing smaller enemies. Functionally the same as the stomp punish attack
-    - New spawn state based on her spawn anim in Smash Bros.
-    - M2 Tweeks:
+    - New spawn state based on her Smash Bros. reveal trailer
+    - M2 Tweaks:
         - Heel slide and ABK down are now jump-cancellable
         - Jump-cancellable moves now properly check to see if Bayo has any mid-air jumps remaining
         - Heel slide can now be directionally influenced mid-slide

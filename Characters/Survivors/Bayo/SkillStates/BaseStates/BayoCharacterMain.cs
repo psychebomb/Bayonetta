@@ -46,7 +46,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 if (Input.GetKeyDown(Modules.Config.emote3Keybind.Value))
                 {
                     //EntityStateMachine.FindByCustomName(this.gameObject, "Weapon").SetNextState(new StrutNew());
-                    outer.SetNextState(new StrutNew());
+                    outer.SetNextState(new LetsDance2());
                     return;
                 }
                 if (Input.GetKeyDown(Modules.Config.emote4Keybind.Value))
@@ -54,13 +54,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     outer.SetNextState(new LetsDance());
                     return;
                 }
-                /*
-                if (Input.GetKeyDown(KeyCode.Alpha5))
+
+                if (Input.GetKeyDown(Modules.Config.emote5Keybind.Value))
                 {
-                    outer.SetNextState(new LetsDance2());
+                    outer.SetNextState(new StrutNew());
                     return;
                 }
-                */
+
                 /*
                 if (cTracker)
                 {
