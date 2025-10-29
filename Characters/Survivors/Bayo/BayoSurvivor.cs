@@ -10,9 +10,7 @@ using BayoMod.Modules.Characters;
 using BayoMod.Modules.Components;
 using BayoMod.Survivors.Bayo.Components;
 using BayoMod.Survivors.Bayo.SkillStates;
-using BepInEx.Configuration;
 using EntityStates;
-using EntityStates.BrotherMonster;
 using R2API;
 using R2API.Networking;
 using R2API.Networking.Interfaces;
@@ -21,11 +19,7 @@ using RoR2.Projectile;
 using RoR2.Skills;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using static BayoMod.Modules.Skins;
 
@@ -253,6 +247,7 @@ namespace BayoMod.Survivors.Bayo
             bodyPrefab.AddComponent<BayoController>();
             bodyPrefab.AddComponent<UIController>();
             bodyPrefab.AddComponent<CameraController>();
+            prefabCharacterModel.gameObject.AddComponent<BayoAnimationEvents>();
             displayPrefab.transform.Find("DistantSound").gameObject.GetComponent<RTPCController>().akSoundString = "select";
         }
 

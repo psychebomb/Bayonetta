@@ -9,7 +9,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
         {
             zoom = false;
             cam = this.gameObject.GetComponent<CameraController>();
-            cam.fov = 40f;
+            cam.fov = 45f;
             cam.SetCam();
             base.OnEnter();
         }

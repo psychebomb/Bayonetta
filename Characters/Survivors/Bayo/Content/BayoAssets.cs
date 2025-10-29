@@ -175,7 +175,7 @@ namespace BayoMod.Survivors.Bayo
             slam.transform.Find("Point Light").gameObject.GetComponent<Light>().range = 3f;
             ShakeEmitter se = slam.gameObject.GetComponent<ShakeEmitter>();
             se.radius = 50f;
-            se.duration = 0.2f;
+            se.duration = 0.3f;
             se.wave.amplitude = 3f;
             se.wave.frequency = 60f;
             slam.transform.Find("Water, Directional").gameObject.transform.set_localScale_Injected(ref tempVec);

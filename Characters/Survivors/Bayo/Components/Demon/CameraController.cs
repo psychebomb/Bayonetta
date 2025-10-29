@@ -173,6 +173,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
 
             ui.SetRORUIActiveState(false);
 
+            
             handle = camParams.AddParamsOverride(request, 0.05f);
 
         }
@@ -185,7 +186,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
             }
 
             smoothDampTime = 0.5f;
-            maxSmoothDampSpeed = 50f;
+            maxSmoothDampSpeed = 80f;
             shouldRotateCamera = true;
             inCam = false;
             startRotation = camObject.transform.localRotation;
@@ -279,7 +280,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
                     UnsetCam();
                 }
             }
-            else if (inCam && !useCamObj && !inDebug)
+            else if (inCam && !useCamObj && !inDebug && trackTrans)
             {
                 camObject.transform.LookAt(trackTrans.position);
             }
@@ -350,10 +351,10 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
             }
         }
 
-        public void ZoomInFOV()
+        public void ZoomIn()
         {
-            Debug.Log("ZOOMIN HERE PUH LEASEEEE");
-            camParams.RemoveParamsOverride(handle);
+            //Debug.Log("ZOOMIN HERE PUH LEASEEEE");
+            camParams.RemoveParamsOverride(handle, 0.001f);
             CharacterCameraParamsData cameraParamsData = camParams.currentCameraParamsData;
             cameraParamsData.fov = 5f;
 
@@ -362,12 +363,12 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
                 cameraParamsData = cameraParamsData,
                 priority = 0,
             };
-            handle = camParams.AddParamsOverride(request, 0.01f);
+            handle = camParams.AddParamsOverride(request, 0.001f);
         }
-        public void ZoomOutFOV()
+        public void ZoomOut()
         {
-            Debug.Log("ZOOMOUT HERE PLEASEEEEEEE");
-            camParams.RemoveParamsOverride(handle);
+            //Debug.Log("ZOOMOUT HERE PLEASEEEEEEE");
+            camParams.RemoveParamsOverride(handle, 0.001f);
             CharacterCameraParamsData cameraParamsData = camParams.currentCameraParamsData;
             cameraParamsData.fov = fov;
 
@@ -376,7 +377,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
                 cameraParamsData = cameraParamsData,
                 priority = 0,
             };
-            handle = camParams.AddParamsOverride(request, 0.01f);
+            handle = camParams.AddParamsOverride(request, 0.001f);
         }
 
         private void LateUpdate()
@@ -395,6 +396,11 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
                     position2 *= 0.5f;
                 }
                 camObject.transform.SetPositionAndRotation(position2, camObject.transform.rotation);
+            }
+
+            if (inCam && !useCamObj && !inDebug && trackTrans)
+            {
+                camObject.transform.LookAt(trackTrans.position);
             }
         }
 

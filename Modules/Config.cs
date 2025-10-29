@@ -13,6 +13,7 @@ namespace BayoMod.Modules
         public static ConfigEntry<KeyCode> emote2Keybind;
         public static ConfigEntry<KeyCode> emote3Keybind;
         public static ConfigEntry<KeyCode> emote4Keybind;
+        public static ConfigEntry<KeyCode> emote5Keybind;
         public static ConfigEntry<bool> musicClient;
         public static ConfigEntry<bool> eZoom;
         public static ConfigEntry<bool> musicOn;
@@ -27,7 +28,16 @@ namespace BayoMod.Modules
             Bayo_1_Only,
             Bayo_2_Only
         }
+
+        public enum StrutMusic
+        {
+            Random,
+            Walking,
+            Crazy
+        }
+
         public static ConfigEntry<LongTaunt> longTaunt;
+        public static ConfigEntry<StrutMusic> strutMus;
 
         //stats
         public static ConfigEntry<float> hpStat;
@@ -42,17 +52,19 @@ namespace BayoMod.Modules
 
         public static void ReadConfig()
         {
-            emote1Keybind = BayoPlugin.instance.Config.Bind<KeyCode>(new ConfigDefinition("Keybinds", "Emote1"), KeyCode.Alpha1, new ConfigDescription("I've got a fever, and the only cure is more dead angels"));
-            emote2Keybind = BayoPlugin.instance.Config.Bind<KeyCode>(new ConfigDefinition("Keybinds", "Emote2"), KeyCode.Alpha2, new ConfigDescription("You want to touch me?"));
-            emote3Keybind = BayoPlugin.instance.Config.Bind<KeyCode>(new ConfigDefinition("Keybinds", "Strut"), KeyCode.Alpha3, new ConfigDescription("Dreadful!"));
-            emote4Keybind = BayoPlugin.instance.Config.Bind<KeyCode>(new ConfigDefinition("Keybinds", "Lets Dance Boys"), KeyCode.Alpha4, new ConfigDescription("I love trippling my mod's filesize with one emote"));
+            emote1Keybind = BayoPlugin.instance.Config.Bind<KeyCode>(new ConfigDefinition("Keybinds", "Long Taunt"), KeyCode.Alpha1, new ConfigDescription("I've got a fever, and the only cure is more dead angels"));
+            emote2Keybind = BayoPlugin.instance.Config.Bind<KeyCode>(new ConfigDefinition("Keybinds", "Short Taunt"), KeyCode.Alpha2, new ConfigDescription("You want to touch me?"));
+            emote3Keybind = BayoPlugin.instance.Config.Bind<KeyCode>(new ConfigDefinition("Keybinds", "Lets Dance Boys (cam)"), KeyCode.Alpha3, new ConfigDescription("Entire LDB dance from end of bayo 1 with camera animations"));
+            emote4Keybind = BayoPlugin.instance.Config.Bind<KeyCode>(new ConfigDefinition("Keybinds", "Lets Dance Boys (no cam)"), KeyCode.Alpha4, new ConfigDescription("Entire LDB dance from end of bayo 1 without camera animations"));
+            emote5Keybind = BayoPlugin.instance.Config.Bind<KeyCode>(new ConfigDefinition("Keybinds", "Strut Emote"), KeyCode.Alpha5, new ConfigDescription("This one makes bayo walk slow"));
             musicOn = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Strut music", true, "Toggle's whether Bayonetta's strut emote plays music.");
+            strutMus = BayoPlugin.instance.Config.Bind<StrutMusic>("01 - Misc Settings", "Strut music choice", StrutMusic.Walking, "Chooses which music plays during the strut emote (none are dmca save lol)");
             musicOn2 = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Lets Dance Boys music", true, "Toggle's whether Bayonetta's LDB emote plays music.");
+            longTaunt = BayoPlugin.instance.Config.Bind<LongTaunt>("01 - Misc Settings", "Emote 1 voice options", LongTaunt.Based_On_Skin_Choice, "Chooses which voiceline will play when performing Emote 1.");
             musicClient = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Client side music", true, "Toggle's whether or not emotes with music will play for the whole server (false) or just the local client (true)");
             eZoom = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Emote zoom", true, "Toggle's whether Bayonetta's emotes zoom in the camera.");
             overlayOn = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Witch time screen overlay", true, "Causes a screen overlay effect to occur during witch time when enabled.");
             tpFreeze = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Teleporter Freeze-Frame Event", true, "Activates a special freeze frame + emote after entering a teleporter when enabled.");
-            longTaunt = BayoPlugin.instance.Config.Bind<LongTaunt>("01 - Misc Settings", "Emote 1 voice options", LongTaunt.Based_On_Skin_Choice, "Chooses which voiceline will play when performing Emote 1.");
 
             hpStat = BayoPlugin.instance.Config.Bind<float>(new ConfigDefinition("02 - Base Stats", "Base HP"), 110f, new ConfigDescription("Bayonetta's base starting HP"));
             regenStat = BayoPlugin.instance.Config.Bind<float>(new ConfigDefinition("02 - Base Stats", "Base HP Regen"), 1f, new ConfigDescription("Bayonetta's base starting health regen"));

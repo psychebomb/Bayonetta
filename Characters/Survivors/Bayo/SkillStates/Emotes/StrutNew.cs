@@ -1,4 +1,5 @@
-﻿using EntityStates;
+﻿using BayoMod.Survivors.Bayo;
+using EntityStates;
 using RoR2;
 using RoR2.ConVar;
 using UnityEngine;
@@ -31,6 +32,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private string oldMusic;
         BaseConVar convar;
 
+        public Modules.Config.StrutMusic musicOption;
+
 
         public override void OnEnter()
         {
@@ -52,11 +55,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             {
                 if (client && isAuthority)
                 {
-                    sound = AkSoundEngine.PostEvent(2930662992, this.gameObject);
+                    PlayTauntSound();
                 }
                 else if (!client)
                 {
-                    sound = AkSoundEngine.PostEvent(2930662992, this.gameObject);
+                    PlayTauntSound();
                 }
                 if (isAuthority)
                 {
@@ -167,11 +170,23 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 
         }
 
-        public override void Update()
+        private void PlayTauntSound()
         {
-            base.Update();
-        }
+            musicOption = Modules.Config.strutMus.Value;
 
+            switch (musicOption)
+            {
+                case Modules.Config.StrutMusic.Walking:
+                    sound = AkSoundEngine.PostEvent(340271938, this.gameObject);
+                    break;
+                case Modules.Config.StrutMusic.Crazy:
+                    sound = AkSoundEngine.PostEvent(2930662992, this.gameObject);
+                    break;
+                case Modules.Config.StrutMusic.Random:
+                    sound = AkSoundEngine.PostEvent(1363286269, this.gameObject);
+                    break;
+            }
+        }
         public override void OnExit()
         {
             base.OnExit();
