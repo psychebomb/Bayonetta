@@ -988,21 +988,6 @@ namespace BayoMod.Survivors.Bayo
                 Util.PlaySound("revive", self.GetBodyObject());
             }
         }
-        private CharacterBody ReviveHook(On.RoR2.CharacterMaster.orig_Respawn orig, CharacterMaster self, Vector3 footPosition, Quaternion rotation, bool wasRevivedMidStage)
-        {
-
-            CharacterBody body = orig(self, footPosition, rotation, wasRevivedMidStage);
-
-            if (wasRevivedMidStage == true)
-            {
-                if (self.GetBodyObject().name.Contains("BayoBody"))
-                {
-                    Util.PlaySound("revive", self.GetBodyObject());
-                }
-            }
-            return body;
-        }
-
         #endregion
         private void WTBandHook(On.RoR2.SkillLocator.orig_ApplyAmmoPack orig, SkillLocator self)
         {
@@ -1114,9 +1099,9 @@ namespace BayoMod.Survivors.Bayo
             if (NetworkServer.active && self && self.gameObject && self.gameObject.name.Contains("BayoBody"))
             {
                 bool flagg = (buffDef == BayoBuffs.wtBuff);
-                int alien = self.inventory.GetItemCount(RoR2Content.Items.AlienHead);
-                int light = self.inventory.GetItemCount(DLC1Content.Items.HalfAttackSpeedHalfCooldowns);
-                int pure = self.inventory.GetItemCount(RoR2Content.Items.LunarBadLuck);
+                int alien = self.inventory.GetItemCountEffective(RoR2Content.Items.AlienHead);
+                int light = self.inventory.GetItemCountEffective(DLC1Content.Items.HalfAttackSpeedHalfCooldowns);
+                int pure = self.inventory.GetItemCountEffective(RoR2Content.Items.LunarBadLuck);
                 float cd = wtcooldur;
 
                 for (int k = 0; k < alien; k++)

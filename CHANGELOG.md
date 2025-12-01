@@ -3,6 +3,7 @@
     - Added new version of LDB taunt that uses camera animations. On alpha3 by default, LDB w/o camera anims is still on alpha4 and strut emote has been moved to alpha5
     - Fixed LDB taunt causing Bayo 1's sleeves to look weird
     - Added a new song for Bayo's strut emote that plays by default. The old one can still be turned on in config.
+    - Happy 16th anniversary to Bayonetta 1!!!!!
 - 0.5.1
     - Updated the readme...
 - 0.5.0
