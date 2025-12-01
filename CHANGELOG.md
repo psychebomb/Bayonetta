@@ -1,4 +1,7 @@
 ## Changelog
+- 0.5.3
+    - Updated for AC
+    - Updated dependencies
 - 0.5.2
     - Added new version of LDB taunt that uses camera animations. On alpha3 by default, LDB w/o camera anims is still on alpha4 and strut emote has been moved to alpha5
     - Fixed LDB taunt causing Bayo 1's sleeves to look weird
