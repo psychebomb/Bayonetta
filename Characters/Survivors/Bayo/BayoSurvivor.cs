@@ -47,7 +47,7 @@ namespace BayoMod.Survivors.Bayo
             sortPosition = 100,
 
             crosshair = Asset.LoadCrosshair("Standard"),
-            podPrefab = null,
+            podPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/SurvivorPod"),
 
             maxHealth = 110f,
             healthRegen = 1f,

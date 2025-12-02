@@ -51,7 +51,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates
                 characterMotor.velocity.z = 0f;
             }
 
-            if (characterBody && Physics.Raycast(characterBody.footPosition, Vector3.down, 7f, LayerIndex.world.mask) && !startedAnim)
+            if (characterBody && Physics.Raycast(characterBody.footPosition, Vector3.down, 7f, LayerIndex.world.mask) && !startedAnim && cam)
             {
                 //start the next camera right before bayo touches the ground
                 cam.useCamObj = false;

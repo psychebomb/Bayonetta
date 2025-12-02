@@ -38,6 +38,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates
         {
             base.OnEnter();
             base.characterMotor.rootMotion.y += 8f;
+            cam = this.gameObject.GetComponent<CameraController>();
 
             if (base.rigidbody && !base.rigidbody.isKinematic)
             {
@@ -127,8 +128,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates
                     shakeStarted = true;
                     batsInstance.transform.Find("shaker").gameObject.SetActive(true);
                 }
-                vfxShaker.wave.amplitude = Mathf.Lerp(0f, 1.15f, (stopwatch - shakeStart) / (duration - shakeStart));
-                vfxShaker.wave.frequency = Mathf.Lerp(2.5f, 7.5f, (stopwatch - shakeStart) / (duration - shakeStart));
+                if (vfxShaker)
+                {
+                    vfxShaker.wave.amplitude = Mathf.Lerp(0f, 1.15f, (stopwatch - shakeStart) / (duration - shakeStart));
+                    vfxShaker.wave.frequency = Mathf.Lerp(2.5f, 7.5f, (stopwatch - shakeStart) / (duration - shakeStart));
+                }
             }
 
             if (!soundStarted && stopwatch >= soundStart)
@@ -153,10 +157,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates
                     }
                 }
                 */
-                if(stopwatch >= 0.01f && !zoominStarted)
+                if(stopwatch >= 0.01f && !zoominStarted && cam)
                 {
                     zoominStarted = true;
-                    cam = this.gameObject.GetComponent<CameraController>();
                     cam.fov = 60f;
                     cam.useCamObj = true;
                     cam.SetCam();
@@ -173,8 +176,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates
 
         public override void OnExit()
         {
-            vfxShaker.amplitudeTimeDecay = true;
-            vfxShaker.wave.amplitude = 2f;
+            if (vfxShaker)
+            {
+                vfxShaker.amplitudeTimeDecay = true;
+                vfxShaker.wave.amplitude = 2f;
+            }
             if ((bool)characterModel)
             {
                 characterModel.invisibilityCount--;
@@ -186,11 +192,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates
             }
             */
 
-            if (characterBody.master.playerCharacterMasterController.networkUser)
+            if (characterBody.master.playerCharacterMasterController.networkUser.cameraRigController)
             {
                 cameraRig = characterBody.master.playerCharacterMasterController.networkUser.cameraRigController;
-                Vector3 rotateAngle = this.characterDirection.forward * -1;
-                ((CameraModePlayerBasic.InstanceData)cameraRig.cameraMode.camToRawInstanceData[cameraRig]).SetPitchYawFromLookVector(rotateAngle);
+                if (this.characterDirection)
+                {
+                    Vector3 rotateAngle = this.characterDirection.forward * -1;
+                    ((CameraModePlayerBasic.InstanceData)cameraRig.cameraMode.camToRawInstanceData[cameraRig]).SetPitchYawFromLookVector(rotateAngle);
+                }
             }
 
             base.OnExit();

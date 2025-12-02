@@ -382,7 +382,14 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
 
         private void LateUpdate()
         {
-            if(camObject && inCam)
+            if (!camObject)
+            {
+                camObject = Camera.main.gameObject;
+                previousParent = camObject.transform.parent;
+                cameraRig = camObject.GetComponent<CameraRigController>();
+            }
+
+            if (camObject && inCam && cameraRig)
             {
                 float num = ((cameraRig.localUserViewer == null) ? 1f : cameraRig.localUserViewer.userProfile.screenShakeScale);
                 //float num = 1f;
@@ -398,7 +405,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
                 camObject.transform.SetPositionAndRotation(position2, camObject.transform.rotation);
             }
 
-            if (inCam && !useCamObj && !inDebug && trackTrans)
+            if (inCam && !useCamObj && !inDebug && trackTrans && camObject)
             {
                 camObject.transform.LookAt(trackTrans.position);
             }

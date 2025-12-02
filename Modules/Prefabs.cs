@@ -636,6 +636,9 @@ namespace BayoMod.Modules
             {
                 setStateOnHurt.idleStateMachine = Array.Empty<EntityStateMachine>();
             }
+
+            CharacterBody body = bodyPrefab.GetComponent<CharacterBody>();
+            body.vehicleIdleStateMachine = Array.Empty<EntityStateMachine>();
         }
 
         public static void AddMainEntityStateMachine(GameObject bodyPrefab, string machineName = "Body", Type mainStateType = null, Type initalStateType = null)
