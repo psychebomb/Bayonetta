@@ -53,7 +53,7 @@ namespace BayoMod.Survivors.Bayo
             #region Primary
             Language.Add(prefix + "PRIMARY_COMBO_NAME", "Bullet Arts");
             Language.Add(prefix + "PRIMARY_COMBO_DESCRIPTION", $"Perform a 5 hit punch sequence, dealing <style=cIsDamage>{200f}%</style> damage for the first four hits." +
-                $" The last hit is a flurry attack that deals <style=cIsDamage>{165f}%</style> damage each hit and summons a wicked weave when released, dealing <style=cIsDamage>{1500f}%</style> damage." +
+                $" The last hit is a flurry attack that deals <style=cIsDamage>{165f}%</style> damage each hit and summons a wicked weave when released, dealing <style=cIsDamage>{1250f}%</style> damage." +
                 $" Bayonetta will also continuously fire her guns during the sequence, each shot dealing <style=cIsDamage>{50f}%</style> damage.");
             #endregion
 
@@ -87,8 +87,8 @@ namespace BayoMod.Survivors.Bayo
             Language.Add(prefix + "SPECIAL_STOMP_NAME", "Heel Stomp");
             Language.Add(prefix + "SPECIAL_STOMP_DESCRIPTION", $"TEYIAHHH");
 
-            LanguageAPI.Add("KEYWORD_BAYO_TETS", $"<style=cKeywordName>Tetsuzanko</style> <style=cIsUtility>Input: Primary (M1)</style> <style=cSub>Summon a demon fist that knocks enemies away, dealing <style=cIsDamage>{1500f}%</style> damage.</style>");
-            LanguageAPI.Add("KEYWORD_BAYO_HSTOMP", $"<style=cKeywordName>Heel Stomp</style> <style=cIsUtility>Input: Secondary (M2)</style> <style=cSub>Summon a demon foot that <style=cIsUtility>knocks down</style> enemies, sending them downwards and dealing <style=cIsDamage>{1500f}%</style> damage.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_TETS", $"<style=cKeywordName>Tetsuzanko</style> <style=cIsUtility>Input: Primary (M1)</style> <style=cSub>Summon a demon fist that knocks enemies away, dealing <style=cIsDamage>{1250f}%</style> damage.</style>");
+            LanguageAPI.Add("KEYWORD_BAYO_HSTOMP", $"<style=cKeywordName>Heel Stomp</style> <style=cIsUtility>Input: Secondary (M2)</style> <style=cSub>Summon a demon foot that <style=cIsUtility>knocks down</style> enemies, sending them downwards and dealing <style=cIsDamage>{1250f}%</style> damage.</style>");
             LanguageAPI.Add("KEYWORD_BAYO_KD", $"<style=cKeywordName>Knocked Down</style> <style=cSub>Enemies who are knocked down are stunned for a extended duration. If Bayonetta is grounded and close enough to a knocked down enemy, she can use the Interact button to perform a punish attack</style>");
             #endregion
 

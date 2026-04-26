@@ -70,7 +70,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
             //bwc = this.gameObject.GetComponent<BayoWeaponComponent>();
             //bwc.currentWeapon = BayoWeaponComponent.WeaponState.Open;
             uiController = this.gameObject.GetComponent<UIController>();
-            uiController.SetRORUIActiveState(false);
+            if (base.isAuthority) uiController.SetRORUIActiveState(false);
 
             base.OnEnter();
 
@@ -116,7 +116,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
         public override void OnExit()
         {
             //bwc.currentWeapon = BayoWeaponComponent.WeaponState.Guns;
-            uiController.SetRORUIActiveState(true);
+            if (base.isAuthority) uiController.SetRORUIActiveState(true);
             if (base.cameraTargetParams && cam2.isValid && zoom)
             {
                 cam2 = base.cameraTargetParams.RemoveParamsOverride(cam2, zoomOutDur);

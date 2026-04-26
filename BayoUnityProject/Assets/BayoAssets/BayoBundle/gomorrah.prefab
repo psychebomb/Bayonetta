@@ -32570,7 +32570,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5143497484656078965}
   - component: {fileID: 8362815574728358395}
-  - component: {fileID: 5075117451466228091}
   - component: {fileID: 1149196547475828134}
   m_Layer: 0
   m_Name: PP
@@ -32578,7 +32577,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5143497484656078965
 Transform:
   m_ObjectHideFlags: 0
@@ -32606,7 +32605,7 @@ MonoBehaviour:
   m_Script: {fileID: -432102721, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ppVolume: {fileID: 5075117451466228091}
+  ppVolume: {fileID: 0}
   ppWeightCurve:
     serializedVersion: 2
     m_Curve:
@@ -32652,23 +32651,6 @@ MonoBehaviour:
   maxDuration: 18.5
   destroyOnEnd: 1
   useUnscaledTime: 0
---- !u!114 &5075117451466228091
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6898170916245004237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 708136152, guid: e161fae64b898bc22624d03ed611378f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 2dfc026e63553c14fab9d7cd412d0822, type: 2}
-  isGlobal: 0
-  blendDistance: 0
-  weight: 1
-  priority: 6
 --- !u!135 &1149196547475828134
 SphereCollider:
   m_ObjectHideFlags: 0

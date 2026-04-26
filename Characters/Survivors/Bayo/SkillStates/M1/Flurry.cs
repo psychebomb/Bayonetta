@@ -17,6 +17,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         private string animName;
         public static float verticalAcceleration = GroundSlam.verticalAcceleration * 0.2f;
         protected float hopVelocity = 1.25f;
+        private uint sound = 0;
         protected bool flip = false;
         public override void OnEnter()
         {
@@ -44,13 +45,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 characterMotor.velocity = characterMotor.velocity * 0f;
             }
 
+            sound = AkSoundEngine.PostEvent(3782729823, this.gameObject);
             Util.PlaySound("flurry", this.gameObject);
-            Util.PlaySound("falling", this.gameObject);
             ReplacePrefabs(BayoAssets.pflur, BayoAssets.pflur2);
-
-            GameObject dam = BayoAssets.sum;
-            if(isAuthority) EffectManager.SimpleMuzzleFlash(dam, this.gameObject, "DamageCenter", true);
-            Util.PlaySound("portalsum", this.gameObject);
 
             base.OnEnter();
 
@@ -178,6 +175,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
         public override void OnExit()
         {
             if (launch) LastHit();
+            AkSoundEngine.StopPlayingID(sound);
             base.OnExit();
         }
     }

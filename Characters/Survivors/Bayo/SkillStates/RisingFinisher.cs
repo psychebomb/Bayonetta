@@ -208,7 +208,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             blastAttack.crit = RollCrit();
             blastAttack.damageType = DamageType.Stun1s;
             blastAttack.falloffModel = BlastAttack.FalloffModel.Linear;
-            blastAttack.procCoefficient = 0.5f;
+            blastAttack.procCoefficient = 0.25f;
             blastAttack.radius = blastRadius;
             blastAttack.position = base.characterBody.footPosition;
             blastAttack.attackerFiltering = AttackerFiltering.NeverHitSelf;

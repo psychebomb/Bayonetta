@@ -24,6 +24,18 @@ namespace BayoMod.Characters.Survivors.Bayo.Components
             }
             camController = bodyObject.gameObject.GetComponent<CameraController>();
         }
+        public void PlayFastWoosh()
+        {
+            Util.PlaySound("wooshf", bodyObject);
+        }
+        public void PlaySlowWoosh()
+        {
+            Util.PlaySound("wooshs", bodyObject);
+        }
+        public void PlayDoubleWoosh()
+        {
+            Util.PlaySound("wooshd", bodyObject);
+        }
         public void ZoomInFOV()
         {
             //camController.ZoomIn();

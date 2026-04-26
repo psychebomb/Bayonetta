@@ -1,4 +1,23 @@
 ## Changelog
+- 0.5.5
+    - Miss me baby?
+    - Added new character select animations
+    - Added new optimization options in config that disable different parts of bayonetta's hair/ribbon/whatever physics. Use these if you are ever running into performance issues! Specifically:
+        - Colliders_Off: keeps dynamic bones enabled but removes the colliders on bayonetta's body
+        - Dynamic_Off_Visible: turns off dynamic bones but keeps the elements like hair and ribbons visible.
+        - Dynamic_Off_Not_Visible: turns off dynamic bones and hides the afformentioned elements.
+    - Added footstep sounds and vfx
+    - Bayo is now back to using her custom spawn state yayyyyyy
+    - Improved bayonetta's hair physics sorta kinda
+    - Fixed bug that made it so the freezeframe and kiss states would cause all players in multiplayer to lose their ui
+    - The different survivor icons used for each skin now show up in the in-game UI
+    - Decreased all Wicked Weave damage to 1250%
+    - Decreased the proc chance on moves with a large bullet radius (like heel tornado) from 50% to 25%
+    - Punish attacks will now automatically speed up instead of requiring a mash input
+- 0.5.4
+    - Reverted bayo's custom spawn state
+        - This spawn state was already scuffed and held together by hopes and dreams, but it seems to fuck with networking bad and cause bayo to break in multiplayer. Bayo will use the standard survivor pod in the meantime while I try to fix this
+    - Fixed bug relating to the LBD camera taunt where if one bayo used the taunt, all the other bayos' cameras would snap to the taunting bayo
 - 0.5.3
     - Updated for AC
     - Updated dependencies

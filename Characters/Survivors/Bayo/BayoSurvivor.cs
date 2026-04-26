@@ -42,12 +42,13 @@ namespace BayoMod.Survivors.Bayo
             bodyNameToken = BAYO_PREFIX + "NAME",
             subtitleNameToken = BAYO_PREFIX + "SUBTITLE",
 
-            characterPortrait = assetBundle.LoadAsset<Texture>("texBayoIcon"),
+            characterPortrait = assetBundle.LoadAsset<Sprite>("texBayoIcon").texture,
             bodyColor = Color.red,
-            sortPosition = 100,
+            sortPosition = 1219,
 
             crosshair = Asset.LoadCrosshair("Standard"),
-            podPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/SurvivorPod"),
+            //podPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/NetworkedObjects/SurvivorPod"),
+            podPrefab = null,
 
             maxHealth = 110f,
             healthRegen = 1f,
@@ -241,6 +242,7 @@ namespace BayoMod.Survivors.Bayo
         private void AdditionalBodySetup()
         {
             AddHitboxes();
+            DynamicBoneConfig();
             bodyPrefab.AddComponent<PunishTracker>();
             //bodyPrefab.AddComponent<ClimaxTracker>();
             bodyPrefab.AddComponent<ABKRotator>();
@@ -249,6 +251,9 @@ namespace BayoMod.Survivors.Bayo
             bodyPrefab.AddComponent<CameraController>();
             prefabCharacterModel.gameObject.AddComponent<BayoAnimationEvents>();
             displayPrefab.transform.Find("DistantSound").gameObject.GetComponent<RTPCController>().akSoundString = "select";
+            displayPrefab.gameObject.AddComponent<RandomAnimSelect>();
+            //prefabCharacterModel.gameObject.GetComponent<FootstepHandler>().footstepDustPrefab = assetBundle.LoadAsset<GameObject>("footstep");
+
         }
 
         public void AddHitboxes()
@@ -259,6 +264,35 @@ namespace BayoMod.Survivors.Bayo
             Prefabs.SetupHitBoxGroup(characterModelObject, "CoverGroup", "Envelop");
             Prefabs.SetupHitBoxGroup(characterModelObject, "CoverGroup2", "Envelop2");
             Prefabs.SetupHitBoxGroup(characterModelObject, "HeelGroup", "HeelHitbox");
+        }
+
+        private void DynamicBoneConfig()
+        {
+            if(Modules.Config.boneOptimization.Value != Modules.Config.OptBones.Unchanged)
+            {
+                DynamicBone[] comps = prefabCharacterModel.gameObject.GetComponents<DynamicBone>();
+                DynamicBone[] comps2 = displayPrefab.GetComponents<DynamicBone>();
+
+                foreach (DynamicBone comp in comps)
+                {
+                    comp.m_Colliders.Clear();
+
+                    if(Modules.Config.boneOptimization.Value != Modules.Config.OptBones.Colliders_Off)
+                    {
+                        comp.enabled = false;
+                    }
+
+                }
+                foreach (DynamicBone comp in comps2)
+                {
+                    comp.m_Colliders.Clear();
+
+                    if (Modules.Config.boneOptimization.Value != Modules.Config.OptBones.Colliders_Off)
+                    {
+                        comp.enabled = false;
+                    }
+                }
+            }
         }
         public override void InitializeEntityStateMachines() 
         {
@@ -598,6 +632,10 @@ namespace BayoMod.Survivors.Bayo
                 "top",
                 "top.001"*/);
 
+            defaultSkin.skinDefParams.rendererInfos[0].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("body1_nody") : assetBundle.LoadMaterial("body1");
+            defaultSkin.skinDefParams.rendererInfos[1].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("guns_nody") : assetBundle.LoadMaterial("guns");
+            defaultSkin.skinDefParams.rendererInfos[2].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("guns_nody") : assetBundle.LoadMaterial("guns");
+
             defaultSkin.skinDefParams.gameObjectActivations = new SkinDefParams.GameObjectActivation[]
 {
                 new SkinDefParams.GameObjectActivation
@@ -605,6 +643,12 @@ namespace BayoMod.Survivors.Bayo
                     gameObject = childLocator.FindChildGameObject("Chest"),
                     shouldActivate = false
                     
+                },
+
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("Sleeves"),
+                    shouldActivate = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible)? false : true
                 }
 };
 
@@ -652,8 +696,8 @@ namespace BayoMod.Survivors.Bayo
             //masterySkin has a new set of RendererInfos (based on default rendererinfos)
             //you can simply access the RendererInfos' materials and set them to the new materials for your skin.
             masterySkin.skinDefParams.rendererInfos[0].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            masterySkin.skinDefParams.rendererInfos[1].defaultMaterial = assetBundle.LoadMaterial("lib");
-            masterySkin.skinDefParams.rendererInfos[2].defaultMaterial = assetBundle.LoadMaterial("lib");
+            masterySkin.skinDefParams.rendererInfos[1].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("lib_nody"): assetBundle.LoadMaterial("lib");
+            masterySkin.skinDefParams.rendererInfos[2].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("lib_nody") : assetBundle.LoadMaterial("lib");
             masterySkin.skinDefParams.rendererInfos[3].defaultMaterial = assetBundle.LoadMaterial("famedbody");
             masterySkin.skinDefParams.rendererInfos[4].defaultMaterial = assetBundle.LoadMaterial("famedbody");
             masterySkin.skinDefParams.rendererInfos[5].defaultMaterial = assetBundle.LoadMaterial("famedbody");
@@ -667,6 +711,12 @@ namespace BayoMod.Survivors.Bayo
                 {
                     gameObject = childLocator.FindChildGameObject("Sleeves"),
                     shouldActivate = false,
+                },
+
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("Chest"),
+                    shouldActivate = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible)? false : true
                 }
             };
             //simply find an object on your child locator you want to activate/deactivate and set if you want to activate/deacitvate it with this skin
@@ -840,6 +890,37 @@ namespace BayoMod.Survivors.Bayo
             On.RoR2.SetStateOnHurt.OverrideStunInternal += PunishHook2;
             On.RoR2.SceneExitController.Begin += FreezeBayoHook;
             On.RoR2.UI.SurvivorIconController.Update += IconUpdaterHook;
+            if(Modules.Config.footstepVfx.Value == true)On.RoR2.FootstepHandler.Footstep_string_GameObject += ButterflyFoootsteps;
+        }
+
+        private void ButterflyFoootsteps(On.RoR2.FootstepHandler.orig_Footstep_string_GameObject orig, FootstepHandler self, string childName, GameObject footstepEffect)
+        {
+            orig(self, childName, footstepEffect);
+
+            if (!self.body)
+            {
+                return;
+            }
+            Transform transform = self.childLocator.FindChild(childName);
+            int childIndex = self.childLocator.FindChildIndex(childName);
+            if ((bool)transform)
+            {
+                RaycastHit hitInfo = default(RaycastHit);
+                Vector3 position = transform.position;
+                position.y += 1.5f;
+                if (Physics.Raycast(new Ray(position, Vector3.down), out hitInfo, 4f, (int)LayerIndex.world.mask | (int)LayerIndex.water.mask, QueryTriggerInteraction.Collide))
+                {
+                    if (self.body.gameObject.name.Contains("BayoBody"))
+                    {
+                        EffectData effectData = new EffectData();
+                        effectData.origin = hitInfo.point;
+                        effectData.rotation = Util.QuaternionSafeLookRotation(hitInfo.normal);
+                        effectData.SetChildLocatorTransformReference(self.body.gameObject, childIndex);
+                        EffectManager.SpawnEffect(BayoAssets.footstep, effectData, transmit: false);
+                        //EffectManager.SimpleMuzzleFlash(glint, gameObject, "glint", true);
+                    }
+                }
+            }
         }
 
         private void IconUpdaterHook(On.RoR2.UI.SurvivorIconController.orig_Update orig, RoR2.UI.SurvivorIconController self)
@@ -856,10 +937,10 @@ namespace BayoMod.Survivors.Bayo
                 switch (loadout.bodyLoadoutManager.GetSkinIndex(bayoIndex))
                 {
                     case 1:
-                        self.survivorIcon.texture = assetBundle.LoadAsset<Texture>("texBayo2Icon");
+                        self.survivorIcon.texture = assetBundle.LoadAsset<Sprite>("texBayo2Icon").texture;
                         break;
                     default:
-                        self.survivorIcon.texture = assetBundle.LoadAsset<Texture>("texBayoIcon");
+                        self.survivorIcon.texture = assetBundle.LoadAsset<Sprite>("texBayoIcon").texture;
                         break;
                 }
             }

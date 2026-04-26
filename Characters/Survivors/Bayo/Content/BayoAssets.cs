@@ -120,7 +120,12 @@ namespace BayoMod.Survivors.Bayo
         public static GameObject glintR;
         public static GameObject spotlight;
         public static GameObject spotlight2;
+        public static GameObject footstep;
         #endregion
+
+        internal static Sprite bayo1icon;
+
+        internal static Sprite bayo2icon;
 
         public static void Init(AssetBundle assetBundle)
         {
@@ -134,6 +139,8 @@ namespace BayoMod.Survivors.Bayo
             CreateTrackers();
 
             CreateDemons();
+
+            CreateUIElements();
 
         }
 
@@ -165,6 +172,7 @@ namespace BayoMod.Survivors.Bayo
             camObj = _assetBundle.LoadAsset<GameObject>("CamObject");
             glintL = _assetBundle.LoadEffect("shinel", true);
             glintR = _assetBundle.LoadEffect("shiner", true);
+            footstep = _assetBundle.LoadEffect("footstep", true);
 
             //UnityEngine.Object.Destroy(slam.GetComponent<ShakeEmitter>());
             UnityEngine.Object.Destroy(slam.transform.Find("Water, Billboard").gameObject);
@@ -186,6 +194,7 @@ namespace BayoMod.Survivors.Bayo
             bwings.AddComponent<WingComponent>();
             bwings2.AddComponent<WingComponent2>();
             ContentAddition.AddEffect(slam);
+            //ContentAddition.AddEffect(footstep);
         }
         private static void CreateSwings()
         {
@@ -797,7 +806,8 @@ namespace BayoMod.Survivors.Bayo
                 transformm.Find("hair").GetComponent<ParticleSystemRenderer>().material = mat;
                 transformm.Find("ring").GetComponent<ParticleSystemRenderer>().material = mat;
             }
-
+            
+            /*
             //profile = gomorrah.transform.Find("PP").gameObject.GetComponent<PostProcessVolume>().profile;
             profile = ScriptableObject.CreateInstance<PostProcessProfile>();
             RampFog rf = profile.AddSettings<RampFog>();
@@ -824,8 +834,15 @@ namespace BayoMod.Survivors.Bayo
             rf.skyboxStrength.value = 0f;
 
             gomorrah.transform.Find("PP").gameObject.GetComponent<PostProcessVolume>().sharedProfile = profile;
+            */
 
             ContentAddition.AddNetworkedObject(gomorrah);
+        }
+
+        private static void CreateUIElements()
+        {
+            bayo1icon = _assetBundle.LoadAsset<Sprite>("texBayoIcon");
+            bayo2icon = _assetBundle.LoadAsset<Sprite>("texBayo2Icon");
         }
     }
 }

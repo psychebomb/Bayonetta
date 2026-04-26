@@ -64,7 +64,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
             body = gameObject.GetComponent<CharacterBody>();
             direction = gameObject.GetComponent<CharacterDirection>();
             camParams = GetComponent<CameraTargetParams>();
-            ui = GetComponent<UIController>();
+            //ui = GetComponent<UIController>();
             cameraRig = body.master.playerCharacterMasterController.networkUser.cameraRigController;
 
             ModelLocator component = gameObject.GetComponent<ModelLocator>();
@@ -95,7 +95,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
                 Debug.Log($"Should be alright: {e}");
             }
 
-            baseRotation = camObject.transform.rotation;
+            if(camObject) baseRotation = camObject.transform.rotation;
         }
 
         public void SetCam()
@@ -171,7 +171,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
                 priority = 0,
             };
 
-            ui.SetRORUIActiveState(false);
+            //ui.SetRORUIActiveState(false);
 
             
             handle = camParams.AddParamsOverride(request, 0.05f);
@@ -210,7 +210,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components.Demon
 
             if(camParentObj)UnityEngine.Object.Destroy(camParentObj);
 
-            ui.SetRORUIActiveState(true);
+            //ui.SetRORUIActiveState(true);
         }
 
         public void DemonHandoff()

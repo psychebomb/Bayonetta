@@ -18,6 +18,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
         protected float attackEnd = 1f;
         private int counter = 8;
         private float curSpeed = 1f;
+        private float speedUpTimer = 0f;
+        private float speedUpInterval = 0.2f;
 
         public CharacterBody enemyBody;
         public CameraTargetParams.CameraParamsOverrideHandle cameraParamsOverrideHandle;
@@ -86,8 +88,9 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
                 hasFired = false;
             }
 
-            if (inputBank.skill1.justPressed && counter > 0)
+            if (speedUpTimer >= speedUpInterval && counter > 0)
             {
+                speedUpTimer = 0f;
                 counter--;
                 float idealFire = fireFreq / 6;
                 float multi = (fireFreq - idealFire) / 8f;
@@ -103,6 +106,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
         public override void FixedUpdate()
         {
             base.FixedUpdate();
+
+            speedUpTimer += Time.fixedDeltaTime;
 
             if (characterDirection) characterDirection.forward = forwardDir;
             if (inputBank) inputBank.moveVector = Vector3.zero;

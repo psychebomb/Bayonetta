@@ -136,7 +136,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 return;
             }
 
-            this.characterBody.moveSpeed = 6.5f * 0.635f;
+            this.characterBody.moveSpeed = 6.5f * 0.5f;
 
             if (rootmotion && !flag1)
             {
@@ -164,7 +164,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             if (stopwatch >= animDuration && !flag1)
             {
                 flag1 = true;
-                animator.SetFloat(AnimationParameters.walkSpeed, base.characterBody.moveSpeed);
+                animator.SetFloat(AnimationParameters.walkSpeed, (6.5f * 0.635f));
                 PlayCrossfade("Body", "Walk", 0.5f);
             }
 

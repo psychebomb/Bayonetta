@@ -56,6 +56,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             characterDirection.forward = GetAimRay().direction;
             rootMotionAccumulator = GetModelRootMotionAccumulator();
 
+            GameObject dam = BayoAssets.sum;
+            if (isAuthority) EffectManager.SimpleMuzzleFlash(dam, this.gameObject, "DamageCenter", true);
+            Util.PlaySound("portalsum", this.gameObject);
+
             base.OnEnter();
 
             if ((bool)base.characterBody)

@@ -15,11 +15,11 @@ namespace BayoMod.Modules
 {
     // module for creating body prefabs and whatnot
     // recommended to simply avoid touching this unless you REALLY need to
-
     internal static class Prefabs
     {
         // cache this just to give our ragdolls the same physic material as vanilla stuff
         private static PhysicMaterial ragdollMaterial;
+
 
         public static GameObject CreateDisplayPrefab(AssetBundle assetBundle, string displayPrefabName, GameObject prefab)
         {
@@ -504,8 +504,11 @@ namespace BayoMod.Modules
             FootstepHandler footstepHandler = model.AddComponent<FootstepHandler>();
             footstepHandler.baseFootstepString = "Play_player_footstep";
             footstepHandler.sprintFootstepOverrideString = "";
+            footstepHandler.baseFootliftString = "stepr";
+            footstepHandler.sprintFootliftOverrideString = "";
             footstepHandler.enableFootstepDust = true;
             footstepHandler.footstepDustPrefab = RoR2.LegacyResourcesAPI.Load<GameObject>("Prefabs/GenericFootstepDust");
+
         }
 
         private static void SetupRagdoll(GameObject model)

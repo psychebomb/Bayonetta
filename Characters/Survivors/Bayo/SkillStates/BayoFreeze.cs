@@ -86,7 +86,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             }
 
             uiController = this.gameObject.GetComponent<UIController>();
-            uiController.SetRORUIActiveState(false);
+            if (base.isAuthority) uiController.SetRORUIActiveState(false);
 
         }
 
@@ -144,7 +144,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
                 ((CameraModePlayerBasic.InstanceData)Camera.cameraMode.camToRawInstanceData[Camera]).SetPitchYawFromLookVector(lookDir);
             }
 
-            uiController.SetRORUIActiveState(true);
+            if (base.isAuthority) uiController.SetRORUIActiveState(true);
 
             base.OnExit();
         }

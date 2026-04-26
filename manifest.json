@@ -1,0 +1,20 @@
+{
+  "name": "Bayonetta_Survivor",
+  "author": "Psyche",
+  "version_number": "0.5.5",
+  "website_url": "https://github.com/psychebomb/Bayonetta",
+  "description": "New 'do, dead you!",
+  "dependencies": [
+    "bbepis-BepInExPack-5.4.2101",
+    "RiskofThunder-R2API_Core-5.1.5",
+    "RiskofThunder-R2API_Prefab-1.0.4",
+    "RiskofThunder-R2API_Networking-1.0.4",
+    "RiskofThunder-R2API_RecalculateStats-1.5.0",
+    "RiskofThunder-R2API_Language-1.0.1",
+    "RiskofThunder-R2API_Sound-1.0.3",
+    "RiskofThunder-R2API_TempVisualEffect-1.0.3",
+    "RiskofThunder-HookGenPatcher-1.2.3",
+    "RiskofThunder-R2API_Skins-1.2.0",
+    "LordVGames-EnemyAttackSpeedFixes-1.4.0"
+  ]
+}

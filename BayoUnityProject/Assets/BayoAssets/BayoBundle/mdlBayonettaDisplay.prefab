@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: -1095921540, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playOnEnable: 1
   akSoundString: 
   rtpcString: attackSpeed
   rtpcValue: 65
@@ -419,7 +420,7 @@ PrefabInstance:
     - target: {fileID: 2022775912232750583, guid: 13d3f6cba24787d458ec4355b19865aa,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.976755
+      value: 4.9
       objectReference: {fileID: 0}
     - target: {fileID: 2022775912232750583, guid: 13d3f6cba24787d458ec4355b19865aa,
         type: 3}
@@ -429,7 +430,7 @@ PrefabInstance:
     - target: {fileID: 2022775912232750583, guid: 13d3f6cba24787d458ec4355b19865aa,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.4615054
+      value: 16.85
       objectReference: {fileID: 0}
     - target: {fileID: 2022775912232750583, guid: 13d3f6cba24787d458ec4355b19865aa,
         type: 3}

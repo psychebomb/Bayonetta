@@ -33,6 +33,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             }
             rootMotionAccumulator = GetModelRootMotionAccumulator();
             PlayAnimation("Body", animName, "Slash.playbackRate", duration);
+            Util.PlaySound("falling", this.gameObject);
             //Util.PlaySound("flurspin", this.gameObject);
             characterDirection.forward = GetAimRay().direction;
             characterMotor.velocity.y = 0f;

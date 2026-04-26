@@ -20,6 +20,7 @@ namespace BayoMod.Modules
         public static ConfigEntry<bool> musicOn2;
         public static ConfigEntry<bool> overlayOn;
         public static ConfigEntry<bool> tpFreeze;
+        public static ConfigEntry<bool> footstepVfx;
 
         public enum LongTaunt
         {
@@ -35,9 +36,17 @@ namespace BayoMod.Modules
             Walking,
             Crazy
         }
+        public enum OptBones
+        {
+            Unchanged,
+            Colliders_Off,
+            Dynamic_Off_Visible,
+            Dynamic_Off_Not_Visible
+        }
 
         public static ConfigEntry<LongTaunt> longTaunt;
         public static ConfigEntry<StrutMusic> strutMus;
+        public static ConfigEntry<OptBones> boneOptimization;
 
         //stats
         public static ConfigEntry<float> hpStat;
@@ -61,10 +70,12 @@ namespace BayoMod.Modules
             strutMus = BayoPlugin.instance.Config.Bind<StrutMusic>("01 - Misc Settings", "Strut music choice", StrutMusic.Walking, "Chooses which music plays during the strut emote (none are dmca save lol)");
             musicOn2 = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Lets Dance Boys music", true, "Toggle's whether Bayonetta's LDB emote plays music.");
             longTaunt = BayoPlugin.instance.Config.Bind<LongTaunt>("01 - Misc Settings", "Emote 1 voice options", LongTaunt.Based_On_Skin_Choice, "Chooses which voiceline will play when performing Emote 1.");
+            boneOptimization = BayoPlugin.instance.Config.Bind<OptBones>("01 - Misc Settings", "Dynamic bone optimization settings", OptBones.Unchanged, "These settings disable certain components that affect bayo's dynamic bones. Change these if you are running into any performance issues");
             musicClient = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Client side music", true, "Toggle's whether or not emotes with music will play for the whole server (false) or just the local client (true)");
             eZoom = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Emote zoom", true, "Toggle's whether Bayonetta's emotes zoom in the camera.");
             overlayOn = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Witch time screen overlay", true, "Causes a screen overlay effect to occur during witch time when enabled.");
             tpFreeze = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Teleporter Freeze-Frame Event", true, "Activates a special freeze frame + emote after entering a teleporter when enabled.");
+            footstepVfx = BayoPlugin.instance.Config.Bind<bool>("01 - Misc Settings", "Footstep VFX", true, "Plays special butterfly vfx every footstep when enabled.");
 
             hpStat = BayoPlugin.instance.Config.Bind<float>(new ConfigDefinition("02 - Base Stats", "Base HP"), 110f, new ConfigDescription("Bayonetta's base starting HP"));
             regenStat = BayoPlugin.instance.Config.Bind<float>(new ConfigDefinition("02 - Base Stats", "Base HP Regen"), 1f, new ConfigDescription("Bayonetta's base starting health regen"));

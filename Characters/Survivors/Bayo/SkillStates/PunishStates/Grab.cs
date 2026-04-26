@@ -21,6 +21,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
         public float y;
         private float modifY = 0;
         private bool voiced = false;
+        private float speedUpTimer = 0f;
+        private float speedUpInterval = 0.2f;
 
         public CharacterBody enemyBody;
         public Vector3 forwardDir;
@@ -119,6 +121,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
         {
             base.FixedUpdate();
 
+            speedUpTimer += Time.fixedDeltaTime;
+
             float rotSpeed = 360f / fireFreq;
             rotSpeed *= -1f;
             curAngle += rotSpeed * Time.fixedDeltaTime;
@@ -174,8 +178,9 @@ namespace BayoMod.Survivors.Bayo.SkillStates.PunishStates
                 return;
             }
 
-            if (inputBank.skill1.justPressed && counter > 0)
+            if (speedUpTimer >= speedUpInterval && counter > 0)
             {
+                speedUpTimer = 0f;
                 counter--;
                 float idealFire = fireFreq / 6;
                 float multi = (fireFreq - idealFire) / 8f;

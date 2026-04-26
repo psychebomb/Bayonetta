@@ -16,7 +16,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         private BayoTracker tracker;
         private PunishTracker pTracker;
         //private ClimaxTracker cTracker;
-        private bool fallRemoved = false;
+        private bool fallRemoved = true;
         private GameObject wingPrefab;
         private GameObject wingInstance;
         private GameObject jumpPrefab = BayoAssets.djump;
@@ -45,7 +45,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 }
                 if (Input.GetKeyDown(Modules.Config.emote3Keybind.Value))
                 {
-                    //EntityStateMachine.FindByCustomName(this.gameObject, "Weapon").SetNextState(new StrutNew());
                     outer.SetNextState(new LetsDance2());
                     return;
                 }
@@ -98,6 +97,9 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 {
                     characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
                     fallRemoved = true;
+
+                    //if (isAuthority) EffectManager.SimpleMuzzleFlash(BayoAssets.land, gameObject, "SwingCenter", true);
+                    Util.PlaySound("batland", this.gameObject);
                 }
 
                 //if (cTracker) cTracker.enabled = true;
@@ -134,7 +136,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             }
             if (base.characterMotor.jumpCount == 0 || base.characterBody.baseJumpCount == 1)
             {
-                //future single jump effects go here idk im lazy
+                //Util.PlaySound("jump", this.gameObject);
             }
             else
             {
@@ -154,7 +156,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 }
                 //EffectManager.SimpleMuzzleFlash(wingPrefab, gameObject, "WingCenter", true);
                 EffectManager.SimpleMuzzleFlash(jumpPrefab, gameObject, "SwingCenter", true);
+                Util.PlaySound("jump", this.gameObject);
             }
+
+            fallRemoved = false;
+
             base.ProcessJump();
             
         }

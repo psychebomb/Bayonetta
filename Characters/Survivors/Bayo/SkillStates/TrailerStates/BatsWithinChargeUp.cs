@@ -195,7 +195,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates
             if (characterBody.master.playerCharacterMasterController.networkUser.cameraRigController)
             {
                 cameraRig = characterBody.master.playerCharacterMasterController.networkUser.cameraRigController;
-                if (this.characterDirection)
+                if (this.characterDirection && isAuthority)
                 {
                     Vector3 rotateAngle = this.characterDirection.forward * -1;
                     ((CameraModePlayerBasic.InstanceData)cameraRig.cameraMode.camToRawInstanceData[cameraRig]).SetPitchYawFromLookVector(rotateAngle);

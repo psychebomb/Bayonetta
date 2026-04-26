@@ -116,14 +116,16 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             if (characterDirection) characterDirection.forward = GetAimRay().direction;
             if (!inHitPause)
             {
+                /*
                 if (rootMotionAccumulator)
                 {
                     Vector3 vector = rootMotionAccumulator.ExtractRootMotion();
-                    if (vector != Vector3.zero && base.isAuthority && base.characterMotor)
+                    if (vector != Vector3.zero && base.isAuthority && base.characterMotor && stopwatch <= (attackStartPercentTime -0.25f))
                     {
-                        //base.characterMotor.rootMotion += vector;
+                        base.characterMotor.rootMotion += vector;
                     }
                 }
+                */
                 Vector3 normalized = (transform.position - previousPosition).normalized;
                 if (characterMotor && characterDirection)
                 {
