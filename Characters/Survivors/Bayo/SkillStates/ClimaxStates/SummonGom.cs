@@ -22,7 +22,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.ClimaxStates
         private BaseConVar convar;
         private string oldMusic;
 
-        private CameraController cam;
+        private BayoCameraController cam;
         private GameObject hairPrefab;
         public override void OnEnter()
         {
@@ -58,7 +58,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.ClimaxStates
             }
 
             zoom = false;
-            cam = this.gameObject.GetComponent<CameraController>();
+            cam = this.gameObject.GetComponent<BayoCameraController>();
             cam.fov = 50f;
             cam.SetCam();
 

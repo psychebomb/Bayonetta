@@ -9,8 +9,10 @@ namespace BayoMod.Modules
 
         internal static Shader hotpoo = RoR2.LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/HGStandard");
 
-        public static Material LoadMaterial(this AssetBundle assetBundle, string materialName) => CreateHopooMaterialFromBundle(assetBundle, materialName);
-        public static Material CreateHopooMaterialFromBundle(this AssetBundle assetBundle, string materialName)
+        public static Material LoadMaterial(this AssetBundle assetBundle, string materialName) => CreateHopooMaterialFromBundle(assetBundle, materialName, false);
+
+        public static Material LoadMaterial(this AssetBundle assetBundle, string materialName, bool convert) => CreateHopooMaterialFromBundle(assetBundle, materialName, convert);
+        public static Material CreateHopooMaterialFromBundle(this AssetBundle assetBundle, string materialName, bool actuallyConvert)
         {
             Material tempMat = cachedMaterials.Find(mat =>
             {
@@ -29,7 +31,7 @@ namespace BayoMod.Modules
                 return new Material(hotpoo);
             }
 
-            return tempMat.ConvertDefaultShaderToHopoo(true);
+            return tempMat.ConvertDefaultShaderToHopoo(actuallyConvert);
         }
 
         public static Material SetHopooMaterial(this Material tempMat) => ConvertDefaultShaderToHopoo(tempMat, false);
@@ -63,7 +65,7 @@ namespace BayoMod.Modules
             smooth = tempMat.GetFloat("_Glossiness");
 
             //set shader
-            //if(actuallyConvert) tempMat.shader = hotpoo;
+            if(actuallyConvert) tempMat.shader = hotpoo;
 
             //apply values after shader is set
             tempMat.SetTexture("_EmTex", tempMat.GetTexture("_EmissionMap"));

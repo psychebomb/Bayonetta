@@ -1,11 +1,9 @@
 ﻿using RoR2;
 using UnityEngine;
-using EntityStates.Merc;
 using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Survivors.Bayo;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
-using System;
-using UnityEngine.Networking;
+using BayoMod.Characters.Bayo;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -49,7 +47,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             forwardDir = Vector3.up;
             rollSpeed = 0f;
             characterDirection.forward = GetAimRay().direction;
-            ReplacePrefabs(BayoAssets.backk, BayoAssets.backk2);
+            ReplacePrefab2(BayoAssets.backk, BayoAssets.backk2, BayoArtVFX.backkf);
             rootMotionAccumulator = GetModelRootMotionAccumulator();
             m2Refund = true;
 

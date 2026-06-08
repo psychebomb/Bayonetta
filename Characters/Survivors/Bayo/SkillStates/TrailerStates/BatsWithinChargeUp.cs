@@ -29,7 +29,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates
         public float stopwatch = 0f;
 
         private CharacterModel characterModel;
-        private CameraController cam;
+        private BayoCameraController cam;
         private CameraRigController cameraRig;
         //protected CharacterCameraParams cameraParams;
         //protected CameraTargetParams.CameraParamsOverrideHandle cameraParamsOverrideHandle;
@@ -38,7 +38,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates
         {
             base.OnEnter();
             base.characterMotor.rootMotion.y += 8f;
-            cam = this.gameObject.GetComponent<CameraController>();
+            cam = this.gameObject.GetComponent<BayoCameraController>();
 
             if (base.rigidbody && !base.rigidbody.isKinematic)
             {

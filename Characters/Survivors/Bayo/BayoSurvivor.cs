@@ -64,6 +64,10 @@ namespace BayoMod.Survivors.Bayo
                 },
                 new CustomRendererInfo
                 {
+                    childName = "2ndBody",
+                },
+                new CustomRendererInfo
+                {
                     childName = "GFeet",
                    
                 },
@@ -94,69 +98,7 @@ namespace BayoMod.Survivors.Bayo
                 new CustomRendererInfo
                 {
                     childName = "Chest",
-                }/*,
-                new CustomRendererInfo
-                {
-                    childName = "armrings",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "belt",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "bow",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "bow1",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "button",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "clock",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "core",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "hands",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "heels",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "helmet",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "legs",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "pants",
-
-                },
-                new CustomRendererInfo
-                {
-                    childName = "sash",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "top",
-                },
-                new CustomRendererInfo
-                {
-                    childName = "top1",
-                },
-                */
+                }
         };
 
         public override UnlockableDef characterUnlockableDef => BayoUnlockables.characterUnlockableDef;
@@ -248,7 +190,7 @@ namespace BayoMod.Survivors.Bayo
             bodyPrefab.AddComponent<ABKRotator>();
             bodyPrefab.AddComponent<BayoController>();
             bodyPrefab.AddComponent<UIController>();
-            bodyPrefab.AddComponent<CameraController>();
+            bodyPrefab.AddComponent<BayoCameraController>();
             prefabCharacterModel.gameObject.AddComponent<BayoAnimationEvents>();
             displayPrefab.transform.Find("DistantSound").gameObject.GetComponent<RTPCController>().akSoundString = "select";
             displayPrefab.gameObject.AddComponent<RandomAnimSelect>();
@@ -264,6 +206,7 @@ namespace BayoMod.Survivors.Bayo
             Prefabs.SetupHitBoxGroup(characterModelObject, "CoverGroup", "Envelop");
             Prefabs.SetupHitBoxGroup(characterModelObject, "CoverGroup2", "Envelop2");
             Prefabs.SetupHitBoxGroup(characterModelObject, "HeelGroup", "HeelHitbox");
+            Prefabs.SetupHitBoxGroup(characterModelObject, "OverheadGroup", "OverheadHitbox");
         }
 
         private void DynamicBoneConfig()
@@ -608,6 +551,7 @@ namespace BayoMod.Survivors.Bayo
             //uncomment this when you have another skin
             defaultSkin.skinDefParams.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
                 "Body",
+                null,
                 "GunsFeet",
                 "GunsHands",
                 "LHandGun",
@@ -615,26 +559,11 @@ namespace BayoMod.Survivors.Bayo
                 "LHandOpen",
                 "RHandOpen",
                 "Sleeves",
-                "Hairrr"/*,
-                "armrings",
-                "belt",
-                "bow",
-                "bow.001",
-                "button",
-                "clock",
-                "core",
-                "hands",
-                "heels",
-                "helmet",
-                "legs",
-                "pants",
-                "sash",
-                "top",
-                "top.001"*/);
+                "Hairrr");
 
             defaultSkin.skinDefParams.rendererInfos[0].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("body1_nody") : assetBundle.LoadMaterial("body1");
-            defaultSkin.skinDefParams.rendererInfos[1].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("guns_nody") : assetBundle.LoadMaterial("guns");
             defaultSkin.skinDefParams.rendererInfos[2].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("guns_nody") : assetBundle.LoadMaterial("guns");
+            defaultSkin.skinDefParams.rendererInfos[3].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("guns_nody") : assetBundle.LoadMaterial("guns");
 
             defaultSkin.skinDefParams.gameObjectActivations = new SkinDefParams.GameObjectActivation[]
 {
@@ -644,7 +573,12 @@ namespace BayoMod.Survivors.Bayo
                     shouldActivate = false
                     
                 },
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("2ndBody"),
+                    shouldActivate = false
 
+                },
                 new SkinDefParams.GameObjectActivation
                 {
                     gameObject = childLocator.FindChildGameObject("Sleeves"),
@@ -669,6 +603,7 @@ namespace BayoMod.Survivors.Bayo
             //if you don't want to replace the mesh (for example, you only want to replace the material), pass in null so the order is preserved
             masterySkin.skinDefParams.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
                 "Body2",
+                null,
                 "LiB_Feet",
                 "LiB_Hands",
                 "LHGun2",
@@ -676,33 +611,19 @@ namespace BayoMod.Survivors.Bayo
                 "LHOpen2",
                 "RHOpen2",
                 null,
-                null/*,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null*/);
+                null);
 
             //masterySkin has a new set of RendererInfos (based on default rendererinfos)
             //you can simply access the RendererInfos' materials and set them to the new materials for your skin.
             masterySkin.skinDefParams.rendererInfos[0].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            masterySkin.skinDefParams.rendererInfos[1].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("lib_nody"): assetBundle.LoadMaterial("lib");
-            masterySkin.skinDefParams.rendererInfos[2].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("lib_nody") : assetBundle.LoadMaterial("lib");
-            masterySkin.skinDefParams.rendererInfos[3].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.skinDefParams.rendererInfos[1].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.skinDefParams.rendererInfos[2].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("lib_nody"): assetBundle.LoadMaterial("lib");
+            masterySkin.skinDefParams.rendererInfos[3].defaultMaterial = (Modules.Config.boneOptimization.Value == Modules.Config.OptBones.Dynamic_Off_Not_Visible) ? assetBundle.LoadMaterial("lib_nody") : assetBundle.LoadMaterial("lib");
             masterySkin.skinDefParams.rendererInfos[4].defaultMaterial = assetBundle.LoadMaterial("famedbody");
             masterySkin.skinDefParams.rendererInfos[5].defaultMaterial = assetBundle.LoadMaterial("famedbody");
             masterySkin.skinDefParams.rendererInfos[6].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            masterySkin.skinDefParams.rendererInfos[7].defaultMaterial = assetBundle.LoadMaterial("hairrr");
+            masterySkin.skinDefParams.rendererInfos[7].defaultMaterial = assetBundle.LoadMaterial("famedbody");
+            masterySkin.skinDefParams.rendererInfos[8].defaultMaterial = assetBundle.LoadMaterial("hairrr");
 
             //here's a barebones example of using gameobjectactivations that could probably be streamlined or rewritten entirely, truthfully, but it works
             masterySkin.skinDefParams.gameObjectActivations = new SkinDefParams.GameObjectActivation[]
@@ -712,7 +633,12 @@ namespace BayoMod.Survivors.Bayo
                     gameObject = childLocator.FindChildGameObject("Sleeves"),
                     shouldActivate = false,
                 },
+                new SkinDefParams.GameObjectActivation
+                {
+                    gameObject = childLocator.FindChildGameObject("2ndBody"),
+                    shouldActivate = false
 
+                },
                 new SkinDefParams.GameObjectActivation
                 {
                     gameObject = childLocator.FindChildGameObject("Chest"),
@@ -735,50 +661,31 @@ namespace BayoMod.Survivors.Bayo
             //adding the mesh replacements as above. 
             //if you don't want to replace the mesh (for example, you only want to replace the material), pass in null so the order is preserved
             artSkin.skinDefParams.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
-                "Body2",
-                "LiB_Feet",
-                null,
-                "LHOpen2",
-                "RHOpen2",
-                "LHOpen2",
-                "RHOpen2",
-                null,
-                null/*,
+                "meshBody",
+                "meshTech",
                 null,
                 null,
+                "meshLOpenHand",
+                "meshROpenHand",
+                "meshLOpenHand",
+                "meshROpenHand",
                 null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null*/);
+                null);
 
             //masterySkin has a new set of RendererInfos (based on default rendererinfos)
             //you can simply access the RendererInfos' materials and set them to the new materials for your skin.
-            artSkin.skinDefParams.rendererInfos[0].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            artSkin.skinDefParams.rendererInfos[1].defaultMaterial = assetBundle.LoadMaterial("lib");
+            artSkin.skinDefParams.rendererInfos[0].defaultMaterial = assetBundle.LoadMaterial("artbody", true);
+            artSkin.skinDefParams.rendererInfos[1].defaultMaterial = assetBundle.LoadMaterial("artbodysmooth", true);
             artSkin.skinDefParams.rendererInfos[2].defaultMaterial = assetBundle.LoadMaterial("lib");
-            artSkin.skinDefParams.rendererInfos[3].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            artSkin.skinDefParams.rendererInfos[4].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            artSkin.skinDefParams.rendererInfos[5].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            artSkin.skinDefParams.rendererInfos[6].defaultMaterial = assetBundle.LoadMaterial("famedbody");
-            artSkin.skinDefParams.rendererInfos[7].defaultMaterial = assetBundle.LoadMaterial("hairrr");
+            artSkin.skinDefParams.rendererInfos[3].defaultMaterial = assetBundle.LoadMaterial("lib");
+            artSkin.skinDefParams.rendererInfos[4].defaultMaterial = assetBundle.LoadMaterial("artbody", true);
+            artSkin.skinDefParams.rendererInfos[5].defaultMaterial = assetBundle.LoadMaterial("artbody", true);
+            artSkin.skinDefParams.rendererInfos[6].defaultMaterial = assetBundle.LoadMaterial("artbody", true);
+            artSkin.skinDefParams.rendererInfos[7].defaultMaterial = assetBundle.LoadMaterial("artbody", true);
 
             //here's a barebones example of using gameobjectactivations that could probably be streamlined or rewritten entirely, truthfully, but it works
             artSkin.skinDefParams.gameObjectActivations = new SkinDefParams.GameObjectActivation[]
             {
-                new SkinDefParams.GameObjectActivation
-                {
-                    gameObject = childLocator.FindChildGameObject("Body"),
-                    shouldActivate = false,
-                },
                 new SkinDefParams.GameObjectActivation
                 {
                     gameObject = childLocator.FindChildGameObject("GFeet"),
@@ -787,26 +694,6 @@ namespace BayoMod.Survivors.Bayo
                 new SkinDefParams.GameObjectActivation
                 {
                     gameObject = childLocator.FindChildGameObject("GHands"),
-                    shouldActivate = false,
-                },
-                new SkinDefParams.GameObjectActivation
-                {
-                    gameObject = childLocator.FindChildGameObject("LHG"),
-                    shouldActivate = false,
-                },
-                new SkinDefParams.GameObjectActivation
-                {
-                    gameObject = childLocator.FindChildGameObject("RHG"),
-                    shouldActivate = false,
-                },
-                new SkinDefParams.GameObjectActivation
-                {
-                    gameObject = childLocator.FindChildGameObject("LHO"),
-                    shouldActivate = false,
-                },
-                new SkinDefParams.GameObjectActivation
-                {
-                    gameObject = childLocator.FindChildGameObject("RHO"),
                     shouldActivate = false,
                 },
                 new SkinDefParams.GameObjectActivation
@@ -822,7 +709,7 @@ namespace BayoMod.Survivors.Bayo
             };
             //simply find an object on your child locator you want to activate/deactivate and set if you want to activate/deacitvate it with this skin
 
-            //skins.Add(artSkin);
+            skins.Add(artSkin);
 
             #endregion
 
@@ -1122,9 +1009,32 @@ namespace BayoMod.Survivors.Bayo
                     {
                         num = body.rigidbody.mass - 100f;
                     }
-                    
-                    forceVec = (damageInfo.force/100) * num;
-                    victim.GetComponent<HealthComponent>().TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
+
+                    forceVec = (damageInfo.force / 100) * num;
+                    if (damageInfo.force.magnitude >= 5000)
+                    {
+                        float mag = forceVec.magnitude;
+                        Vector3 forceNorm = forceVec.normalized;
+                        forceNorm.y += 0.7f;
+                        forceVec = forceNorm * mag;
+                        if (NetworkServer.active && body.HasBuff(BayoBuffs.punishable))
+                        {
+                            body.RemoveBuff(BayoBuffs.punishable);
+                        }
+                        if(victim.GetComponent<BayoSpinController>() == null)
+                        {
+                            if (body.master) new SetFreezeOnBodyRequest(body.masterObjectId, 10f, true).Send(NetworkDestination.Clients);
+                            forceNorm.y = 0f;
+                            body.characterDirection.forward = forceNorm * -1;
+
+                            BayoSpinController spinner = body.gameObject.AddComponent<BayoSpinController>();
+                            if (spinner)
+                            {
+                                spinner.bayoBody = damageInfo.attacker.GetComponent<CharacterBody>();
+                            }
+                        }
+                    }
+                    victim.GetComponent<HealthComponent>().TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: false);
                 }
                 float down = damageInfo.force.normalized.y;
                 if (down <= -0.75f && !body.isChampion)

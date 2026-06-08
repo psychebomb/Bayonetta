@@ -11,6 +11,9 @@ namespace BayoMod.Modules.Components
         public float maxTrackingAngle = 45f;
         public float trackerUpdateFrequency = 10f;
         public BullseyeSearch.SortMode sort = BullseyeSearch.SortMode.Angle;
+        public bool indicate = true;
+        public bool update = true;
+        
 
         private HurtBox trackingTarget;
         private CharacterBody characterBody;
@@ -37,6 +40,11 @@ namespace BayoMod.Modules.Components
             return this.trackingTarget;
         }
 
+        public void SetTrackingTarget(HurtBox target)
+        {
+            this.trackingTarget = target;
+        }
+
         private void OnEnable()
         {
             this.indicator.active = true;
@@ -60,8 +68,11 @@ namespace BayoMod.Modules.Components
             {
                 this.trackerUpdateStopwatch -= 1f / this.trackerUpdateFrequency;
 
-                Ray aimRay = new Ray(this.inputBank.aimOrigin, this.inputBank.aimDirection);
-                this.SearchForTarget(aimRay);
+                if (update)
+                {
+                    Ray aimRay = new Ray(this.inputBank.aimOrigin, this.inputBank.aimDirection);
+                    this.SearchForTarget(aimRay);
+                }
 
                 this.indicator.targetTransform = (this.trackingTarget ? this.trackingTarget.transform : null);
             }

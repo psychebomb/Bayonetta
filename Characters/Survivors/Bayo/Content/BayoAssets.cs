@@ -1,16 +1,18 @@
-﻿using RoR2;
-using UnityEngine;
+﻿using BayoMod.Characters.Bayo;
+using BayoMod.Characters.Survivors.Bayo.Components.Demon;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.ClimaxStates;
 using BayoMod.Modules;
-using RoR2.Projectile;
+using BayoMod.Modules.Components;
 using R2API;
+using RoR2;
+using RoR2.Audio;
+using RoR2.ContentManagement;
+using RoR2.Projectile;
+using TMPro;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 using UnityEngine.Rendering.PostProcessing;
-using BayoMod.Modules.Components;
-using RoR2.Audio;
-using TMPro;
-using BayoMod.Characters.Survivors.Bayo.SkillStates.ClimaxStates;
-using BayoMod.Characters.Survivors.Bayo.Components.Demon;
 
 namespace BayoMod.Survivors.Bayo
 {
@@ -28,6 +30,8 @@ namespace BayoMod.Survivors.Bayo
 
         public static GameObject fistDown;
 
+        public static GameObject footForward;
+
         public static GameObject bulletMuz;
 
         private static GameObject tempMuz;
@@ -41,8 +45,6 @@ namespace BayoMod.Survivors.Bayo
         internal static GameObject trackerPrefab;
 
         public static GameObject wardPrefab;
-
-        public static GameObject tempWard;
 
         public static GameObject evilObject;
 
@@ -72,6 +74,7 @@ namespace BayoMod.Survivors.Bayo
         public static GameObject backs;
         public static GameObject spin;
         public static GameObject slam;
+        public static GameObject bigExplode;
         public static GameObject fallk;
         public static GameObject fall;
         public static GameObject falle;
@@ -92,21 +95,10 @@ namespace BayoMod.Survivors.Bayo
         public static GameObject backk2;
         public static GameObject backs2;
         public static GameObject spin2;
-        public static GameObject slam2;
         public static GameObject fallk2;
         public static GameObject fall2;
         public static GameObject falle2;
         public static GameObject abk2;
-
-        private static Material fireMat;
-        public static GameObject p1art;
-        //public static GameObject p1aart;
-        public static GameObject p2art;
-        //public static GameObject p2aart;
-        public static GameObject p3art;
-        //public static GameObject p3aart;
-        public static GameObject p4art;
-        //public static GameObject p4aart;
 
         public static GameObject bwings;
         public static GameObject bwings2;
@@ -142,6 +134,8 @@ namespace BayoMod.Survivors.Bayo
 
             CreateUIElements();
 
+            BayoArtVFX.Init(_assetBundle);
+
         }
 
 
@@ -153,7 +147,6 @@ namespace BayoMod.Survivors.Bayo
             CreateCommonEffects();
             CreateSwings();
             CreateSwings2();
-            MakeArtstyleVFX();
             CreateOverlay();
             CreateMuz();
         }
@@ -162,6 +155,7 @@ namespace BayoMod.Survivors.Bayo
         {
             damage = _assetBundle.LoadEffect("damage", true);
             slam = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/HermitCrab/HermitCrabBombExplosion.prefab").WaitForCompletion().InstantiateClone("BayoSlam", false);
+            bigExplode = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/ClayBoss/ClayBossDeath.prefab").WaitForCompletion().InstantiateClone("BayoExplode", false);
             bwings = _assetBundle.LoadAsset<GameObject>("wings");
             bwings2 = _assetBundle.LoadAsset<GameObject>("wings2");
             djump = _assetBundle.LoadEffect("djump", true);
@@ -193,7 +187,10 @@ namespace BayoMod.Survivors.Bayo
             temp = new Color(0.231372f, 0.2f, 231372f, temp.a);
             bwings.AddComponent<WingComponent>();
             bwings2.AddComponent<WingComponent2>();
+            UnityEngine.Object.Destroy(bigExplode.transform.Find("mdlClayBossShattered").gameObject);
+            UnityEngine.Object.Destroy(bigExplode.transform.Find("Particles/Goo").gameObject);
             ContentAddition.AddEffect(slam);
+            ContentAddition.AddEffect(bigExplode);
             //ContentAddition.AddEffect(footstep);
         }
         private static void CreateSwings()
@@ -393,59 +390,6 @@ namespace BayoMod.Survivors.Bayo
             SkinVFX.AddSkinVFX(BayoSurvivor.masterySkin, falle, falle2);
 
         }
-
-    
-        private static void MakeArtstyleVFX()
-        {
-            MakeMaterial();
-
-            MakeArtSwings();
-        }
-
-        private static void MakeMaterial()
-        {
-            GameObject tempThingy = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Wisp/TracerEmbers.prefab").WaitForCompletion().InstantiateClone("TempBayoThingy", false);
-            fireMat = tempThingy.gameObject.GetComponent<LineRenderer>().material;
-            fireMat.mainTexture = _assetBundle.LoadAsset<Texture>("texBasicMask");
-            fireMat.SetTexture("_Cloud1Tex", _assetBundle.LoadAsset<Texture>("testmask"));
-            Vector4 scrollVec = new Vector4(0, 25, 4, 4);
-            fireMat.SetVector("_CutoffScroll", scrollVec);
-
-            fireMat.mainTextureOffset = new Vector2(0, 0.1f);
-            fireMat.mainTextureScale = new Vector2(1, 0.8f);
-        }
-
-        private static void MakeArtSwings()
-        {
-            p1art = _assetBundle.LoadAsset<GameObject>("artm1p1");
-            p1art.transform.Find("swing1").gameObject.GetComponent<ParticleSystemRenderer>().material = fireMat;
-
-            p2art = _assetBundle.LoadAsset<GameObject>("artm1p2");
-            p2art.transform.Find("swing1").gameObject.GetComponent<ParticleSystemRenderer>().material = fireMat;
-            MoveOffset mo = p2art.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
-            mo.startOffset = 0.3f;
-            mo.idealOffset = -0.65f;
-
-            p3art = _assetBundle.LoadAsset<GameObject>("artm1p3");
-            p3art.transform.Find("swing1").gameObject.GetComponent<ParticleSystemRenderer>().material = fireMat;
-            mo = p3art.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
-            mo.startOffset = 0.3f;
-            mo.idealOffset = -0.65f;
-            mo.slideDur = 0.15f;
-
-            p4art = _assetBundle.LoadAsset<GameObject>("artm1p4");
-            p4art.transform.Find("swing1").gameObject.GetComponent<ParticleSystemRenderer>().material = fireMat;
-            mo = p4art.transform.Find("swing1").gameObject.AddComponent<MoveOffset>();
-            mo.startOffset = 0.3f;
-            mo.idealOffset = -0.65f;
-            mo.slideDur = 0.15f;
-
-            p1art.gameObject.AddComponent<VFXrm>();
-            p2art.gameObject.AddComponent<VFXrm>();
-            p3art.gameObject.AddComponent<VFXrm>();
-            p4art.gameObject.AddComponent<VFXrm>();
-
-        }
         private static void CreateOverlay()
         {
             if (Modules.Config.overlayOn.Value)
@@ -528,6 +472,8 @@ namespace BayoMod.Survivors.Bayo
             PrefabAPI.RegisterNetworkPrefab(footFast);
             Content.AddProjectilePrefab(fistDown);
             PrefabAPI.RegisterNetworkPrefab(fistDown);
+            Content.AddProjectilePrefab(footForward);
+            PrefabAPI.RegisterNetworkPrefab(footForward);
             ContentAddition.AddNetworkedObject(wardPrefab);
             ContentAddition.AddNetworkedObject(evilObject);
 
@@ -585,7 +531,7 @@ namespace BayoMod.Survivors.Bayo
                 footFast.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/ring").GetComponent<ParticleSystemRenderer>().material = mat;
                 footFast.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/hair").GetComponent<ParticleSystemRenderer>().material = mat;
 
-                fistDown = _assetBundle.LoadAsset<GameObject>("footproj").InstantiateClone("fastweaveHand");
+                fistDown = _assetBundle.LoadAsset<GameObject>("footproj").InstantiateClone("downweaveHand");
                 fistDown.GetComponent<ProjectileController>().ghostPrefab = _assetBundle.CreateProjectileGhostPrefab("weavehandDown");
                 shakeEmitter = fistDown.GetComponent<ShakeEmitter>();
                 shakeEmitter.amplitudeTimeDecay = true;
@@ -652,6 +598,28 @@ namespace BayoMod.Survivors.Bayo
                 fistFast.gameObject.GetComponent<ProjectileController>().flightSoundLoop = loop;
                 fistFast.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/ring").GetComponent<ParticleSystemRenderer>().material = mat;
                 fistFast.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/hair").GetComponent<ParticleSystemRenderer>().material = mat;
+
+                footForward = _assetBundle.LoadAsset<GameObject>("fistproj").InstantiateClone("forwardweaveFoot");
+                footForward.GetComponent<ProjectileController>().ghostPrefab = _assetBundle.CreateProjectileGhostPrefab("weavefootforward");
+                ww = footForward.GetComponent<WickedWeave>();
+                ww.startTime = 0f;
+                ww.hitboxEnd = 0.8f;
+                shakeEmitter = footForward.GetComponent<ShakeEmitter>();
+                shakeEmitter.amplitudeTimeDecay = true;
+                shakeEmitter.duration = 0.36f;
+                shakeEmitter.radius = 100f;
+                shakeEmitter.scaleShakeRadiusWithLocalScale = false;
+                shakeEmitter.wave = new Wave
+                {
+                    amplitude = 2f,
+                    frequency = 7f,
+                    cycleOffset = 0f
+                };
+                loop = ScriptableObject.CreateInstance<LoopSoundDef>();
+                loop.startSoundName = "weave";
+                footForward.gameObject.GetComponent<ProjectileController>().flightSoundLoop = loop;
+                footForward.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/ring").GetComponent<ParticleSystemRenderer>().material = mat;
+                footForward.GetComponent<ProjectileController>().ghostPrefab.transform.Find("portal/hair").GetComponent<ParticleSystemRenderer>().material = mat;
             }
         }
         #endregion 
@@ -718,10 +686,9 @@ namespace BayoMod.Survivors.Bayo
             rb.angularDrag = 0.05f;
             rb.interpolation = RigidbodyInterpolation.None;
 
-            tempWard = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/EliteHaunted/AffixHauntedWard.prefab").WaitForCompletion().InstantiateClone("TempBayoWard", false);
             var sphere = wardPrefab.transform.Find("AreaIndicator/Sphere").gameObject.GetComponent<MeshRenderer>();
-            Material mat = tempWard.transform.Find("Indicator/IndicatorSphere").gameObject.GetComponent<MeshRenderer>().material;
-            //Material mat = Addressables.LoadAssetAsync<Material>("RoR2/Base/EliteHaunted/matHauntedEliteAreaIndicator.mat").WaitForCompletion();
+            Material mat = new Material(AssetAsyncReferenceManager<Material>.LoadAsset(new AssetReferenceT<Material>(RoR2BepInExPack.GameAssetPathsBetter.RoR2_Base_EliteHaunted.matHauntedEliteAreaIndicator_mat)).WaitForCompletion());
+            mat.name = "matBayoWTIndicator";
             int num = mat.GetTexturePropertyNameIDs()[3];
             mat.SetTexture(num, _assetBundle.LoadAsset<Texture>("texRampWt"));
             Material[] mats = { mat };

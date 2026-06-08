@@ -4,6 +4,7 @@ using EntityStates.Merc;
 using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using BayoMod.Survivors.Bayo;
+using BayoMod.Characters.Bayo;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -36,7 +37,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             forwardDir.y = 0f;
             hitboxGroupName = "HeelGroup";
             hitboxName = "HeelHitbox";
-            ReplacePrefabs(BayoAssets.heels, BayoAssets.heels2);
+            ReplacePrefab2(BayoAssets.heels, BayoAssets.heels2, BayoArtVFX.heelsf);
 
             characterDirection.forward = forwardDir;
             m2Refund = true;

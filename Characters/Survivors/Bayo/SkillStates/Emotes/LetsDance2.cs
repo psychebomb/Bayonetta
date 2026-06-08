@@ -5,12 +5,12 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes
 {
     public class LetsDance2 : LetsDance
     {
-        private CameraController cam;
+        private BayoCameraController cam;
         private UIController ui;
         public override void OnEnter()
         {
             zoom = false;
-            cam = this.gameObject.GetComponent<CameraController>();
+            cam = this.gameObject.GetComponent<BayoCameraController>();
             ui = this.gameObject.GetComponent<UIController>();
             if (base.isAuthority)
             {

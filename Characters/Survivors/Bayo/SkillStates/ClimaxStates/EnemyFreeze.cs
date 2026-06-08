@@ -17,7 +17,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.ClimaxStates
         private Animator modelAnimator;
 
         public bool gomorrah = true;
-        private float stopwatch;
+        public bool freeze = true;
+        protected float stopwatch;
         public override void OnEnter()
         {
             base.OnEnter();
@@ -35,7 +36,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.ClimaxStates
                 }
             }
 
-            if (characterBody.characterMotor) characterMotor.velocity = Vector3.zero;
+            if (characterBody.characterMotor && freeze) characterMotor.velocity = Vector3.zero;
 
             if (characterDirection)
             {
@@ -77,7 +78,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.ClimaxStates
                 characterDirection.moveVector = characterDirection.forward;
             }
 
-            if (characterBody.characterMotor)
+            if (characterBody.characterMotor && freeze)
             {
                 characterMotor.velocity = Vector3.zero;
                 if (!characterMotor.isGrounded) characterMotor.velocity.y -= Time.fixedDeltaTime * Physics.gravity.y;

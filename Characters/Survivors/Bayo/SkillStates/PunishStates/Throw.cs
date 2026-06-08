@@ -1,13 +1,16 @@
-﻿using RoR2;
-using UnityEngine;
-using BayoMod.Survivors.Bayo.SkillStates;
-using RoR2.CameraModes;
-using UnityEngine.Networking;
-using BayoMod.Survivors.Bayo;
-using EntityStates;
-using RoR2.Projectile;
+﻿using BayoMod.Characters.Survivors.Bayo.Components;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
 using BayoMod.Modules.Components;
+using BayoMod.Survivors.Bayo;
+using BayoMod.Survivors.Bayo.SkillStates;
+using EntityStates;
+using R2API.Networking;
+using RoR2;
+using RoR2.CameraModes;
+using RoR2.Projectile;
+using UnityEngine;
+using UnityEngine.Networking;
+using R2API.Networking.Interfaces;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
 {
@@ -55,6 +58,20 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates
                 num *= 100f;
                 Vector3 forceVec = forwardDir * num;
                 if(enemyBody.healthComponent && NetworkServer.active) enemyBody.healthComponent.TakeDamageForce(forceVec, alwaysApply: true, disableAirControlUntilCollision: true);
+                if (NetworkServer.active)
+                {
+                    if (enemyBody && enemyBody.HasBuff(BayoBuffs.punishable)) enemyBody.RemoveBuff(BayoBuffs.punishable);
+                }
+
+                if (enemyBody.master) new SetFreezeOnBodyRequest(enemyBody.masterObjectId, 10f, true).Send(NetworkDestination.Clients);
+                enemyBody.characterDirection.forward = forwardDir;
+
+                BayoSpinController spinner = enemyBody.gameObject.AddComponent<BayoSpinController>();
+                if (spinner)
+                {
+                    spinner.bayoBody = characterBody;
+                    spinner.spin2 = true;
+                }
             }
 
             base.OnEnter();

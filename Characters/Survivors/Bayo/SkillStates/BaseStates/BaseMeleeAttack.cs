@@ -80,6 +80,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected bool destroyvfx = true;
 
         protected HealthComponent item;
+        protected HurtBox itemHurt;
         private GameObject gunMuz;
         public bool m2Refund = false;
         private bool refunded = false;
@@ -94,7 +95,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             if (curSkin == BayoSurvivor.artSkin)
             {
                 gunMuz = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Mage/MuzzleflashMageFire.prefab").WaitForCompletion();
-                gunName = gunName + "art";
+                tracerEffectPrefab = FireEmbers.tracerEffectPrefab;
             }
             else
             {
@@ -248,10 +249,10 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 Collider[] hits = Physics.OverlapBox(position, vector, rot, LayerIndex.entityPrecise.mask);
                 for (int i = 0; i < hits.Length; i++)
                 {
-                    HurtBox hurtBox = hits[i].GetComponent<HurtBox>();
-                    if (hurtBox)
+                    itemHurt = hits[i].GetComponent<HurtBox>();
+                    if (itemHurt)
                     {
-                        HealthComponent healthComponent = hurtBox.healthComponent;
+                        HealthComponent healthComponent = itemHurt.healthComponent;
                         if (healthComponent)
                         {
                             TeamIndex team = GetTeam();

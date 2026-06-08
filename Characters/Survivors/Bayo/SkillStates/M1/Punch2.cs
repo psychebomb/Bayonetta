@@ -1,5 +1,7 @@
-﻿using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
+﻿using BayoMod.Characters.Bayo;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using BayoMod.Survivors.Bayo;
+using RoR2;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 {
@@ -13,7 +15,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
                 animEnd = "P2E";
                 earlyExitPercentTime = 0.26f;
                 endDuration = 0.48f;
-                ReplacePrefab2(BayoAssets.p2s, BayoAssets.p2s2, BayoAssets.p2art);
+                ReplacePrefab2(BayoAssets.p2s, BayoAssets.p2s2, BayoArtVFX.p2f);
                 playSwing = 0.2f;
             }
             else
@@ -29,7 +31,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
             gunStr = "muzlh";
             voiceString = "p2v";
             swingSoundString = "p2";
+            animDur = earlyExitPercentTime * 2f;
             voice = true;
+
+            SkinDef curSkin = SkinCatalog.FindCurrentSkinDefForBodyInstance(this.characterBody.gameObject);
+            if (curSkin == BayoSurvivor.artSkin)
+            {
+                gunName = gunName + "art";
+            }
             base.OnEnter();
         }
     }

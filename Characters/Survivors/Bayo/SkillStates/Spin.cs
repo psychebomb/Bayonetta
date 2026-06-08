@@ -5,6 +5,7 @@ using EntityStates.Loader;
 using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Survivors.Bayo;
 using System.Collections.Generic;
+using BayoMod.Characters.Bayo;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
 {
@@ -12,7 +13,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
     {
         public override void OnEnter()
         {
-            dur = 1.6f;
+            dur = 1.6f; 
             damage = 1.5f;
             blastDamage = 0.6f;
             blastRadius = 30f;
@@ -27,6 +28,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             hbn = "Envelop2";
             effect = BayoAssets.spin;
             effect2 = BayoAssets.spin2;
+            effect3 = BayoArtVFX.spinf;
             m2Refund = true;
             base.OnEnter();
         }

@@ -52,6 +52,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             hbn = "Envelop2";
             effect = null;
             effect2 = null;
+            effect3 = null;
             bwc = this.gameObject.GetComponent<BayoController>();
             m2Refund = true;
 

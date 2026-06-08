@@ -2,6 +2,7 @@
 using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.M1_Alt;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Weave;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
@@ -38,6 +39,12 @@ namespace BayoMod.Survivors.Bayo
             Modules.Content.AddEntityState(typeof(Flurry));
 
             Modules.Content.AddEntityState(typeof(FlurryEnd));
+
+            Modules.Content.AddEntityState(typeof(PPK));
+
+            Modules.Content.AddEntityState(typeof(PPKK));
+
+            Modules.Content.AddEntityState(typeof(PPKKK));
             #endregion
 
             #region M2 Skills
@@ -126,6 +133,8 @@ namespace BayoMod.Survivors.Bayo
             Modules.Content.AddEntityState(typeof(Throw));
 
             Modules.Content.AddEntityState(typeof(EnemyFreeze));
+
+            Modules.Content.AddEntityState(typeof(EnemySpin));
 
             Modules.Content.AddEntityState(typeof(ClimaxEntry));
 

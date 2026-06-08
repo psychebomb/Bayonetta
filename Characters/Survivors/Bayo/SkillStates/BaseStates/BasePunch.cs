@@ -3,17 +3,22 @@ using UnityEngine;
 using BayoMod.Survivors.Bayo.SkillStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
 using EntityStates.Loader;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.M1_Alt;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
 {
     public class BasePunch : BaseMeleeAttack
     {
         public int swingIndex;
+        public int altSwingIndex;
         protected string animStart;
         protected string animEnd;
         protected float exitTime;
         protected float holdTime;
         protected float endDuration;
+        protected float animDur;
+        protected bool aimMove = false;
+        protected float attackEnd = 0.6f;
         private RootMotionAccumulator rootMotionAccumulator;
         private bool cancel;
         private bool jumped;
@@ -23,10 +28,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
         protected float hopVelocity = 2.5f;
         protected Vector3 forwardDir;
         private Vector3 vfxPos;
+        public bool inAltPath;
         public override void OnEnter()
         {
             damageCoefficient = 2f;
-            attackEndPercentTime = 0.6f;
+            attackEndPercentTime = attackEnd;
             //damageCoefficient = 3f;  wtf is wrong with me
             procCoefficient = 1f;
             damageType = DamageTypeCombo.GenericPrimary;
@@ -39,7 +45,8 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             shootRay = GetAimRay();
             gunName = gunStr;
             gunDamage = 0.5f;
-            launch = false;
+            launch = true;
+            juggleHop = 7f / this.attackSpeedStat;
             fireTime = 0.166f;
             destroyvfx = false;
 
@@ -53,18 +60,20 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             earlyExitPercentTime /= this.attackSpeedStat;
             endDuration /= this.attackSpeedStat;
             playSwing /= this.attackSpeedStat;
+            animDur /= this.attackSpeedStat;
             exitTime = holdTime + earlyExitPercentTime;
             duration = exitTime + endDuration;
-            attackStartPercentTime = earlyExitPercentTime /duration;
-            PlayAnimation("Body", animStart, playbackRateParam, earlyExitPercentTime * 2);
+            attackStartPercentTime = earlyExitPercentTime / duration;
+
+            PlayAnimation("Body", animStart, playbackRateParam, animDur);
 
             if (characterMotor && !characterMotor.isGrounded && hopVelocity > 0f)
             {
                 characterMotor.velocity.y = 0f;
                 characterMotor.airControl = characterMotor.airControl;
                 SmallHop(characterMotor, hopVelocity);
-                launch = true;
-                juggleHop = 7f / this.attackSpeedStat;
+                //launch = true;
+                //juggleHop = 7f / this.attackSpeedStat;
                 exitToStance = false;
             }
 
@@ -124,7 +133,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             if (CanDodge())
             {
                 cancel = true;
-                outer.SetNextState(new Dodge { currentSwing = swingIndex });
+                outer.SetNextState(new Dodge {
+                    currentSwing = swingIndex,
+                    inAltPath = inAltPath,
+                    altSwing = altSwingIndex
+                });
                 inputBank.skill3.hasPressBeenClaimed = true;
                 return;
             }
@@ -153,7 +166,14 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                 characterDirection.moveVector = characterMotor.moveDirection;
             }
 
-            characterDirection.forward = forwardDir;
+            if (aimMove)
+            {
+                characterDirection.forward = GetAimRay().direction;
+            }
+            else
+            {
+                characterDirection.forward = forwardDir;
+            }
 
             shootRay = GetAimRay();
 
@@ -161,6 +181,11 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             {
                 if (inputBank.skill1.down)
                 {
+                    if ((swingIndex > 0 && inputBank.skill2.down) || inAltPath == true)
+                    {
+                        SetAltStep();
+                        return;
+                    }
                     SetStep();
                     return;
                 }
@@ -173,7 +198,6 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
             }
 
             base.FixedUpdate();
-
 
         }
 
@@ -212,6 +236,37 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates
                     outer.SetNextState(new FlurryStart());
                     break;
 
+            }
+        }
+
+        public void SetAltStep()
+        {
+            switch (altSwingIndex)
+            {
+                case 0:
+                    outer.SetNextState(new PPK
+                    {
+                        swingIndex = 2,
+                        altSwingIndex = 1,
+                        inAltPath = true
+                    });
+                    break;
+                case 1:
+                    outer.SetNextState(new PPKK
+                    {
+                        curSwing = 2,
+                        inAltPath = true,
+                        altSwing = 2
+                    });
+                    break;
+                case 2:
+                    outer.SetNextState(new PPKKK
+                    {
+                        curSwing = -1,
+                        inAltPath = false,
+                        altSwing = 0
+                    });
+                    break;
             }
         }
 

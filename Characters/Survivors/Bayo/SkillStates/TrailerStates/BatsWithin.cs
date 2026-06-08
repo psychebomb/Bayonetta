@@ -9,7 +9,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates
 {
     public class BatsWithin : BaseSkillState
     {
-        private CameraController cam;
+        private BayoCameraController cam;
         private bool startedAnim = false;
         public override void OnEnter()
         {
@@ -33,7 +33,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.TrailerStates
 
             this.characterBody.isSprinting = false;
 
-            cam = this.gameObject.GetComponent<CameraController>();
+            cam = this.gameObject.GetComponent<BayoCameraController>();
             PlayAnimation("Body", "DodgeBack");
         }
 

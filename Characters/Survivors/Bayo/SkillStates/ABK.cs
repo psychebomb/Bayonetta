@@ -6,6 +6,7 @@ using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using UnityEngine.Assertions.Must;
 using UnityEngine.UIElements;
 using BayoMod.Characters.Survivors.Bayo.Components;
+using BayoMod.Characters.Bayo;
 
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates
@@ -39,7 +40,7 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates
             voice = true;
             voiceString = "stompabk";
             Util.PlaySound("abk", gameObject);
-            ReplacePrefabs(BayoAssets.abk, BayoAssets.abk2);
+            ReplacePrefab2(BayoAssets.abk, BayoAssets.abk2, BayoArtVFX.abkf);
             muzzleString = "ABKC";
             playSwing = 0.15f;
             shootRay = GetAimRay();

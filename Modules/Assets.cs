@@ -141,7 +141,7 @@ namespace BayoMod.Modules
             if (!ghostPrefab.GetComponent<NetworkIdentity>()) ghostPrefab.AddComponent<NetworkIdentity>();
             if (!ghostPrefab.GetComponent<ProjectileGhostController>()) ghostPrefab.AddComponent<ProjectileGhostController>();
 
-            Modules.Asset.ConvertAllRenderersToHopooShader(ghostPrefab, true);
+            Modules.Asset.ConvertAllRenderersToHopooShader(ghostPrefab, false);
 
             return ghostPrefab;
         }

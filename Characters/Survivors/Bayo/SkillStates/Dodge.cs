@@ -1,13 +1,14 @@
-﻿using EntityStates;
+﻿using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.M1_Alt;
+using BayoMod.Modules.Components;
+using EntityStates;
+using R2API;
 using RoR2;
+using System;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Networking;
-using BayoMod.Characters.Survivors.Bayo.SkillStates.M1;
-using System;
-using R2API;
-using BayoMod.Characters.Survivors.Bayo.SkillStates.Emotes;
-using System.ComponentModel;
-using BayoMod.Modules.Components;
 
 namespace BayoMod.Survivors.Bayo.SkillStates
 {
@@ -26,6 +27,8 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         private Animator animator;
         private Vector3 previousPosition;
         public int currentSwing = -1;
+        public int altSwing = -1;
+        public bool inAltPath = false;
         protected float earlyExit = 0.525f;
         protected bool jumped;
         protected float stopwatch;
@@ -224,6 +227,11 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                 DetermineCancel();
                 if (inputBank.skill1.down)
                 {
+                    if ((currentSwing > 0 && currentSwing < 3 && inputBank.skill2.down) || inAltPath == true)
+                    {
+                        SetAltStep();
+                        return;
+                    }
                     SetStep();
                     return;
                 }
@@ -333,6 +341,36 @@ namespace BayoMod.Survivors.Bayo.SkillStates
                     outer.SetNextState(new FlurryEnd());
                     break;
 
+            }
+        }
+        public void SetAltStep()
+        {
+            switch (altSwing)
+            {
+                case 0:
+                    outer.SetNextState(new PPK
+                    {
+                        swingIndex = 2,
+                        altSwingIndex = 1,
+                        inAltPath = true
+                    });
+                    break;
+                case 1:
+                    outer.SetNextState(new PPKK
+                    {
+                        curSwing = 2,
+                        inAltPath = true,
+                        altSwing = 2
+                    });
+                    break;
+                case 2:
+                    outer.SetNextState(new PPKKK
+                    {
+                        curSwing = -1,
+                        inAltPath = false,
+                        altSwing = 0
+                    });
+                    break;
             }
         }
 

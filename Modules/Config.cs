@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using BepInEx.Configuration;
+﻿using BepInEx.Configuration;
 using UnityEngine;
 using RoR2;
 

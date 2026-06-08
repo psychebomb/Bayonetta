@@ -1,4 +1,5 @@
-﻿using EntityStates;
+﻿using BayoMod.Characters.Bayo;
+using EntityStates;
 using RoR2;
 using UnityEngine;
 
@@ -36,9 +37,13 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             {
                 swingEffectPrefab = BayoAssets.fallk;
             }
-            else
+            else if (curSkin == BayoSurvivor.masterySkin)
             {
                 swingEffectPrefab = BayoAssets.fallk2;
+            }
+            else
+            {
+                swingEffectPrefab = BayoArtVFX.fallkf;
             }
             if (childLocator)
             {

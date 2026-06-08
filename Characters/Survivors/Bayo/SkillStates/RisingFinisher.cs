@@ -2,6 +2,7 @@
 using UnityEngine;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
 using EntityStates.Toolbot;
+using BayoMod.Characters.Bayo;
 
 namespace BayoMod.Survivors.Bayo.SkillStates
 {
@@ -33,6 +34,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
         protected bool clear = true;
         protected GameObject effect = BayoAssets.backs;
         protected GameObject effect2 = BayoAssets.backs2;
+        protected GameObject effect3 = BayoArtVFX.backsf;
         public override void OnEnter()
         {
             duration = dur;
@@ -55,7 +57,7 @@ namespace BayoMod.Survivors.Bayo.SkillStates
             hitboxGroupName = hgn;
             hitboxName = hbn;
             PlayAnim();
-            ReplacePrefabs(effect, effect2);
+            ReplacePrefab2(effect, effect2, effect3);
 
             forwardDir = GetAimRay().direction;
             characterDirection.forward = forwardDir;

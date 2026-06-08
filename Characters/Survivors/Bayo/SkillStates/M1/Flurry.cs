@@ -5,6 +5,7 @@ using EntityStates.Loader;
 using UnityEngine.UIElements;
 using BayoMod.Survivors.Bayo;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.BaseStates;
+using BayoMod.Characters.Bayo;
 
 namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 {
@@ -47,7 +48,13 @@ namespace BayoMod.Characters.Survivors.Bayo.SkillStates.M1
 
             sound = AkSoundEngine.PostEvent(3782729823, this.gameObject);
             Util.PlaySound("flurry", this.gameObject);
-            ReplacePrefabs(BayoAssets.pflur, BayoAssets.pflur2);
+            ReplacePrefab2(BayoAssets.pflur, BayoAssets.pflur2, BayoArtVFX.pflurf);
+
+            SkinDef curSkin = SkinCatalog.FindCurrentSkinDefForBodyInstance(this.characterBody.gameObject);
+            if (curSkin == BayoSurvivor.artSkin)
+            {
+                gunName = gunName + "art";
+            }
 
             base.OnEnter();
 

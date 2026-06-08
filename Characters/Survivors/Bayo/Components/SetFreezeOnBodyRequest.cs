@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 using BayoMod.Characters.Survivors.Bayo.SkillStates;
 using BayoMod.Characters.Survivors.Bayo.SkillStates.ClimaxStates;
 using BayoMod.Characters.Survivors.Bayo.Components;
+using BayoMod.Characters.Survivors.Bayo.SkillStates.PunishStates;
 
 namespace BayoMod.Modules.Components
 {
@@ -14,6 +15,7 @@ namespace BayoMod.Modules.Components
     {
         NetworkInstanceId netID;
         float duration;
+        bool spin = false;
 
         public SetFreezeOnBodyRequest()
         {
@@ -24,6 +26,13 @@ namespace BayoMod.Modules.Components
         {
             this.netID = netID;
             this.duration = duration;
+        }
+
+        public SetFreezeOnBodyRequest(NetworkInstanceId netID, float duration, bool spinning)
+        {
+            this.netID = netID;
+            this.duration = duration;
+            this.spin = spinning;
         }
 
         public void Deserialize(NetworkReader reader)
@@ -96,15 +105,21 @@ namespace BayoMod.Modules.Components
 
                     if (healthComponent.health > 0)
                     {
-                        if (healthComponent.body.name.Contains("BayoBody"))  //Beautiful queen snap snap haha
+                        if (spin)
+                        {
+                            stateMachine.SetNextState(new EnemySpin { duration = this.duration});
+                        }
+                        else if( healthComponent.body.name.Contains("BayoBody"))  //Beautiful queen snap snap haha
                         {
                             masterobject.AddComponent<KissCountdown>();
                             stateMachine.SetNextState(new BayoFreeze { duration = this.duration });
                         }
+                        /*
                         else
                         {
                             stateMachine.SetNextState(new EnemyFreeze { duration = this.duration });
                         }
+                        */
                     }
                     return;
                 }

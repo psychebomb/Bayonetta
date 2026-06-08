@@ -12,7 +12,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components
 
         private CharacterModel characterModel;
 
-        private CameraController camController;
+        private BayoCameraController camController;
 
 
         private void Start()
@@ -22,7 +22,7 @@ namespace BayoMod.Characters.Survivors.Bayo.Components
             {
                 bodyObject = characterModel.body.gameObject;
             }
-            camController = bodyObject.gameObject.GetComponent<CameraController>();
+            camController = bodyObject.gameObject.GetComponent<BayoCameraController>();
         }
         public void PlayFastWoosh()
         {
